@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DentalPro PMS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.header{background:#1e293b;padding:16px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #334155}
+.logo{font-size:24px}.title{font-size:20px;font-weight:700;color:#38bdf8}
+.status{margin-left:auto;padding:6px 14px;border-radius:20px;font-size:13px;background:#064e3b;color:#34d399}
+.nav{display:flex;gap:4px;padding:12px 24px;border-bottom:1px solid #1e293b;background:#0f172a;flex-wrap:wrap}
+.nav button{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;background:#1e293b;color:#94a3b8}
+.nav button.active{background:#0ea5e9;color:white}
+.content{padding:24px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
+.card{background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155}
+.card h3{font-size:12px;color:#64748b;margin-bottom:8px;text-transform:uppercase}
+.card .val{font-size:28px;font-weight:700;color:#38bdf8}
+.section{background:#1e293b;border-radius:12px;border:1px solid #334155;overflow:hidden}
+.section-header{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #334155}
+.section-header h2{font-size:15px;font-weight:600}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:#0ea5e9;color:white}
+table{width:100%;border-collapse:collapse}
+th{padding:12px 16px;text-align:left;font-size:12px;color:#64748b;text-transform:uppercase;border-bottom:1px solid #334155}
+td{padding:12px 16px;font-size:14px;border-bottom:1px solid #1a2744}
+tr:hover td{background:#162032}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.green{background:#064e3b;color:#34d399}.amber{background:#451a03;color:#fbbf24}
+.red{background:#4c0519;color:#fb7185}.blue{background:#1e3a5f;color:#60a5fa}
+.empty{padding:40px;text-align:center;color:#475569}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:#1e293b;border-radius:16px;padding:24px;width:420px;border:1px solid #334155;max-height:90vh;overflow-y:auto}
+.modal-box h3{font-size:16px;font-weight:700;margin-bottom:20px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px}
+.form-group input,.form-group select{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:14px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.btn-cancel{background:#334155;color:#94a3b8}
+.page{display:none}.page.active{display:block}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="logo">🦷</span>
+  <span class="title">DentalPro PMS</span>
+  <span class="status" id="status">Conectando...</span>
+</div>
+<div class="nav">
+  <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+  <button onclick="showPage('patients',this)">👤 Pacientes</button>
+  <button onclick="showPage('appointments',this)">📅 Citas</button>
+  <button onclick="showPage('inventory',this)">📦 Inventario</button>
+  <button onclick="showPage('api',this)">🔗 API</button>
+</div>
+<div class="content">
+  <div class="page active" id="page-dashboard">
+    <div class="cards">
+      <div class="card"><h3>Estado API</h3><div class="val" id="api-val">...</div></div>
+      <div class="card"><h3>Base de Datos</h3><div class="val" id="db-val">...</div></div>
+      <div class="card"><h3>Pacientes</h3><div class="val" id="patients-count">0</div></div>
+      <div class="card"><h3>Citas</h3><div class="val" id="appts-count">0</div></div>
+    </div>
+  </div>
+  <div class="page" id="page-patients">
+    <div class="section">
+      <div class="section-header">
+        <h2>👤 Pacientes</h2>
+        <button class="btn" onclick="openModal('patient')">+ Nuevo</button>
+      </div>
+      <table>
+        <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Código</th><th>Registrado</th><th>Acciones</th></tr></thead>
+        <tbody id="patients-table"><tr><td colspan="6" class="empty">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="page" id="page-appointments">
+    <div class="section">
+      <div class="section-header">
+        <h2>📅 Citas</h2>
+        <button class="btn" onclick="openModal('appointment')">+ Nueva</button>
+      </div>
+      <table>
+        <thead><tr><th>Paciente</th><th>Fecha</th><th>Motivo</th><th>Urgencia</th><th>Estado</th></tr></thead>
+        <tbody id="appointments-table"><tr><td colspan="5" class="empty">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="page" id="page-inventory">
+    <div class="section">
+      <div class="section-header">
+        <h2>📦 Inventario</h2>
+        <button class="btn" onclick="openModal('inv')">+ Agregar</button>
+      </div>
+      <table>
+        <thead><tr><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Unidad</th><th>Mínimo</th><th>Estado</th></tr></thead>
+        <tbody id="inventory-table"><tr><td colspan="6" class="empty">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="page" id="page-api">
+    <div class="section">
+      <div class="section-header"><h2>🔗 Endpoints</h2></div>
+      <table>
+        <thead><tr><th>Método</th><th>URL</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge green">GET</span></td><td>/health</td><td>Estado</td></tr>
+          <tr><td><span class="badge green">GET</span></td><td>/patients</td><td>Listar pacientes</td></tr>
+          <tr><td><span class="badge blue">POST</span></td><td>/patients</td><td>Crear paciente</td></tr>
+          <tr><td><span class="badge green">GET</span></td><td>/appointments</td><td>Listar citas</td></tr>
+          <tr><td><span class="badge blue">POST</span></td><td>/appointments</td><td>Crear cita</td></tr>
+          <tr><td><span class="badge green">GET</span></td><td>/inventory</td><td>Listar inventario</td></tr>
+          <tr><td><span class="badge blue">POST</span></td><td>/inventory</td><td>Agregar item</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal" id="modal-patient">
+  <div class="modal-box">
+    <h3>👤 Nuevo Paciente</h3>
+    <div class="form-group"><label>Nombre *</label><input id="p-name" placeholder="Nombre completo"></div>
+    <div class="form-group"><label>Email</label><input id="p-email" type="email"></div>
+    <div class="form-group"><label>Teléfono</label><input id="p-phone"></div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeModal('patient')">Cancelar</button>
+      <button class="btn" onclick="createPatient()">Guardar</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="modal-appointment">
+  <div class="modal-box">
+    <h3>📅 Nueva Cita</h3>
+    <div class="form-group"><label>Paciente *</label><select id="a-patient"><option value="">Seleccionar...</option></select></div>
+    <div class="form-group"><label>Fecha y Hora *</label><input id="a-date" type="datetime-local"></div>
+    <div class="form-group"><label>Motivo</label><input id="a-reason"></div>
+    <div class="form-group"><label>Urgencia</label>
+      <select id="a-urgency"><option value="green">Normal</option><option value="amber">Urgente</option><option value="red">Emergencia</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeModal('appointment')">Cancelar</button>
+      <button class="btn" onclick="createAppointment()">Guardar</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="modal-inv">
+  <div class="modal-box">
+    <h3>📦 Nuevo Item</h3>
+    <div class="form-group"><label>Nombre *</label><input id="i-name" placeholder="Anestesia lidocaina..."></div>
+    <div class="form-group"><label>Categoría</label><input id="i-cat" placeholder="anestesia, resina..."></div>
+    <div class="form-group"><label>Stock inicial</label><input id="i-stock" type="number" value="0"></div>
+    <div class="form-group"><label>Unidad</label><input id="i-unit" placeholder="pza, ml, g..."></div>
+    <div class="form-group"><label>Stock mínimo</label><input id="i-min" type="number" value="5"></div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeModal('inv')">Cancelar</button>
+      <button class="btn" onclick="createInvItem()">Guardar</button>
+    </div>
+  </div>
+</div>
+<script>
+const API='https://dentalpro-docker.onrender.com';
+let patients=[];
+
+function showPage(page,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  btn.classList.add('active');
+  if(page==='patients')loadPatients();
+  if(page==='appointments')loadAppointments();
+  if(page==='inventory')loadInventory();
+}
+
+async function checkHealth(){
+  try{
+    const r=await fetch(API+'/health');
+    const d=await r.json();
+    document.getElementById('api-val').textContent=d.status==='healthy'?'OK':'ERR';
+    document.getElementById('db-val').textContent=d.database?'OK':'ERR';
+    document.getElementById('status').textContent=d.status==='healthy'?'Online':'Degradado';
+  }catch(e){document.getElementById('status').textContent='Offline';}
+}
+
+async function loadPatients(){
+  try{
+    const r=await fetch(API+'/patients');
+    patients=await r.json();
+    document.getElementById('patients-count').textContent=patients.length;
+    const tb=document.getElementById('patients-table');
+    if(!patients.length){tb.innerHTML='<tr><td colspan="6" class="empty">Sin pacientes</td></tr>';return;}
+    tb.innerHTML=patients.map(p=>`<tr>
+      <td>${p.name}</td><td>${p.email||'-'}</td><td>${p.phone||'-'}</td>
+      <td><span class="badge green">${p.portal_code||'-'}</span></td>
+      <td>${new Date(p.created_at).toLocaleDateString('es-MX')}</td>
+      <td><button onclick="window.open('odontogram.html?patient=${p.id}&name='+encodeURIComponent('${p.name}'),'_blank')" style="padding:4px 10px;background:#7c3aed;color:white;border:none;border-radius:6px;cursor:pointer;font-size:11px">🦷 Odonto</button></td>
+    </tr>`).join('');
+  }catch(e){document.getElementById('patients-table').innerHTML='<tr><td colspan="6" class="empty">Error</td></tr>';}
+}
+
+async function loadAppointments(){
+  try{
+    const r=await fetch(API+'/appointments');
+    const a=await r.json();
+    document.getElementById('appts-count').textContent=a.length;
+    const tb=document.getElementById('appointments-table');
+    if(!a.length){tb.innerHTML='<tr><td colspan="5" class="empty">Sin citas</td></tr>';return;}
+    const ul={green:'green',amber:'amber',red:'red'};
+    const ll={green:'Normal',amber:'Urgente',red:'Emergencia'};
+    tb.innerHTML=a.map(x=>`<tr>
+      <td>${x.patient_name}</td>
+      <td>${new Date(x.scheduled_at).toLocaleString('es-MX')}</td>
+      <td>${x.reason||'-'}</td>
+      <td><span class="badge ${ul[x.urgency_level]||'green'}">${ll[x.urgency_level]||'Normal'}</span></td>
+      <td><span class="badge blue">${x.status||'scheduled'}</span></td>
+    </tr>`).join('');
+  }catch(e){document.getElementById('appointments-table').innerHTML='<tr><td colspan="5" class="empty">Error</td></tr>';}
+}
+
+async function loadInventory(){
+  try{
+    const r=await fetch(API+'/inventory');
+    const items=await r.json();
+    const tb=document.getElementById('inventory-table');
+    if(!items.length){tb.innerHTML='<tr><td colspan="6" class="empty">Sin items</td></tr>';return;}
+    tb.innerHTML=items.map(i=>{
+      const low=i.stock<=i.min_stock;
+      return `<tr>
+        <td>${i.name}</td><td>${i.category||'-'}</td>
+        <td style="font-weight:700;color:${low?'#fb7185':'#34d399'}">${i.stock}</td>
+        <td>${i.unit||'-'}</td><td>${i.min_stock}</td>
+        <td><span class="badge ${low?'red':'green'}">${low?'Bajo':'OK'}</span></td>
+      </tr>`;
+    }).join('');
+  }catch(e){document.getElementById('inventory-table').innerHTML='<tr><td colspan="6" class="empty">Error</td></tr>';}
+}
+
+function openModal(type){
+  if(type==='appointment'){
+    const sel=document.getElementById('a-patient');
+    sel.innerHTML='<option value="">Seleccionar...</option>';
+    patients.forEach(p=>sel.innerHTML+=`<option value="${p.id}">${p.name}</option>`);
+  }
+  document.getElementById('modal-'+type).classList.add('open');
+}
+function closeModal(type){document.getElementById('modal-'+type).classList.remove('open');}
+
+async function createPatient(){
+  const name=document.getElementById('p-name').value.trim();
+  if(!name){alert('Nombre requerido');return;}
+  const r=await fetch(API+'/patients',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name,email:document.getElementById('p-email').value,phone:document.getElementById('p-phone').value})});
+  if(r.ok){closeModal('patient');document.getElementById('p-name').value='';loadPatients();}
+}
+
+async function createAppointment(){
+  const pid=document.getElementById('a-patient').value;
+  const date=document.getElementById('a-date').value;
+  if(!pid||!date){alert('Paciente y fecha requeridos');return;}
+  const r=await fetch(API+'/appointments',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({patient_id:pid,scheduled_at:date,reason:document.getElementById('a-reason').value,urgency_level:document.getElementById('a-urgency').value})});
+  if(r.ok){closeModal('appointment');loadAppointments();}
+  else{const e=await r.json();alert('Error: '+e.detail);}
+}
+
+async function createInvItem(){
+  const name=document.getElementById('i-name').value.trim();
+  if(!name){alert('Nombre requerido');return;}
+  const r=await fetch(API+'/inventory',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name,category:document.getElementById('i-cat').value,
+      stock:parseFloat(document.getElementById('i-stock').value)||0,
+      unit:document.getElementById('i-unit').value||'pza',
+      min_stock:parseFloat(document.getElementById('i-min').value)||5})});
+  if(r.ok){closeModal('inv');loadInventory();}
+}
+
+checkHealth();
+loadPatients();
+setInterval(checkHealth,30000);
+</script>
+</body>
+</html>
