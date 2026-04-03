@@ -161,6 +161,15 @@ tr:hover td{background:#162032}
 </div>
 <script>
 const API='https://dentalpro-docker.onrender.com';
+
+const _user = localStorage.getItem('dentalpro_user');
+if (!_user) window.location.href = 'login.html';
+const _userData = _user ? JSON.parse(_user) : {};
+function logout() {
+  localStorage.removeItem('dentalpro_user');
+  window.location.href = 'login.html';
+}
+
 let patients=[];
 
 function showPage(page,btn){
