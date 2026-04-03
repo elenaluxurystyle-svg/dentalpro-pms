@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics — DentalPro</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.header{background:#1e293b;padding:16px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #334155}
+.title{font-size:18px;font-weight:700;color:#38bdf8}
+.back{padding:6px 14px;background:#334155;border:none;color:#e2e8f0;border-radius:8px;cursor:pointer;font-size:13px}
+.content{padding:24px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
+.card{background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155;text-align:center}
+.card h3{font-size:12px;color:#64748b;margin-bottom:8px;text-transform:uppercase}
+.card .val{font-size:32px;font-weight:700;color:#38bdf8}
+.card .sub{font-size:12px;color:#64748b;margin-top:4px}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:24px}
+.chart-box{background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155}
+.chart-box h3{font-size:14px;font-weight:600;margin-bottom:16px;color:#cbd5e1}
+.alert-box{background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155;margin-bottom:24px}
+.alert-box h3{font-size:14px;font-weight:600;margin-bottom:12px;color:#fbbf24}
+.alert-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #0f172a;font-size:13px}
+.alert-item:last-child{border-bottom:none}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.red{background:#4c0519;color:#fb7185}.amber{background:#451a03;color:#fbbf24}
+</style>
+</head>
+<body>
+<div class="header">
+  <button class="back" onclick="location.href='index.html'">← Volver</button>
+  <span style="font-size:20px">📊</span>
+  <span class="title">Analytics — DentalPro PMS</span>
+</div>
+<div class="content">
+  <div class="cards">
+    <div class="card"><h3>Total Pacientes</h3><div class="val" id="total-patients">-</div><div class="sub">registrados</div></div>
+    <div class="card"><h3>Total Citas</h3><div class="val" id="total-appts">-</div><div class="sub">agendadas</div></div>
+    <div class="card"><h3>Inventario</h3><div class="val" id="total-inv">-</div><div class="sub">items totales</div></div>
+    <div class="card"><h3>Alertas Stock</h3><div class="val" id="low-stock" style="color:#fb7185">-</div><div class="sub">items bajos</div></div>
+  </div>
+  <div class="alert-box" id="alerts-box" style="display:none">
+    <h3>⚠️ Alertas de Inventario Bajo</h3>
+    <div id="alerts-list"></div>
+  </div>
+  <div class="charts">
+    <div class="chart-box">
+      <h3>📅 Citas por Urgencia</h3>
+      <canvas id="urgency-chart" height="200"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>📦 Stock de Inventario</h3>
+      <canvas id="inventory-chart" height="200"></canvas>
+    </div>
+  </div>
+</div>
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
+
+async function loadAnalytics() {
+  try {
+    const [pRes, aRes, iRes] = await Promise.all([
+      fetch(API + '/patients'),
+      fetch(API + '/appointments'),
+      fetch(API + '/inventory')
+    ]);
+    const patients = await pRes.json();
+    const appts = await aRes.json();
+    const inventory = await iRes.json();
+
+    document.getElementById('total-patients').textContent = patients.length;
+    document.getElementById('total-appts').textContent = appts.length;
+    document.getElementById('total-inv').textContent = inventory.length;
+
+    const lowItems = inventory.filter(i => i.stock <= i.min_stock);
+    document.getElementById('low-stock').textContent = lowItems.length;
+
+    if (lowItems.length > 0) {
+      document.getElementById('alerts-box').style.display = 'block';
+      document.getElementById('alerts-list').innerHTML = lowItems.map(i =>
+        `<div class="alert-item">
+          <span class="badge red">⚠️ Bajo</span>
+          <span>${i.name}</span>
+          <span style="margin-left:auto;color:#fb7185">${i.stock} ${i.unit} (mín: ${i.min_stock})</span>
+        </div>`
+      ).join('');
+    }
+
+    // Urgency chart
+    const urgencyCounts = {green:0, amber:0, red:0};
+    appts.forEach(a => urgencyCounts[a.urgency_level] = (urgencyCounts[a.urgency_level]||0) + 1);
+    new Chart(document.getElementById('urgency-chart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Normal', 'Urgente', 'Emergencia'],
+        datasets: [{
+          data: [urgencyCounts.green, urgencyCounts.amber, urgencyCounts.red],
+          backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+          borderWidth: 0
+        }]
+      },
+      options: {plugins: {legend: {labels: {color: '#94a3b8'}}}}
+    });
+
+    // Inventory chart
+    const topItems = inventory.slice(0, 8);
+    new Chart(document.getElementById('inventory-chart'), {
+      type: 'bar',
+      data: {
+        labels: topItems.map(i => i.name.length > 12 ? i.name.substring(0,12)+'...' : i.name),
+        datasets: [{
+          label: 'Stock',
+          data: topItems.map(i => i.stock),
+          backgroundColor: topItems.map(i => i.stock <= i.min_stock ? '#ef4444' : '#10b981'),
+          borderRadius: 6
+        }]
+      },
+      options: {
+        plugins: {legend: {display: false}},
+        scales: {
+          x: {ticks: {color: '#64748b'}, grid: {color: '#1e293b'}},
+          y: {ticks: {color: '#64748b'}, grid: {color: '#334155'}}
+        }
+      }
+    });
+  } catch(e) {
+    console.error('Error cargando analytics:', e);
+  }
+}
+
+loadAnalytics();
+</script>
+</body>
+</html>
