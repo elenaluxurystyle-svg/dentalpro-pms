@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receta Digital — DentalPro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.header{background:#1e293b;padding:16px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #334155}
+.title{font-size:18px;font-weight:700;color:#38bdf8}
+.back{padding:6px 14px;background:#334155;border:none;color:#e2e8f0;border-radius:8px;cursor:pointer;font-size:13px}
+.content{padding:24px;max-width:700px;margin:0 auto}
+.form-card{background:#1e293b;border-radius:16px;padding:24px;border:1px solid #334155;margin-bottom:16px}
+.form-card h2{font-size:15px;font-weight:600;margin-bottom:16px;color:#cbd5e1}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:14px}
+.form-group textarea{height:80px;resize:vertical}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#0ea5e9}
+.btn{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;background:#0ea5e9;color:white}
+.btn-green{background:#059669}.btn-gray{background:#334155;color:#94a3b8}
+.medicamentos{margin-bottom:16px}
+.med-item{background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.med-info{flex:1}
+.med-name{font-size:14px;font-weight:600}
+.med-dose{font-size:12px;color:#64748b;margin-top:2px}
+.btn-remove{background:#4c0519;color:#fb7185;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px}
+.actions{display:flex;gap:12px;margin-top:16px}
+
+@media print {
+  body{background:white;color:black}
+  .header,.actions,.btn,.back{display:none}
+  .form-card{border:1px solid #ddd;background:white;color:black}
+  .form-group label{color:#666}
+  .form-group input,.form-group select,.form-group textarea{border:1px solid #ddd;background:white;color:black}
+  .med-item{background:#f5f5f5;color:black}
+  .med-dose{color:#666}
+  .receta-header{display:flex!important}
+}
+.receta-header{display:none;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #0ea5e9}
+.receta-logo{font-size:28px}
+.receta-title{font-size:20px;font-weight:700;color:#0ea5e9}
+.receta-sub{font-size:12px;color:#666}
+</style>
+</head>
+<body>
+<div class="header">
+  <button class="back" onclick="location.href='index.html'">← Volver</button>
+  <span style="font-size:20px">💊</span>
+  <span class="title">Receta Digital</span>
+</div>
+<div class="content">
+  <div class="receta-header">
+    <div><div class="receta-logo">🦷</div></div>
+    <div><div class="receta-title">DentalPro PMS</div><div class="receta-sub">Sistema de Gestión Dental Profesional</div></div>
+    <div style="text-align:right"><div style="font-size:12px;color:#666">Fecha: <span id="print-date"></span></div></div>
+  </div>
+  <div class="form-card">
+    <h2>👤 Datos del Paciente</h2>
+    <div class="form-group"><label>Paciente *</label>
+      <select id="r-patient"><option value="">Seleccionar paciente...</option></select>
+    </div>
+    <div class="form-group"><label>Diagnóstico</label>
+      <input id="r-diagnosis" placeholder="Ej: Caries dental, Periodontitis...">
+    </div>
+  </div>
+  <div class="form-card">
+    <h2>💊 Medicamentos</h2>
+    <div class="medicamentos" id="med-list"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div class="form-group" style="margin:0"><label>Medicamento</label><input id="m-name" placeholder="Amoxicilina 500mg"></div>
+      <div class="form-group" style="margin:0"><label>Dosis</label><input id="m-dose" placeholder="1 cápsula cada 8hrs"></div>
+    </div>
+    <div class="form-group"><label>Indicaciones</label><input id="m-notes" placeholder="Por 7 días, con alimentos..."></div>
+    <button class="btn btn-green" onclick="addMed()">+ Agregar Medicamento</button>
+  </div>
+  <div class="form-card">
+    <h2>📝 Indicaciones Generales</h2>
+    <div class="form-group"><label>Indicaciones post-tratamiento</label>
+      <textarea id="r-notes" placeholder="Evitar alimentos duros por 24hrs, no fumar, aplicar hielo si hay inflamación..."></textarea>
+    </div>
+    <div class="form-group"><label>Próxima cita</label>
+      <input id="r-followup" type="datetime-local">
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="printReceta()">🖨️ Imprimir Receta</button>
+    <button class="btn btn-gray" onclick="location.href='index.html'">Cancelar</button>
+  </div>
+</div>
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
+let meds = [];
+
+async function loadPatients() {
+  const r = await fetch(API + '/patients');
+  const patients = await r.json();
+  const sel = document.getElementById('r-patient');
+  patients.forEach(p => sel.innerHTML += `<option value="${p.id}">${p.name}</option>`);
+  const params = new URLSearchParams(window.location.search);
+  const pid = params.get('patient');
+  if (pid) sel.value = pid;
+}
+
+function addMed() {
+  const name = document.getElementById('m-name').value.trim();
+  if (!name) { alert('Escribe el nombre del medicamento'); return; }
+  const med = {
+    name, 
+    dose: document.getElementById('m-dose').value,
+    notes: document.getElementById('m-notes').value
+  };
+  meds.push(med);
+  renderMeds();
+  document.getElementById('m-name').value = '';
+  document.getElementById('m-dose').value = '';
+  document.getElementById('m-notes').value = '';
+}
+
+function removeMed(i) {
+  meds.splice(i, 1);
+  renderMeds();
+}
+
+function renderMeds() {
+  const list = document.getElementById('med-list');
+  if (!meds.length) { list.innerHTML = '<p style="color:#475569;font-size:13px;margin-bottom:12px">No hay medicamentos agregados</p>'; return; }
+  list.innerHTML = meds.map((m, i) => `
+    <div class="med-item">
+      <div class="med-info">
+        <div class="med-name">💊 ${m.name}</div>
+        <div class="med-dose">${m.dose} ${m.notes ? '— ' + m.notes : ''}</div>
+      </div>
+      <button class="btn-remove" onclick="removeMed(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function printReceta() {
+  const patient = document.getElementById('r-patient');
+  const patientName = patient.options[patient.selectedIndex]?.text || 'Paciente';
+  document.getElementById('print-date').textContent = new Date().toLocaleDateString('es-MX', {year:'numeric',month:'long',day:'numeric'});
+  window.print();
+}
+
+loadPatients();
+renderMeds();
+</script>
+</body>
+</html>
