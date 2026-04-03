@@ -3,88 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DentalPro PMS</title>
+<title>DentalPro</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0f1e;color:#e2e8f0;min-height:100vh}
-.header{background:linear-gradient(135deg,#1e293b,#0f172a);padding:14px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #1e3a5f;position:sticky;top:0;z-index:50}
-.logo{font-size:22px}
-.title{font-size:18px;font-weight:800;color:#38bdf8;letter-spacing:-0.5px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4ff;color:#1e3a5f;min-height:100vh}
+.header{background:white;padding:12px 24px;display:flex;align-items:center;gap:12px;border-bottom:2px solid #e8f0fe;box-shadow:0 2px 8px rgba(0,71,171,.08);position:sticky;top:0;z-index:50}
+.header-logo{display:flex;align-items:center;gap:10px}
+.logo-svg{width:44px;height:44px}
+.logo-text{display:flex;flex-direction:column;line-height:1.1}
+.logo-text span:first-child{font-size:16px;font-weight:800;color:#0047ab}
+.logo-text span:last-child{font-size:11px;font-weight:500;color:#1e90ff}
 .user-info{margin-left:auto;display:flex;align-items:center;gap:10px}
-.user-avatar{width:32px;height:32px;border-radius:50%;border:2px solid #38bdf8}
-.user-name{font-size:13px;color:#94a3b8}
-.btn-logout{padding:4px 12px;background:#1e293b;border:1px solid #334155;color:#64748b;border-radius:6px;cursor:pointer;font-size:12px}
+.user-avatar{width:32px;height:32px;border-radius:50%;border:2px solid #1e90ff}
+.user-name{font-size:13px;color:#64748b}
+.btn-logout{padding:5px 12px;background:white;border:1.5px solid #e2e8f0;color:#94a3b8;border-radius:8px;cursor:pointer;font-size:12px;transition:all .2s}
 .btn-logout:hover{border-color:#ef4444;color:#ef4444}
-.nav{display:flex;gap:2px;padding:8px 24px;background:#0a0f1e;border-bottom:1px solid #1e293b;overflow-x:auto}
-.nav button{padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:transparent;color:#64748b;white-space:nowrap;transition:all .2s}
-.nav button.active{background:#1e3a5f;color:#38bdf8}
-.nav button:hover:not(.active){background:#1e293b;color:#94a3b8}
-.content{padding:20px 24px}
+.nav{background:white;padding:8px 24px;border-bottom:1px solid #e8f0fe;display:flex;justify-content:flex-end;gap:4px;flex-wrap:wrap}
+.nav button{padding:7px 16px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:transparent;color:#64748b;transition:all .2s}
+.nav button.active{background:#0047ab;color:white}
+.nav button:hover:not(.active){background:#e8f0fe;color:#0047ab}
+.content{padding:24px}
 .greeting{margin-bottom:20px}
-.greeting h1{font-size:22px;font-weight:700;color:#f1f5f9}
+.greeting h1{font-size:22px;font-weight:700;color:#0047ab}
 .greeting p{font-size:13px;color:#64748b;margin-top:4px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
-.card{background:#1e293b;border-radius:12px;padding:16px;border:1px solid #334155;position:relative;overflow:hidden}
+.card{background:white;border-radius:12px;padding:16px;border:1px solid #e8f0fe;box-shadow:0 2px 8px rgba(0,71,171,.06);position:relative;overflow:hidden}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.card.blue::before{background:linear-gradient(90deg,#38bdf8,#3b82f6)}
+.card.blue::before{background:linear-gradient(90deg,#1e90ff,#0047ab)}
 .card.green::before{background:linear-gradient(90deg,#10b981,#34d399)}
 .card.amber::before{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
 .card.red::before{background:linear-gradient(90deg,#ef4444,#fb7185)}
 .card.purple::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa)}
-.card h3{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
-.card .val{font-size:26px;font-weight:800;color:#f1f5f9}
-.card .sub{font-size:11px;color:#475569;margin-top:4px}
-.card .icon{position:absolute;right:12px;top:16px;font-size:20px;opacity:0.3}
+.card h3{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.card .val{font-size:28px;font-weight:800;color:#0047ab}
+.card .sub{font-size:11px;color:#94a3b8;margin-top:4px}
+.card .icon{position:absolute;right:12px;top:16px;font-size:22px;opacity:0.15}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-.section{background:#1e293b;border-radius:12px;border:1px solid #334155;overflow:hidden}
-.section-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #0f172a}
-.section-header h2{font-size:13px;font-weight:600;color:#cbd5e1}
-.btn{padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:#0ea5e9;color:white;transition:all .2s}
-.btn:hover{background:#0284c7}
+.section{background:white;border-radius:12px;border:1px solid #e8f0fe;overflow:hidden;box-shadow:0 2px 8px rgba(0,71,171,.06)}
+.section-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f4ff;background:#fafbff}
+.section-header h2{font-size:13px;font-weight:700;color:#0047ab}
+.btn{padding:7px 16px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:#0047ab;color:white;transition:all .2s}
+.btn:hover{background:#003d9e}
 .btn-sm{padding:4px 10px;font-size:11px;border-radius:6px;border:none;cursor:pointer;font-weight:600}
-.appt-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid #0f172a;transition:background .2s}
-.appt-item:hover{background:#162032}
+.appt-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid #f0f4ff;transition:background .2s}
+.appt-item:hover{background:#f8faff}
 .appt-item:last-child{border-bottom:none}
-.appt-time{font-size:12px;font-weight:700;color:#38bdf8;min-width:50px}
+.appt-time{font-size:12px;font-weight:700;color:#1e90ff;min-width:50px}
 .appt-info{flex:1}
-.appt-name{font-size:13px;font-weight:600;color:#e2e8f0}
-.appt-reason{font-size:11px;color:#64748b;margin-top:1px}
+.appt-name{font-size:13px;font-weight:600;color:#1e3a5f}
+.appt-reason{font-size:11px;color:#94a3b8;margin-top:1px}
 .badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
-.green{background:#064e3b;color:#34d399}
-.amber{background:#451a03;color:#fbbf24}
-.red{background:#4c0519;color:#fb7185}
-.blue{background:#1e3a5f;color:#60a5fa}
-.purple{background:#2e1065;color:#a78bfa}
-.alert-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #0f172a}
+.green{background:#dcfce7;color:#16a34a}
+.amber{background:#fef3c7;color:#d97706}
+.red{background:#fee2e2;color:#dc2626}
+.blue{background:#dbeafe;color:#1d4ed8}
+.purple{background:#ede9fe;color:#7c3aed}
+.alert-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #f0f4ff}
 .alert-item:last-child{border-bottom:none}
-.alert-icon{font-size:16px}
-.alert-info{flex:1}
-.alert-name{font-size:13px;font-weight:500}
-.alert-sub{font-size:11px;color:#64748b}
-.empty{padding:24px;text-align:center;color:#475569;font-size:13px}
+.alert-name{font-size:13px;font-weight:500;color:#1e3a5f}
+.alert-sub{font-size:11px;color:#94a3b8}
+.empty{padding:24px;text-align:center;color:#94a3b8;font-size:13px}
 table{width:100%;border-collapse:collapse}
-th{padding:10px 16px;text-align:left;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #334155;background:#0f172a}
-td{padding:10px 16px;font-size:13px;border-bottom:1px solid #1a2744}
-tr:hover td{background:#162032}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center}
+th{padding:10px 16px;text-align:left;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e8f0fe;background:#fafbff}
+td{padding:10px 16px;font-size:13px;border-bottom:1px solid #f0f4ff;color:#1e3a5f}
+tr:hover td{background:#f8faff}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,47,171,.15);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center}
 .modal.open{display:flex}
-.modal-box{background:#1e293b;border-radius:16px;padding:24px;width:440px;border:1px solid #334155;max-height:90vh;overflow-y:auto}
-.modal-box h3{font-size:16px;font-weight:700;margin-bottom:20px;color:#f1f5f9}
+.modal-box{background:white;border-radius:16px;padding:24px;width:440px;border:1px solid #e8f0fe;box-shadow:0 20px 60px rgba(0,71,171,.15);max-height:90vh;overflow-y:auto}
+.modal-box h3{font-size:16px;font-weight:700;margin-bottom:20px;color:#0047ab}
 .form-group{margin-bottom:14px}
-.form-group label{display:block;font-size:11px;color:#64748b;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:13px;transition:border .2s}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#38bdf8}
+.form-group label{display:block;font-size:11px;color:#64748b;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;background:#f8faff;border:1.5px solid #e8f0fe;border-radius:8px;color:#1e3a5f;font-size:13px;transition:border .2s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#1e90ff;background:white}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
-.btn-cancel{background:#334155;color:#94a3b8}
+.btn-cancel{background:#f1f5f9;color:#64748b;border:none}
 .page{display:none}.page.active{display:block}
-select option{background:#1e293b}
-@media(max-width:768px){.grid2{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
+select option{background:white;color:#1e3a5f}
+@media(max-width:768px){.grid2{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.nav{justify-content:flex-start}}
 </style>
 </head>
 <body>
 <div class="header">
-  <span class="logo">🦷</span>
-  <span class="title">DentalPro PMS</span>
+  <div class="header-logo">
+    <svg class="logo-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#1e90ff"/>
+          <stop offset="100%" style="stop-color:#0047ab"/>
+        </linearGradient>
+      </defs>
+      <path d="M30 6 C20 6 12 13 12 22 C12 29 14 34 16 41 C17 46 18 54 21 56 C22 58 25 58 26 55 C27 51 28 45 30 45 C32 45 33 51 34 55 C35 58 38 58 39 56 C42 54 43 46 44 41 C46 34 48 29 48 22 C48 13 40 6 30 6Z" fill="url(#tg)"/>
+      <path d="M14 24 Q30 19 46 24" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.9"/>
+      <path d="M15 31 Q30 26 45 31" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+    <div class="logo-text">
+      <span>Dental<span style="color:#1e90ff">Pro</span></span>
+      <span>Sistema de Gestión Dental</span>
+    </div>
+  </div>
   <div class="user-info">
     <img class="user-avatar" id="user-avatar" src="" style="display:none">
     <span class="user-name" id="user-name"></span>
@@ -99,11 +115,8 @@ select option{background:#1e293b}
   <button onclick="location.href='analytics.html'">📊 Analytics</button>
   <button onclick="location.href='receta.html'">💊 Recetas</button>
   <button onclick="location.href='portal.html'">👥 Portal</button>
-  <button onclick="showPage('api',this)">🔗 API</button>
 </div>
 <div class="content">
-
-  <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="greeting">
       <h1 id="greeting-text">Buenos días 👋</h1>
@@ -132,14 +145,13 @@ select option{background:#1e293b}
     </div>
   </div>
 
-  <!-- PACIENTES -->
   <div class="page" id="page-patients">
     <div class="section">
       <div class="section-header">
         <h2>👤 Pacientes</h2>
         <div style="display:flex;gap:8px">
-          <input id="search-patients" placeholder="🔍 Buscar..." style="padding:6px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:12px;width:180px">
-          <button class="btn" onclick="openModal('patient')">+ Nuevo</button>
+          <input id="search-patients" placeholder="🔍 Buscar..." style="padding:6px 12px;background:#f8faff;border:1.5px solid #e8f0fe;border-radius:8px;color:#1e3a5f;font-size:12px;width:200px">
+          <button class="btn" onclick="openModal('patient')">+ Nuevo Paciente</button>
         </div>
       </div>
       <table>
@@ -149,12 +161,11 @@ select option{background:#1e293b}
     </div>
   </div>
 
-  <!-- CITAS -->
   <div class="page" id="page-appointments">
     <div class="section">
       <div class="section-header">
         <h2>📅 Citas</h2>
-        <button class="btn" onclick="openModal('appointment')">+ Nueva</button>
+        <button class="btn" onclick="openModal('appointment')">+ Nueva Cita</button>
       </div>
       <table>
         <thead><tr><th>Paciente</th><th>Fecha</th><th>Motivo</th><th>Urgencia</th><th>Estado</th></tr></thead>
@@ -163,12 +174,11 @@ select option{background:#1e293b}
     </div>
   </div>
 
-  <!-- INVENTARIO -->
   <div class="page" id="page-inventory">
     <div class="section">
       <div class="section-header">
         <h2>📦 Inventario</h2>
-        <button class="btn" onclick="openModal('inv')">+ Agregar</button>
+        <button class="btn" onclick="openModal('inv')">+ Agregar Item</button>
       </div>
       <table>
         <thead><tr><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Unidad</th><th>Mínimo</th><th>Estado</th></tr></thead>
@@ -176,34 +186,14 @@ select option{background:#1e293b}
       </table>
     </div>
   </div>
-
-  <!-- API -->
-  <div class="page" id="page-api">
-    <div class="section">
-      <div class="section-header"><h2>🔗 Endpoints API</h2></div>
-      <table>
-        <thead><tr><th>Método</th><th>URL</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge green">GET</span></td><td>/health</td><td>Estado del sistema</td></tr>
-          <tr><td><span class="badge green">GET</span></td><td>/patients</td><td>Listar pacientes</td></tr>
-          <tr><td><span class="badge blue">POST</span></td><td>/patients</td><td>Crear paciente</td></tr>
-          <tr><td><span class="badge green">GET</span></td><td>/appointments</td><td>Listar citas</td></tr>
-          <tr><td><span class="badge blue">POST</span></td><td>/appointments</td><td>Crear cita</td></tr>
-          <tr><td><span class="badge green">GET</span></td><td>/inventory</td><td>Listar inventario</td></tr>
-          <tr><td><span class="badge blue">POST</span></td><td>/inventory</td><td>Agregar item</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>
 
-<!-- MODALES -->
 <div class="modal" id="modal-patient">
   <div class="modal-box">
     <h3>👤 Nuevo Paciente</h3>
-    <div class="form-group"><label>Nombre completo *</label><input id="p-name" placeholder="Ej: María García López"></div>
-    <div class="form-group"><label>Email</label><input id="p-email" type="email" placeholder="correo@ejemplo.com"></div>
-    <div class="form-group"><label>Teléfono</label><input id="p-phone" placeholder="222-123-4567"></div>
+    <div class="form-group"><label>Nombre completo *</label><input id="p-name" placeholder="María García López"></div>
+    <div class="form-group"><label>Email</label><input id="p-email" type="email"></div>
+    <div class="form-group"><label>Teléfono</label><input id="p-phone"></div>
     <div class="modal-actions">
       <button class="btn btn-cancel" onclick="closeModal('patient')">Cancelar</button>
       <button class="btn" onclick="createPatient()">Guardar</button>
@@ -216,7 +206,7 @@ select option{background:#1e293b}
     <h3>📅 Nueva Cita</h3>
     <div class="form-group"><label>Paciente *</label><select id="a-patient"><option value="">Seleccionar...</option></select></div>
     <div class="form-group"><label>Fecha y Hora *</label><input id="a-date" type="datetime-local"></div>
-    <div class="form-group"><label>Motivo</label><input id="a-reason" placeholder="Limpieza, revisión, dolor..."></div>
+    <div class="form-group"><label>Motivo</label><input id="a-reason"></div>
     <div class="form-group"><label>Urgencia</label>
       <select id="a-urgency">
         <option value="green">🟢 Normal</option>
@@ -233,7 +223,7 @@ select option{background:#1e293b}
 
 <div class="modal" id="modal-inv">
   <div class="modal-box">
-    <h3>📦 Nuevo Item</h3>
+    <h3>📦 Nuevo Item de Inventario</h3>
     <div class="form-group"><label>Nombre *</label><input id="i-name" placeholder="Anestesia lidocaína..."></div>
     <div class="form-group"><label>Categoría</label><input id="i-cat" placeholder="anestesia, resina..."></div>
     <div class="form-group"><label>Stock inicial</label><input id="i-stock" type="number" value="0"></div>
@@ -249,9 +239,8 @@ select option{background:#1e293b}
 <div class="modal" id="modal-qr">
   <div class="modal-box" style="text-align:center;max-width:320px">
     <h3 id="qr-title">QR del Paciente</h3>
-    <img id="qr-img" src="" style="width:200px;height:200px;border-radius:12px;background:white;padding:8px;margin:12px auto;display:block">
-    <p id="qr-code" style="font-size:13px;color:#64748b"></p>
-    <p style="font-size:12px;color:#475569;margin-top:8px">Escanea para ver el portal del paciente</p>
+    <img id="qr-img" src="" style="width:200px;height:200px;border-radius:12px;margin:12px auto;display:block;border:2px solid #e8f0fe">
+    <p id="qr-code" style="font-size:13px;color:#64748b;margin-top:8px"></p>
     <div class="modal-actions" style="justify-content:center;margin-top:16px">
       <button class="btn btn-cancel" onclick="closeModal('qr')">Cerrar</button>
       <button class="btn" onclick="printQR()">🖨️ Imprimir</button>
@@ -263,30 +252,23 @@ select option{background:#1e293b}
 const API='https://dentalpro-docker.onrender.com';
 let patients=[];
 
-// AUTH
 const _user=localStorage.getItem('dentalpro_user');
 if(!_user) window.location.href='login.html';
 const _userData=_user?JSON.parse(_user):{};
 function logout(){localStorage.removeItem('dentalpro_user');window.location.href='login.html';}
 
-// Header usuario
-if(_userData.picture){
-  document.getElementById('user-avatar').src=_userData.picture;
-  document.getElementById('user-avatar').style.display='block';
-}
+if(_userData.picture){document.getElementById('user-avatar').src=_userData.picture;document.getElementById('user-avatar').style.display='block';}
 if(_userData.name) document.getElementById('user-name').textContent=_userData.name;
 
-// Saludo
 function setGreeting(){
   const h=new Date().getHours();
   const name=_userData.name?_userData.name.split(' ')[0]:'Doctor';
-  let g=h<12?'Buenos días':'h<18?'Buenas tardes':'Buenas noches';
+  const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
   document.getElementById('greeting-text').textContent=g+', Dr. '+name+' 👋';
   const days=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
   const months=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   const now=new Date();
-  document.getElementById('greeting-date').textContent=
-    days[now.getDay()]+', '+now.getDate()+' de '+months[now.getMonth()]+' de '+now.getFullYear();
+  document.getElementById('greeting-date').textContent=days[now.getDay()]+', '+now.getDate()+' de '+months[now.getMonth()]+' de '+now.getFullYear();
 }
 setGreeting();
 
@@ -302,75 +284,44 @@ function showPage(page,btn){
 
 async function loadDashboard(){
   try{
-    const [pRes,aRes,iRes]=await Promise.all([
-      fetch(API+'/patients'),fetch(API+'/appointments'),fetch(API+'/inventory')
-    ]);
+    const [pRes,aRes,iRes]=await Promise.all([fetch(API+'/patients'),fetch(API+'/appointments'),fetch(API+'/inventory')]);
     const pts=await pRes.json();
     const apts=await aRes.json();
     const inv=await iRes.json();
-
-    document.getElementById('total-patients').textContent=pts.length;
     patients=pts;
-
+    document.getElementById('total-patients').textContent=pts.length;
     const today=new Date().toDateString();
     const todayApts=apts.filter(a=>new Date(a.scheduled_at).toDateString()===today);
     document.getElementById('today-count').textContent=todayApts.length;
-
-    const urgentToday=todayApts.filter(a=>a.urgency_level==='red');
-    document.getElementById('urgent-count').textContent=urgentToday.length;
-
+    document.getElementById('urgent-count').textContent=todayApts.filter(a=>a.urgency_level==='red').length;
     const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
-    const newPts=pts.filter(p=>new Date(p.created_at)>weekAgo);
-    document.getElementById('new-patients').textContent=newPts.length;
-
+    document.getElementById('new-patients').textContent=pts.filter(p=>new Date(p.created_at)>weekAgo).length;
     const lowItems=inv.filter(i=>parseFloat(i.stock)<=parseFloat(i.min_stock));
     document.getElementById('low-stock').textContent=lowItems.length;
-
-    // Citas de hoy
     const todayDiv=document.getElementById('today-appts');
     if(!todayApts.length){todayDiv.innerHTML='<div class="empty">Sin citas hoy 🎉</div>';}
     else{
       const ul={green:'green',amber:'amber',red:'red'};
-      todayDiv.innerHTML=todayApts.map(a=>`
-        <div class="appt-item">
-          <div class="appt-time">${new Date(a.scheduled_at).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</div>
-          <div class="appt-info">
-            <div class="appt-name">${a.patient_name}</div>
-            <div class="appt-reason">${a.reason||'Consulta general'}</div>
-          </div>
-          <span class="badge ${ul[a.urgency_level]||'green'}">${a.urgency_level==='red'?'🔴 Urgente':a.urgency_level==='amber'?'🟡 Pronto':'🟢 Normal'}</span>
-        </div>`).join('');
+      todayDiv.innerHTML=todayApts.map(a=>`<div class="appt-item">
+        <div class="appt-time">${new Date(a.scheduled_at).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</div>
+        <div class="appt-info"><div class="appt-name">${a.patient_name}</div><div class="appt-reason">${a.reason||'Consulta general'}</div></div>
+        <span class="badge ${ul[a.urgency_level]||'green'}">${a.urgency_level==='red'?'Urgente':a.urgency_level==='amber'?'Pronto':'Normal'}</span>
+      </div>`).join('');
     }
-
-    // Alertas inventario
     const alertDiv=document.getElementById('stock-alerts');
-    if(!lowItems.length){alertDiv.innerHTML='<div class="empty">Todo el inventario está OK ✅</div>';}
-    else{
-      alertDiv.innerHTML=lowItems.slice(0,5).map(i=>`
-        <div class="alert-item">
-          <span class="alert-icon">${parseFloat(i.stock)===0?'🚨':'⚠️'}</span>
-          <div class="alert-info">
-            <div class="alert-name">${i.name}</div>
-            <div class="alert-sub">Stock: ${i.stock} ${i.unit} (mín: ${i.min_stock})</div>
-          </div>
-          <span class="badge red">${parseFloat(i.stock)===0?'Agotado':'Bajo'}</span>
-        </div>`).join('');
-    }
-
-    // Próximas citas
+    if(!lowItems.length){alertDiv.innerHTML='<div class="empty">Inventario OK ✅</div>';}
+    else{alertDiv.innerHTML=lowItems.slice(0,5).map(i=>`<div class="alert-item">
+      <span style="font-size:16px">${parseFloat(i.stock)===0?'🚨':'⚠️'}</span>
+      <div style="flex:1"><div class="alert-name">${i.name}</div><div class="alert-sub">Stock: ${i.stock} ${i.unit} (mín: ${i.min_stock})</div></div>
+      <span class="badge red">${parseFloat(i.stock)===0?'Agotado':'Bajo'}</span>
+    </div>`).join('');}
     const upcoming=apts.filter(a=>new Date(a.scheduled_at)>new Date()).slice(0,5);
     const upDiv=document.getElementById('upcoming-appts');
     if(!upcoming.length){upDiv.innerHTML='<div class="empty">Sin próximas citas</div>';}
-    else{
-      upDiv.innerHTML=upcoming.map(a=>`
-        <div class="appt-item">
-          <div class="appt-time" style="min-width:90px;font-size:11px">${new Date(a.scheduled_at).toLocaleDateString('es-MX',{day:'2-digit',month:'short'})}</div>
-          <div class="appt-info">
-            <div class="appt-name">${a.patient_name}</div>
-            <div class="appt-reason">${a.reason||'Consulta general'}</div>
-          </div>
-        </div>`).join('');
-    }
+    else{upDiv.innerHTML=upcoming.map(a=>`<div class="appt-item">
+      <div class="appt-time" style="min-width:80px;font-size:11px">${new Date(a.scheduled_at).toLocaleDateString('es-MX',{day:'2-digit',month:'short'})}</div>
+      <div class="appt-info"><div class="appt-name">${a.patient_name}</div><div class="appt-reason">${a.reason||'Consulta general'}</div></div>
+    </div>`).join('');}
   }catch(e){console.error(e);}
 }
 
@@ -383,14 +334,13 @@ async function loadPatients(){
     const tb=document.getElementById('patients-table');
     if(!filtered.length){tb.innerHTML='<tr><td colspan="6" class="empty">Sin pacientes</td></tr>';return;}
     tb.innerHTML=filtered.map(p=>`<tr>
-      <td style="font-weight:600">${p.name}</td>
-      <td style="color:#64748b">${p.email||'-'}</td>
-      <td>${p.phone||'-'}</td>
+      <td style="font-weight:600;color:#0047ab">${p.name}</td>
+      <td>${p.email||'-'}</td><td>${p.phone||'-'}</td>
       <td><span class="badge blue">${p.portal_code||'-'}</span></td>
-      <td style="color:#64748b">${new Date(p.created_at).toLocaleDateString('es-MX')}</td>
+      <td>${new Date(p.created_at).toLocaleDateString('es-MX')}</td>
       <td style="display:flex;gap:6px">
-        <button onclick="window.open('odontogram.html?patient=${p.id}&name='+encodeURIComponent('${p.name}'),'_blank')" class="btn-sm" style="background:#7c3aed;color:white">🦷</button>
-        <button onclick="showQR('${p.portal_code}','${p.name}')" class="btn-sm" style="background:#0891b2;color:white">📱</button>
+        <button onclick="window.open('odontogram.html?patient=${p.id}&name='+encodeURIComponent('${p.name}'),'_blank')" class="btn-sm" style="background:#7c3aed;color:white">🦷 Odonto</button>
+        <button onclick="showQR('${p.portal_code}','${p.name}')" class="btn-sm" style="background:#1e90ff;color:white">📱 QR</button>
       </td>
     </tr>`).join('');
   }catch(e){document.getElementById('patients-table').innerHTML='<tr><td colspan="6" class="empty">Error</td></tr>';}
@@ -409,13 +359,13 @@ async function loadAppointments(){
     const ul={green:'green',amber:'amber',red:'red'};
     const ll={green:'Normal',amber:'Urgente',red:'Emergencia'};
     tb.innerHTML=a.map(x=>`<tr>
-      <td style="font-weight:600">${x.patient_name}</td>
+      <td style="font-weight:600;color:#0047ab">${x.patient_name}</td>
       <td>${new Date(x.scheduled_at).toLocaleString('es-MX')}</td>
-      <td style="color:#64748b">${x.reason||'-'}</td>
+      <td>${x.reason||'-'}</td>
       <td><span class="badge ${ul[x.urgency_level]||'green'}">${ll[x.urgency_level]||'Normal'}</span></td>
       <td><span class="badge blue">${x.status||'scheduled'}</span></td>
     </tr>`).join('');
-  }catch(e){document.getElementById('appointments-table').innerHTML='<tr><td colspan="5" class="empty">Error</td></tr>';}
+  }catch(e){}
 }
 
 async function loadInventory(){
@@ -427,15 +377,14 @@ async function loadInventory(){
     tb.innerHTML=items.map(i=>{
       const low=parseFloat(i.stock)<=parseFloat(i.min_stock);
       return `<tr>
-        <td style="font-weight:600">${i.name}</td>
+        <td style="font-weight:600;color:#0047ab">${i.name}</td>
         <td><span class="badge blue">${i.category||'general'}</span></td>
-        <td style="font-weight:700;color:${low?'#fb7185':'#34d399'}">${i.stock}</td>
-        <td style="color:#64748b">${i.unit||'-'}</td>
-        <td>${i.min_stock}</td>
+        <td style="font-weight:700;color:${low?'#dc2626':'#16a34a'}">${i.stock}</td>
+        <td>${i.unit||'-'}</td><td>${i.min_stock}</td>
         <td><span class="badge ${low?'red':'green'}">${low?'⚠️ Bajo':'✅ OK'}</span></td>
       </tr>`;
     }).join('');
-  }catch(e){document.getElementById('inventory-table').innerHTML='<tr><td colspan="6" class="empty">Error</td></tr>';}
+  }catch(e){}
 }
 
 function openModal(type){
@@ -491,7 +440,7 @@ function printQR(){
   const title=document.getElementById('qr-title').textContent;
   const code=document.getElementById('qr-code').textContent;
   const w=window.open('');
-  w.document.write('<html><body style="text-align:center;font-family:sans-serif;padding:40px"><h2>🦷 DentalPro PMS</h2><h3>'+title+'</h3><img src="'+img+'" style="width:200px;margin:20px"><p>'+code+'</p></body></html>');
+  w.document.write('<html><body style="text-align:center;font-family:sans-serif;padding:40px"><h2>DentalPro</h2><h3>'+title+'</h3><img src="'+img+'" style="width:200px;margin:20px"><p>'+code+'</p></body></html>');
   w.print();
 }
 
