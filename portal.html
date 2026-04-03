@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Paciente — DentalPro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.header{background:#1e293b;padding:16px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #334155}
+.title{font-size:18px;font-weight:700;color:#38bdf8}
+.content{padding:24px;max-width:600px;margin:0 auto}
+.card{background:#1e293b;border-radius:16px;padding:24px;border:1px solid #334155;margin-bottom:16px}
+.card h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#cbd5e1}
+.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #0f172a;font-size:14px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#64748b}
+.info-value{color:#e2e8f0;font-weight:500}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.green{background:#064e3b;color:#34d399}
+.amber{background:#451a03;color:#fbbf24}
+.red{background:#4c0519;color:#fb7185}
+.blue{background:#1e3a5f;color:#60a5fa}
+.empty{text-align:center;color:#475569;padding:20px;font-size:14px}
+.portal-code{font-size:24px;font-weight:700;color:#38bdf8;letter-spacing:4px;text-align:center;padding:16px;background:#0f172a;border-radius:8px;margin-bottom:8px}
+.login-box{max-width:400px;margin:40px auto;background:#1e293b;border-radius:16px;padding:24px;border:1px solid #334155}
+.login-box h2{font-size:18px;font-weight:700;margin-bottom:8px;text-align:center}
+.login-box p{font-size:13px;color:#64748b;text-align:center;margin-bottom:20px}
+input{width:100%;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:16px;letter-spacing:2px;text-align:center;margin-bottom:12px}
+input:focus{outline:none;border-color:#0ea5e9}
+.btn{width:100%;padding:12px;background:#0ea5e9;border:none;border-radius:8px;color:white;font-size:15px;font-weight:600;cursor:pointer}
+.btn:hover{background:#0284c7}
+.appt-item{padding:12px;background:#0f172a;border-radius:8px;margin-bottom:8px}
+.appt-date{font-size:13px;color:#64748b;margin-bottom:4px}
+.appt-reason{font-size:14px;font-weight:500}
+</style>
+</head>
+<body>
+<div class="header">
+  <span style="font-size:20px">🦷</span>
+  <span class="title">Portal del Paciente</span>
+</div>
+<div class="content">
+  <div id="login-section">
+    <div class="login-box">
+      <h2>Bienvenido</h2>
+      <p>Ingresa tu código de portal para ver tu historial dental</p>
+      <input id="code-input" placeholder="PAC-XXXX-XXXX" maxlength="20">
+      <button class="btn" onclick="loadPortal()">Ver mi historial</button>
+      <p id="error-msg" style="color:#fb7185;text-align:center;margin-top:12px;font-size:13px;display:none">Código no encontrado</p>
+    </div>
+  </div>
+  <div id="portal-section" style="display:none">
+    <div class="card">
+      <h2>👤 Mi Información</h2>
+      <div id="patient-info"></div>
+    </div>
+    <div class="card">
+      <h2>📅 Mis Citas</h2>
+      <div id="appointments-info"></div>
+    </div>
+    <div style="text-align:center;margin-top:16px">
+      <button onclick="logout()" style="background:#334155;border:none;color:#94a3b8;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:13px">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
+
+const params = new URLSearchParams(window.location.search);
+const codeFromUrl = params.get('code');
+if (codeFromUrl) {
+  document.getElementById('code-input').value = codeFromUrl;
+  loadPortal();
+}
+
+async function loadPortal() {
+  const code = document.getElementById('code-input').value.trim().toUpperCase();
+  if (!code) return;
+  try {
+    const r = await fetch(API + '/patients');
+    const patients = await r.json();
+    const patient = patients.find(p => p.portal_code === code);
+    if (!patient) {
+      document.getElementById('error-msg').style.display = 'block';
+      return;
+    }
+    document.getElementById('error-msg').style.display = 'none';
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('portal-section').style.display = 'block';
+
+    document.getElementById('patient-info').innerHTML = `
+      <div class="info-row"><span class="info-label">Nombre</span><span class="info-value">${patient.name}</span></div>
+      <div class="info-row"><span class="info-label">Email</span><span class="info-value">${patient.email||'-'}</span></div>
+      <div class="info-row"><span class="info-label">Teléfono</span><span class="info-value">${patient.phone||'-'}</span></div>
+      <div class="info-row"><span class="info-label">Código Portal</span><span class="info-value"><span class="badge blue">${patient.portal_code}</span></span></div>
+    `;
+
+    const ar = await fetch(API + '/appointments');
+    const allAppts = await ar.json();
+    const myAppts = allAppts.filter(a => a.patient_name === patient.name);
+    const ul = {green:'green',amber:'amber',red:'red'};
+    const ll = {green:'Normal',amber:'Urgente',red:'Emergencia'};
+
+    if (!myAppts.length) {
+      document.getElementById('appointments-info').innerHTML = '<div class="empty">No tienes citas registradas</div>';
+    } else {
+      document.getElementById('appointments-info').innerHTML = myAppts.map(a => `
+        <div class="appt-item">
+          <div class="appt-date">${new Date(a.scheduled_at).toLocaleString('es-MX')}</div>
+          <div class="appt-reason">${a.reason||'Consulta general'}</div>
+          <div style="margin-top:6px"><span class="badge ${ul[a.urgency_level]||'green'}">${ll[a.urgency_level]||'Normal'}</span> <span class="badge blue">${a.status}</span></div>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    alert('Error conectando con el servidor');
+  }
+}
+
+function logout() {
+  document.getElementById('login-section').style.display = 'block';
+  document.getElementById('portal-section').style.display = 'none';
+  document.getElementById('code-input').value = '';
+}
+</script>
+</body>
+</html>
