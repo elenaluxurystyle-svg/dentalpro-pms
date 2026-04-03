@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+  <defs>
+    <linearGradient id="toothGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e90ff"/>
+      <stop offset="100%" style="stop-color:#0047ab"/>
+    </linearGradient>
+  </defs>
+  <!-- Diente -->
+  <path d="M28 8 C20 8 14 13 14 20 C14 26 16 30 18 36 C19 40 20 48 22 50 C23 52 25 52 26 50 C27 47 28 42 30 42 C32 42 33 47 34 50 C35 52 37 52 38 50 C40 48 41 40 42 36 C44 30 46 26 46 20 C46 13 40 8 28 8Z" fill="url(#toothGrad)"/>
+  <!-- Linea curva 1 -->
+  <path d="M16 22 Q28 18 40 22" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <!-- Linea curva 2 -->
+  <path d="M18 28 Q28 24 38 28" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <!-- Texto DentalPro -->
+  <text x="54" y="28" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18" font-weight="800" fill="#0047ab">Dental</text>
+  <text x="54" y="46" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14" font-weight="500" fill="#1e90ff">Pro</text>
+</svg>
