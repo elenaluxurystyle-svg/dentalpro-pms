@@ -194,7 +194,8 @@ async function loadPatients(){
       <td>${p.name}</td><td>${p.email||'-'}</td><td>${p.phone||'-'}</td>
       <td><span class="badge green">${p.portal_code||'-'}</span></td>
       <td>${new Date(p.created_at).toLocaleDateString('es-MX')}</td>
-      <td><button onclick="window.open('odontogram.html?patient=${p.id}&name='+encodeURIComponent('${p.name}'),'_blank')" style="padding:4px 10px;background:#7c3aed;color:white;border:none;border-radius:6px;cursor:pointer;font-size:11px">🦷 Odonto</button></td>
+      <td><button onclick="window.open('odontogram.html?patient=${p.id}&name='+encodeURIComponent('${p.name}'),'_blank')" style="padding:4px 10px;background:#7c3aed;color:white;border:none;border-radius:6px;cursor:pointer;font-size:11px">🦷 Odonto</button>
+      <button onclick="showQR('${p.portal_code}','${p.name}')" style="padding:4px 10px;background:#0891b2;color:white;border:none;border-radius:6px;cursor:pointer;font-size:11px;margin-left:4px">📱 QR</button></td>
     </tr>`).join('');
   }catch(e){document.getElementById('patients-table').innerHTML='<tr><td colspan="6" class="empty">Error</td></tr>';}
 }
@@ -278,6 +279,42 @@ async function createInvItem(){
 checkHealth();
 loadPatients();
 setInterval(checkHealth,30000);
+</script>
+<div class="modal" id="modal-qr">
+  <div class="modal-box" style="text-align:center;max-width:320px">
+    <h3 id="qr-title" style="margin-bottom:16px">QR del Paciente</h3>
+    <img id="qr-img" src="" style="width:200px;height:200px;border-radius:12px;background:white;padding:8px">
+    <p id="qr-code" style="margin-top:12px;font-size:13px;color:#64748b"></p>
+    <p style="font-size:12px;color:#475569;margin-top:8px">Escanea para ver el portal del paciente</p>
+    <div class="modal-actions" style="justify-content:center;margin-top:16px">
+      <button class="btn btn-cancel" onclick="closeModal('qr')">Cerrar</button>
+      <button class="btn" onclick="printQR()">🖨️ Imprimir</button>
+    </div>
+  </div>
+</div>
+<script>
+function showQR(code, name) {
+  const portalUrl = 'https://elenaluxurystyle-svg.github.io/dentalpro-pms/portal.html?code=' + encodeURIComponent(code);
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(portalUrl);
+  document.getElementById('qr-title').textContent = 'QR — ' + name;
+  document.getElementById('qr-img').src = qrUrl;
+  document.getElementById('qr-code').textContent = 'Código: ' + code;
+  document.getElementById('modal-qr').classList.add('open');
+}
+function printQR() {
+  const img = document.getElementById('qr-img').src;
+  const title = document.getElementById('qr-title').textContent;
+  const code = document.getElementById('qr-code').textContent;
+  const w = window.open('');
+  w.document.write('<html><body style="text-align:center;font-family:sans-serif;padding:40px">');
+  w.document.write('<h2>🦷 DentalPro PMS</h2>');
+  w.document.write('<h3>' + title + '</h3>');
+  w.document.write('<img src="' + img + '" style="width:200px;margin:20px">');
+  w.document.write('<p>' + code + '</p>');
+  w.document.write('<p style="color:#666;font-size:12px">Escanea para ver tu historial dental</p>');
+  w.document.write('</body></html>');
+  w.print();
+}
 </script>
 </body>
 </html>
