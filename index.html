@@ -703,6 +703,24 @@ async function apiFetch(url,opts={}){
   return r.json();
 }
 
+// FILTRO POR DOCTOR - cada doctor ve solo sus pacientes
+const _doctorEmail = _ud.email||'unknown';
+const _doctorPrefix = _doctorEmail.split('@')[0].substring(0,6).toUpperCase();
+
+function filterByDoctor(items, nameField='name'){
+  // Filtra items que pertenecen a este doctor
+  // Los items del doctor tienen su email guardado en localStorage
+  const myItems = JSON.parse(localStorage.getItem('my_items_'+_doctorEmail)||'[]');
+  if(!myItems.length) return items; // Si no hay filtro, mostrar todos (primera vez)
+  return items.filter(i=>myItems.includes(i.id));
+}
+
+function markAsMyItem(id){
+  const myItems = JSON.parse(localStorage.getItem('my_items_'+_doctorEmail)||'[]');
+  if(!myItems.includes(id)) myItems.push(id);
+  localStorage.setItem('my_items_'+_doctorEmail, JSON.stringify(myItems));
+}
+
 // DASHBOARD
 async function loadDashboard(){
   try{
@@ -840,7 +858,12 @@ async function loadDashboard(){
 
 // PATIENTS
 async function loadPatients(){
-  try{const data=await apiFetch('/patients');patients=data;renderPatients();}catch(e){}
+  try{
+    const data=await apiFetch('/patients');
+    const myItems=JSON.parse(localStorage.getItem('my_items_'+_doctorEmail)||'[]');
+    patients=myItems.length?data.filter(p=>myItems.includes(p.id)):data;
+    renderPatients();
+  }catch(e){}
 }
 let patientFilter='all';
 function filterPatients(f,btn){
@@ -1088,6 +1111,10 @@ async function createPatient(){
     await apiFetch('/patients',{method:'POST',body:JSON.stringify({name,email:document.getElementById('p-email').value,phone:document.getElementById('p-phone').value})});
     closeModal('patient');document.getElementById('p-name').value='';
     toast('Paciente registrado correctamente');
+    // Marcar como paciente de este doctor
+    const allPts = await apiFetch('/patients');
+    const newest = allPts[allPts.length-1];
+    if(newest) markAsMyItem(newest.id);
     loadPatients();loadDashboard();
   }catch(e){toast(e.message,'error');}
 }
