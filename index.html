@@ -851,6 +851,9 @@ async function loadDashboard(){
       lucide.createIcons();
     }
 
+    // Huddle
+    renderHuddle(pts,apts,inv);
+
     // Próximas citas
     const upDiv=document.getElementById('upcoming-appts');
     if(!upcoming.length){
@@ -867,7 +870,6 @@ async function loadDashboard(){
           </div>
         </div>`).join('');
     }
-    renderHuddle(pts,apts,inv);
   }catch(e){console.error(e);}
 }
 
