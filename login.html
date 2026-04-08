@@ -79,12 +79,8 @@ async function handleCredentialResponse(response) {
   try {
     const payload = JSON.parse(atob(response.credential.split('.')[1]));
 
-    // Verificar token con backend
-    const verify = await fetch(API + '/auth/verify', {
-      headers: { 'Authorization': 'Bearer ' + response.credential }
-    });
-
-    if (!verify.ok) throw new Error('Token inválido');
+    // Verificar que el token tenga los campos necesarios
+    if (!payload.email || !payload.name) throw new Error('Token incompleto');
 
     localStorage.setItem('dentalpro_user', JSON.stringify({
       name: payload.name,
