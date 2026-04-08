@@ -3,82 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DentalPro — Iniciar sesión</title>
+<title>DentalPro — Iniciar Sesión</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;display:flex;align-items:center;justify-content:center}
-.login-box{background:#1e293b;border-radius:24px;padding:40px;width:380px;border:1px solid #334155;text-align:center}
-.logo{font-size:48px;margin-bottom:16px}
-.title{font-size:24px;font-weight:700;color:#38bdf8;margin-bottom:8px}
-.subtitle{font-size:14px;color:#64748b;margin-bottom:32px}
-.divider{display:flex;align-items:center;gap:12px;margin:24px 0;color:#475569;font-size:12px}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:#334155}
-.features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
-.feature{background:#0f172a;border-radius:10px;padding:12px;text-align:left}
-.feature-icon{font-size:20px;margin-bottom:4px}
-.feature-title{font-size:12px;font-weight:600;color:#cbd5e1}
-.feature-desc{font-size:11px;color:#64748b}
-#g_id_onload{display:none}
-.google-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px;background:white;border:none;border-radius:12px;cursor:pointer;font-size:15px;font-weight:600;color:#1f2937;transition:all .2s}
-.google-btn:hover{background:#f3f4f6;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
-.google-icon{width:20px;height:20px}
-.terms{font-size:11px;color:#475569;margin-top:16px}
+body{font-family:'DM Sans',sans-serif;background:#F8FAFC;min-height:100vh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
+.card{background:white;border-radius:24px;padding:40px;width:100%;max-width:400px;border:1px solid #E8EDF2;box-shadow:0 20px 60px rgba(15,23,42,.08)}
+.logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px}
+.logo-mark{width:44px;height:44px;background:linear-gradient(135deg,#1e90ff,#0047ab);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(27,79,216,.3)}
+.logo-name{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:#0a2463}
+.logo-name span{color:#1e90ff}
+.title{font-size:20px;font-weight:700;color:#0F172A;text-align:center;margin-bottom:6px;letter-spacing:-0.3px}
+.subtitle{font-size:13px;color:#94A3B8;text-align:center;margin-bottom:28px}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
+.feature{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F8FAFC;border-radius:10px;border:1px solid #E8EDF2}
+.feature-icon{font-size:16px}
+.feature-text{font-size:12px;font-weight:600;color:#475569}
+.divider{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.divider-line{flex:1;height:1px;background:#E8EDF2}
+.divider-text{font-size:11px;color:#94A3B8;font-weight:500}
+#google-btn{display:flex;justify-content:center;margin-bottom:16px}
+.error-msg{background:#FFF1F2;border:1px solid #FECDD3;color:#DC2626;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:500;text-align:center;display:none;margin-bottom:12px}
+.loading{display:none;text-align:center;padding:12px;font-size:13px;color:#64748b}
+.terms{font-size:11px;color:#94A3B8;text-align:center;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="login-box">
-  <div class="logo">🦷</div>
-  <div class="title">DentalPro PMS</div>
+<div class="card">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 60 60" fill="none" style="width:24px;height:24px">
+        <path d="M30 6C20 6 12 13 12 22C12 29 14 34 16 41C17 46 18 54 21 56C22 58 25 58 26 55C27 51 28 45 30 45C32 45 33 51 34 55C35 58 38 58 39 56C42 54 43 46 44 41C46 34 48 29 48 22C48 13 40 6 30 6Z" fill="white" opacity="0.95"/>
+        <path d="M14 24Q30 19 46 24" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="logo-name">Dental<span>Pro</span></div>
+  </div>
+  <div class="title">Bienvenido de vuelta</div>
   <div class="subtitle">Sistema de Gestión Dental Profesional</div>
   <div class="features">
-    <div class="feature"><div class="feature-icon">👤</div><div class="feature-title">Pacientes</div><div class="feature-desc">Expedientes digitales</div></div>
-    <div class="feature"><div class="feature-icon">📅</div><div class="feature-title">Citas</div><div class="feature-desc">Agenda inteligente</div></div>
-    <div class="feature"><div class="feature-icon">🦷</div><div class="feature-title">Odontograma</div><div class="feature-desc">FDI interactivo</div></div>
-    <div class="feature"><div class="feature-icon">📦</div><div class="feature-title">Inventario</div><div class="feature-desc">Control de stock</div></div>
+    <div class="feature"><span class="feature-icon">👤</span><span class="feature-text">Pacientes</span></div>
+    <div class="feature"><span class="feature-icon">📅</span><span class="feature-text">Citas</span></div>
+    <div class="feature"><span class="feature-icon">🦷</span><span class="feature-text">Odontograma</span></div>
+    <div class="feature"><span class="feature-icon">📊</span><span class="feature-text">Analytics BI</span></div>
+    <div class="feature"><span class="feature-icon">📦</span><span class="feature-text">Inventario</span></div>
+    <div class="feature"><span class="feature-icon">💊</span><span class="feature-text">Recetas</span></div>
   </div>
-  <button class="google-btn" onclick="signInWithGoogle()">
-    <svg class="google-icon" viewBox="0 0 24 24">
-      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-    </svg>
-    Continuar con Google
-  </button>
-  <div class="terms">Al continuar aceptas los términos de uso de DentalPro</div>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-text">Acceso seguro con Google</div>
+    <div class="divider-line"></div>
+  </div>
+  <div id="error-msg" class="error-msg"></div>
+  <div id="loading" class="loading">⏳ Verificando identidad...</div>
+  <div id="google-btn"></div>
+  <div class="terms">Al continuar aceptas los términos de uso de DentalPro.<br>Tus datos están protegidos y encriptados.</div>
 </div>
-<script>
-const CLIENT_ID = '113537762357-7u7b02i2lf3lnl6fsmaetud3nqelth0o.apps.googleusercontent.com';
 
-function signInWithGoogle() {
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: 'email profile',
-    callback: (response) => {
-      if (response.access_token) {
-        fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: { Authorization: 'Bearer ' + response.access_token }
-        })
-        .then(r => r.json())
-        .then(user => {
-          localStorage.setItem('dentalpro_user', JSON.stringify({
-            name: user.name,
-            email: user.email,
-            picture: user.picture,
-            token: response.access_token
-          }));
-          window.location.href = 'index.html';
-        });
-      }
-    }
-  });
-  client.requestAccessToken();
-}
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
 
 // Si ya está logueado redirigir
-const user = localStorage.getItem('dentalpro_user');
-if (user) window.location.href = 'index.html';
+const _user = localStorage.getItem('dentalpro_user');
+if (_user) window.location.href = 'index.html';
+
+async function handleCredentialResponse(response) {
+  const loading = document.getElementById('loading');
+  const errorMsg = document.getElementById('error-msg');
+  const btn = document.getElementById('google-btn');
+  loading.style.display = 'block';
+  btn.style.display = 'none';
+  errorMsg.style.display = 'none';
+
+  try {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+
+    // Verificar token con backend
+    const verify = await fetch(API + '/auth/verify', {
+      headers: { 'Authorization': 'Bearer ' + response.credential }
+    });
+
+    if (!verify.ok) throw new Error('Token inválido');
+
+    localStorage.setItem('dentalpro_user', JSON.stringify({
+      name: payload.name,
+      email: payload.email,
+      picture: payload.picture,
+      token: response.credential
+    }));
+    window.location.href = 'index.html';
+  } catch(e) {
+    loading.style.display = 'none';
+    btn.style.display = 'flex';
+    errorMsg.textContent = '❌ Error de autenticación: ' + e.message + '. Intenta de nuevo.';
+    errorMsg.style.display = 'block';
+  }
+}
+
+window.onload = function() {
+  google.accounts.id.initialize({
+    client_id: '113537762357-7u7b02i2lf3lnl6fsmaetud3nqelth0o.apps.googleusercontent.com',
+    callback: handleCredentialResponse
+  });
+  google.accounts.id.renderButton(
+    document.getElementById('google-btn'),
+    {theme:'filled_blue', size:'large', text:'signin_with', width:320}
+  );
+};
 </script>
 </body>
 </html>
