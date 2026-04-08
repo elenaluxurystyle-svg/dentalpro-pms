@@ -393,6 +393,20 @@ select option{background:var(--surface)}
       </div>
     </div>
 
+    <!-- HUDDLE DIARIO -->
+    <div class="panel" style="margin-bottom:20px;border-left:4px solid var(--brand);background:linear-gradient(135deg,#fafbff,white)">
+      <div class="panel-header" style="background:linear-gradient(135deg,var(--brand-light),white)">
+        <div class="panel-title" style="font-size:14px">
+          <i data-lucide="zap" style="color:var(--brand)"></i>
+          ☀️ Huddle del Día — <span id="huddle-date"></span>
+        </div>
+        <button class="panel-action" onclick="refreshHuddle()">🔄 Actualizar</button>
+      </div>
+      <div id="huddle-content" style="padding:16px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px" id="huddle-cards"></div>
+      </div>
+    </div>
+
     <div class="panel-grid">
       <div class="panel">
         <div class="panel-header">
@@ -853,6 +867,7 @@ async function loadDashboard(){
           </div>
         </div>`).join('');
     }
+    renderHuddle(pts,apts,inv);
   }catch(e){console.error(e);}
 }
 
