@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<style>
+:root{
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;
+  --surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;
+  --whatsapp:#25D366;--whatsapp-bg:#F0FDF4;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-lg:0 20px 48px rgba(15,23,42,.12);
+  --r:16px;--r-xs:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased}
+.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,23,42,.04)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s;text-decoration:none}
+.back-btn:hover{border-color:var(--brand);color:var(--brand)}
+.header-title{font-size:16px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px}
+.content{padding:24px;max-width:1360px;margin:0 auto}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border-radius:var(--r);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.kpi-icon{width:36px;height:36px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.kpi-icon svg{width:18px;height:18px;stroke:currentColor}
+.kpi-val{font-size:26px;font-weight:800;letter-spacing:-0.03em;color:var(--text-primary);margin-bottom:4px}
+.kpi-label{font-size:12px;color:var(--text-muted);font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.panel-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light)}
+.panel-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:7px}
+.panel-title svg{width:15px;height:15px;color:var(--brand)}
+.btn{padding:8px 16px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--brand-dark)}
+.btn-outline{background:var(--surface);border:1.5px solid var(--border);color:var(--text-secondary)}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-whatsapp{background:var(--whatsapp);color:white}
+.btn-whatsapp:hover{background:#128C7E}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-blue{background:var(--brand-light);color:var(--brand)}
+.badge-gray{background:var(--bg);color:var(--text-muted);border:1px solid var(--border)}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.3);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px;padding:28px;width:100%;max-width:520px;border:1px solid var(--border);box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;animation:modalIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-header h3{font-size:17px;font-weight:700;color:var(--text-primary)}
+.modal-close{width:32px;height:32px;background:var(--bg);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.modal-close:hover{background:var(--red-bg);color:var(--red)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px rgba(27,79,216,.08)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light)}
+.campaign-card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);padding:18px;box-shadow:var(--shadow-sm);transition:all .2s;cursor:pointer}
+.campaign-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.campaign-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.campaign-title{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.campaign-desc{font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:12px}
+.lead-item{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border-light);transition:background .15s}
+.lead-item:hover{background:var(--bg)}
+.lead-item:last-child{border-bottom:none}
+.lead-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+.recordatorio-item{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border-light)}
+.recordatorio-item:last-child{border-bottom:none}
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--text-primary);color:white;padding:12px 16px;border-radius:var(--r-xs);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
+.toast.success{background:#15803d}.toast.error{background:#dc2626}.toast.warning{background:#d97706}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.empty-state{padding:32px;text-align:center;color:var(--text-muted);font-size:13px}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 16px;text-align:left;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;border-bottom:1px solid var(--border)}
+td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border-light);color:var(--text-secondary)}
+tbody tr:hover td{background:var(--bg)}
+tbody tr:last-child td{border-bottom:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back-btn" href="index.html">
+    <i data-lucide="arrow-left" style="width:14px;height:14px"></i> Volver
+  </a>
+  <div class="header-title">
+    <i data-lucide="megaphone" style="width:18px;height:18px;color:var(--brand)"></i>
+    Marketing y Comunicación
+  </div>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="btn btn-whatsapp btn-sm" onclick="openModal('campana')">
+      <i data-lucide="plus" style="width:13px;height:13px"></i> Nueva Campaña
+    </button>
+    <button class="btn btn-sm" onclick="openModal('lead')">
+      <i data-lucide="user-plus" style="width:13px;height:13px"></i> Nuevo Lead
+    </button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--whatsapp-bg);color:var(--whatsapp)"><i data-lucide="message-circle"></i></div>
+      <div class="kpi-val" id="kpi-recordatorios">0</div>
+      <div class="kpi-label">Recordatorios enviados</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--brand-light);color:var(--brand)"><i data-lucide="users"></i></div>
+      <div class="kpi-val" id="kpi-leads">0</div>
+      <div class="kpi-label">Leads registrados</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--green-bg);color:var(--green)"><i data-lucide="trending-up"></i></div>
+      <div class="kpi-val" id="kpi-conversion">0%</div>
+      <div class="kpi-label">Tasa de conversión</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--amber-bg);color:var(--amber)"><i data-lucide="user-x"></i></div>
+      <div class="kpi-val" id="kpi-inactivos">0</div>
+      <div class="kpi-label">Pacientes inactivos</div>
+    </div>
+  </div>
+
+  <!-- Campañas rápidas -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><i data-lucide="zap"></i> Campañas de Reactivación Rápida</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;padding:18px">
+      <div class="campaign-card" onclick="lanzarCampana('limpieza')">
+        <div class="campaign-icon" style="background:#F0FDF4">🦷</div>
+        <div class="campaign-title">Recordatorio de Limpieza</div>
+        <div class="campaign-desc">Contacta a pacientes que no han tenido limpieza en más de 6 meses.</div>
+        <button class="btn btn-whatsapp btn-sm" style="width:100%">
+          <i data-lucide="send" style="width:12px;height:12px"></i> Enviar por WhatsApp
+        </button>
+      </div>
+      <div class="campaign-card" onclick="lanzarCampana('reactivacion')">
+        <div class="campaign-icon" style="background:#EEF2FF">💤</div>
+        <div class="campaign-title">Reactivar Pacientes Inactivos</div>
+        <div class="campaign-desc">Pacientes que no han visitado la clínica en más de 3 meses.</div>
+        <button class="btn btn-sm" style="width:100%;background:var(--purple)">
+          <i data-lucide="send" style="width:12px;height:12px"></i> Enviar Campaña
+        </button>
+      </div>
+      <div class="campaign-card" onclick="lanzarCampana('cumpleanos')">
+        <div class="campaign-icon" style="background:#FFFBEB">🎂</div>
+        <div class="campaign-title">Felicitación de Cumpleaños</div>
+        <div class="campaign-desc">Envía un mensaje personalizado a pacientes que cumplen años este mes.</div>
+        <button class="btn btn-sm" style="width:100%;background:var(--amber)">
+          <i data-lucide="send" style="width:12px;height:12px"></i> Enviar Felicitación
+        </button>
+      </div>
+      <div class="campaign-card" onclick="lanzarCampana('tratamiento')">
+        <div class="campaign-icon" style="background:#FFF1F2">💊</div>
+        <div class="campaign-title">Seguimiento de Tratamiento</div>
+        <div class="campaign-desc">Recuerda a pacientes con tratamientos pendientes que los finalicen.</div>
+        <button class="btn btn-sm" style="width:100%;background:var(--red)">
+          <i data-lucide="send" style="width:12px;height:12px"></i> Enviar Seguimiento
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <!-- Recordatorios automáticos -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><i data-lucide="bell"></i> Recordatorios de Citas</div>
+        <button class="btn btn-whatsapp btn-sm" onclick="enviarRecordatorios()">
+          <i data-lucide="send" style="width:12px;height:12px"></i> Enviar Todos
+        </button>
+      </div>
+      <div id="recordatorios-list">
+        <div class="empty-state">Cargando citas de mañana...</div>
+      </div>
+    </div>
+
+    <!-- Leads -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><i data-lucide="user-plus"></i> Pipeline de Leads</div>
+        <button class="btn btn-outline btn-sm" onclick="openModal('lead')">+ Agregar</button>
+      </div>
+      <div id="leads-list">
+        <div class="empty-state">Sin leads registrados</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pacientes inactivos -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><i data-lucide="user-x" style="color:var(--amber)"></i> Pacientes Inactivos (más de 90 días)</div>
+      <button class="btn btn-outline btn-sm" onclick="contactarInactivos()">
+        <i data-lucide="message-circle" style="width:12px;height:12px"></i> Contactar Todos
+      </button>
+    </div>
+    <table>
+      <thead><tr><th>Paciente</th><th>Última visita</th><th>Días inactivo</th><th>Teléfono</th><th>Acción</th></tr></thead>
+      <tbody id="inactivos-table"></tbody>
+    </table>
+  </div>
+
+  <!-- Historial de campañas -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><i data-lucide="list"></i> Historial de Campañas</div>
+    </div>
+    <div id="campanas-list">
+      <div class="empty-state">Sin campañas enviadas</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL NUEVA CAMPAÑA -->
+<div class="modal" id="modal-campana">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📣 Nueva Campaña</h3>
+      <button class="modal-close" onclick="closeModal('campana')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <div class="form-group"><label>Nombre de la campaña *</label><input id="c-nombre" placeholder="Ej: Limpieza semestral abril"></div>
+    <div class="form-group"><label>Tipo</label>
+      <select id="c-tipo">
+        <option value="recordatorio">📅 Recordatorio de cita</option>
+        <option value="reactivacion">💤 Reactivación</option>
+        <option value="promocion">🎁 Promoción</option>
+        <option value="cumpleanos">🎂 Cumpleaños</option>
+        <option value="seguimiento">💊 Seguimiento tratamiento</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Canal</label>
+      <select id="c-canal">
+        <option value="whatsapp">💬 WhatsApp</option>
+        <option value="email">📧 Email</option>
+        <option value="sms">📱 SMS</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Mensaje *</label>
+      <textarea id="c-mensaje" style="height:100px;resize:vertical" placeholder="Hola {nombre}, te recordamos que tienes una cita en nuestra clínica..."></textarea>
+    </div>
+    <div class="form-group"><label>Segmento de pacientes</label>
+      <select id="c-segmento">
+        <option value="todos">Todos los pacientes</option>
+        <option value="inactivos">Pacientes inactivos +90 días</option>
+        <option value="nuevos">Pacientes nuevos este mes</option>
+        <option value="tratamiento">Con tratamiento pendiente</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('campana')">Cancelar</button>
+      <button class="btn btn-whatsapp" onclick="crearCampana()">
+        <i data-lucide="send" style="width:13px;height:13px"></i> Crear y Enviar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO LEAD -->
+<div class="modal" id="modal-lead">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>👤 Nuevo Lead</h3>
+      <button class="modal-close" onclick="closeModal('lead')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <div class="form-group"><label>Nombre *</label><input id="l-nombre" placeholder="María García"></div>
+    <div class="form-group"><label>Teléfono</label><input id="l-telefono" placeholder="222-123-4567"></div>
+    <div class="form-group"><label>Email</label><input id="l-email" type="email" placeholder="maria@ejemplo.com"></div>
+    <div class="form-group"><label>Interés / Tratamiento</label><input id="l-interes" placeholder="Ortodoncia, blanqueamiento, implante..."></div>
+    <div class="form-group"><label>Fuente</label>
+      <select id="l-fuente">
+        <option value="instagram">📸 Instagram</option>
+        <option value="recomendacion">🤝 Recomendación</option>
+        <option value="google">🔍 Google</option>
+        <option value="facebook">👥 Facebook</option>
+        <option value="tiktok">🎵 TikTok</option>
+        <option value="otro">Otro</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Estado</label>
+      <select id="l-estado">
+        <option value="nuevo">🆕 Nuevo contacto</option>
+        <option value="contactado">📞 Contactado</option>
+        <option value="cita-agendada">📅 Cita agendada</option>
+        <option value="convertido">✅ Convertido en paciente</option>
+        <option value="perdido">❌ Perdido</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Notas</label><textarea id="l-notas" placeholder="Observaciones..." style="height:60px"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('lead')">Cancelar</button>
+      <button class="btn" onclick="guardarLead()">
+        <i data-lucide="save" style="width:13px;height:13px"></i> Guardar Lead
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
+let leads = JSON.parse(localStorage.getItem('dentalpro_leads') || '[]');
+let campanas = JSON.parse(localStorage.getItem('dentalpro_campanas') || '[]');
+let recordatoriosEnviados = JSON.parse(localStorage.getItem('dentalpro_recordatorios') || '[]');
+let pacientes = [];
+let citas = [];
+
+const COLORS = ['#1B4FD8','#7C3AED','#059669','#D97706','#DC2626','#0891B2'];
+function getColor(name){let h=0;for(let c of name)h+=c.charCodeAt(0);return COLORS[h%COLORS.length];}
+function getInitials(name){return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+
+function toast(msg, type='success'){
+  const w = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = {success:'✅',error:'❌',warning:'⚠️'};
+  t.innerHTML = icons[type] + ' ' + msg;
+  w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)}, 3500);
+}
+
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  setTimeout(()=>lucide.createIcons(), 50);
+}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+
+async function loadData(){
+  try{
+    [pacientes, citas] = await Promise.all([
+      fetch(API+'/patients').then(r=>r.json()),
+      fetch(API+'/appointments').then(r=>r.json())
+    ]);
+  }catch(e){
+    pacientes = [];
+    citas = [];
+  }
+  renderAll();
+}
+
+function renderAll(){
+  renderKPIs();
+  renderRecordatorios();
+  renderLeads();
+  renderInactivos();
+  renderCampanas();
+  lucide.createIcons();
+}
+
+function renderKPIs(){
+  const inactivos = getInactivos();
+  const convertidos = leads.filter(l=>l.estado==='convertido').length;
+  const conversion = leads.length > 0 ? Math.round(convertidos/leads.length*100) : 0;
+
+  document.getElementById('kpi-recordatorios').textContent = recordatoriosEnviados.length;
+  document.getElementById('kpi-leads').textContent = leads.length;
+  document.getElementById('kpi-conversion').textContent = conversion + '%';
+  document.getElementById('kpi-inactivos').textContent = inactivos.length;
+}
+
+function getInactivos(){
+  const noventa = new Date(Date.now()-90*24*60*60*1000);
+  return pacientes.filter(p=>{
+    const ultimaCita = citas.filter(c=>c.patient_name===p.name).sort((a,b)=>new Date(b.scheduled_at)-new Date(a.scheduled_at))[0];
+    if(!ultimaCita) return new Date(p.created_at) < noventa;
+    return new Date(ultimaCita.scheduled_at) < noventa;
+  });
+}
+
+function renderRecordatorios(){
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowStr = tomorrow.toDateString();
+  const citasMañana = citas.filter(c=>new Date(c.scheduled_at).toDateString()===tomorrowStr);
+  const div = document.getElementById('recordatorios-list');
+
+  if(!citasMañana.length){
+    div.innerHTML = '<div class="empty-state">✅ Sin citas mañana que recordar</div>';
+    return;
+  }
+
+  div.innerHTML = citasMañana.map(c=>{
+    const p = pacientes.find(pt=>pt.name===c.patient_name);
+    const phone = p?.phone||'';
+    const msg = encodeURIComponent(`Hola ${c.patient_name} 👋, te recordamos que tienes una cita mañana ${tomorrow.toLocaleDateString('es-MX')} a las ${new Date(c.scheduled_at).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}. ¡Te esperamos! 🦷`);
+    return `<div class="recordatorio-item">
+      <div style="width:36px;height:36px;border-radius:50%;background:${getColor(c.patient_name)};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0">${getInitials(c.patient_name)}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--text-primary)">${c.patient_name}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${new Date(c.scheduled_at).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})} · ${c.reason||'Consulta'}</div>
+      </div>
+      ${phone ? `<a href="https://wa.me/52${phone.replace(/\D/g,'')}?text=${msg}" target="_blank" class="btn btn-whatsapp btn-sm">
+        <i data-lucide="message-circle" style="width:12px;height:12px"></i> WhatsApp
+      </a>` : '<span style="font-size:11px;color:var(--text-muted)">Sin teléfono</span>'}
+    </div>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+function renderLeads(){
+  const div = document.getElementById('leads-list');
+  if(!leads.length){
+    div.innerHTML = '<div class="empty-state">Sin leads — agrega tu primer prospecto</div>';
+    return;
+  }
+
+  const estadoColors = {
+    'nuevo':'badge-blue',
+    'contactado':'badge-amber',
+    'cita-agendada':'badge-purple',
+    'convertido':'badge-green',
+    'perdido':'badge-red'
+  };
+  const estadoText = {
+    'nuevo':'Nuevo',
+    'contactado':'Contactado',
+    'cita-agendada':'Cita agendada',
+    'convertido':'Convertido',
+    'perdido':'Perdido'
+  };
+  const fuenteIcon = {instagram:'📸',recomendacion:'🤝',google:'🔍',facebook:'👥',tiktok:'🎵',otro:'📌'};
+
+  div.innerHTML = leads.slice(0,8).map((l,i)=>`
+    <div class="lead-item">
+      <div class="lead-avatar" style="background:${getColor(l.nombre)}">${getInitials(l.nombre)}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--text-primary)">${l.nombre}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${fuenteIcon[l.fuente]||'📌'} ${l.fuente} · ${l.interes||'Sin especificar'}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge ${estadoColors[l.estado]||'badge-gray'}">${estadoText[l.estado]||l.estado}</span>
+        ${l.telefono?`<a href="https://wa.me/52${l.telefono.replace(/\D/g,'')}" target="_blank" class="btn btn-whatsapp btn-sm" style="padding:3px 8px">
+          <i data-lucide="message-circle" style="width:11px;height:11px"></i>
+        </a>`:''}
+        <button onclick="cambiarEstadoLead(${i})" class="btn btn-outline btn-sm" style="padding:3px 8px" title="Cambiar estado">
+          <i data-lucide="chevron-right" style="width:11px;height:11px"></i>
+        </button>
+      </div>
+    </div>`).join('');
+  lucide.createIcons();
+}
+
+function cambiarEstadoLead(idx){
+  const estados = ['nuevo','contactado','cita-agendada','convertido','perdido'];
+  const current = leads[idx].estado;
+  const nextIdx = (estados.indexOf(current)+1)%estados.length;
+  leads[idx].estado = estados[nextIdx];
+  localStorage.setItem('dentalpro_leads', JSON.stringify(leads));
+  renderLeads();
+  renderKPIs();
+  toast('Estado actualizado: '+leads[idx].estado);
+}
+
+function renderInactivos(){
+  const inactivos = getInactivos();
+  const tb = document.getElementById('inactivos-table');
+  if(!inactivos.length){
+    tb.innerHTML = '<tr><td colspan="5" class="empty-state">✅ Sin pacientes inactivos</td></tr>';
+    return;
+  }
+  tb.innerHTML = inactivos.map(p=>{
+    const ultimaCita = citas.filter(c=>c.patient_name===p.name).sort((a,b)=>new Date(b.scheduled_at)-new Date(a.scheduled_at))[0];
+    const ultimaFecha = ultimaCita ? new Date(ultimaCita.scheduled_at) : new Date(p.created_at);
+    const dias = Math.round((Date.now()-ultimaFecha.getTime())/(24*60*60*1000));
+    const phone = p.phone||'';
+    const msg = encodeURIComponent(`Hola ${p.name} 👋, hace tiempo que no te vemos en la clínica. ¿Cómo estás? Nos gustaría agendar una revisión para ti. 🦷`);
+    return `<tr>
+      <td style="font-weight:600;color:var(--text-primary)">${p.name}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${ultimaFecha.toLocaleDateString('es-MX')}</td>
+      <td><span class="badge ${dias>180?'badge-red':dias>90?'badge-amber':'badge-gray'}">${dias} días</span></td>
+      <td>${phone||'—'}</td>
+      <td>
+        ${phone?`<a href="https://wa.me/52${phone.replace(/\D/g,'')}?text=${msg}" target="_blank" class="btn btn-whatsapp btn-sm">
+          <i data-lucide="message-circle" style="width:12px;height:12px"></i> WhatsApp
+        </a>`:'<span style="font-size:11px;color:var(--text-muted)">Sin teléfono</span>'}
+      </td>
+    </tr>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+function renderCampanas(){
+  const div = document.getElementById('campanas-list');
+  if(!campanas.length){
+    div.innerHTML = '<div class="empty-state">Sin campañas enviadas aún</div>';
+    return;
+  }
+  const tipoIcon = {recordatorio:'📅',reactivacion:'💤',promocion:'🎁',cumpleanos:'🎂',seguimiento:'💊'};
+  const canalIcon = {whatsapp:'💬',email:'📧',sms:'📱'};
+  div.innerHTML = campanas.map(c=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border-light)">
+      <div style="font-size:20px">${tipoIcon[c.tipo]||'📣'}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--text-primary)">${c.nombre}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${canalIcon[c.canal]||'💬'} ${c.canal} · ${new Date(c.fecha).toLocaleDateString('es-MX')} · ${c.enviados} enviados</div>
+      </div>
+      <span class="badge badge-green">✅ Enviada</span>
+    </div>`).join('');
+}
+
+function guardarLead(){
+  const nombre = document.getElementById('l-nombre').value.trim();
+  if(!nombre){toast('El nombre es obligatorio','error');return;}
+  leads.unshift({
+    nombre,
+    telefono: document.getElementById('l-telefono').value,
+    email: document.getElementById('l-email').value,
+    interes: document.getElementById('l-interes').value,
+    fuente: document.getElementById('l-fuente').value,
+    estado: document.getElementById('l-estado').value,
+    notas: document.getElementById('l-notas').value,
+    fecha: new Date().toISOString()
+  });
+  localStorage.setItem('dentalpro_leads', JSON.stringify(leads));
+  closeModal('lead');
+  toast('Lead registrado: '+nombre);
+  ['l-nombre','l-telefono','l-email','l-interes','l-notas'].forEach(id=>document.getElementById(id).value='');
+  renderAll();
+}
+
+function crearCampana(){
+  const nombre = document.getElementById('c-nombre').value.trim();
+  const mensaje = document.getElementById('c-mensaje').value.trim();
+  if(!nombre||!mensaje){toast('Nombre y mensaje son obligatorios','error');return;}
+  const segmento = document.getElementById('c-segmento').value;
+  let enviados = pacientes.length;
+  if(segmento==='inactivos') enviados = getInactivos().length;
+  if(segmento==='nuevos'){
+    const monthAgo = new Date(Date.now()-30*24*60*60*1000);
+    enviados = pacientes.filter(p=>new Date(p.created_at)>monthAgo).length;
+  }
+
+  campanas.unshift({
+    nombre,
+    tipo: document.getElementById('c-tipo').value,
+    canal: document.getElementById('c-canal').value,
+    mensaje,
+    segmento,
+    enviados,
+    fecha: new Date().toISOString()
+  });
+  localStorage.setItem('dentalpro_campanas', JSON.stringify(campanas));
+  closeModal('campana');
+  toast(`Campaña "${nombre}" enviada a ${enviados} pacientes`);
+  renderAll();
+}
+
+function lanzarCampana(tipo){
+  const msgs = {
+    limpieza: 'Hola {nombre} 😊, han pasado 6 meses desde tu última limpieza. ¡Es momento de mantener tu sonrisa saludable! Agenda tu cita hoy 🦷',
+    reactivacion: 'Hola {nombre} 👋, hace tiempo que no te vemos. ¡Te extrañamos! Tenemos espacios disponibles esta semana. ¿Agendamos? 📅',
+    cumpleanos: '¡Feliz cumpleaños {nombre}! 🎂 En tu día especial te regalamos un 15% de descuento en tu próxima limpieza. ¡Llámanos!',
+    tratamiento: 'Hola {nombre}, recordamos que tienes un tratamiento pendiente. Es importante completarlo para tu salud bucal. ¡Contáctanos! 💊'
+  };
+  document.getElementById('c-tipo').value = tipo==='reactivacion'?'reactivacion':tipo==='cumpleanos'?'cumpleanos':tipo==='tratamiento'?'seguimiento':'recordatorio';
+  document.getElementById('c-mensaje').value = msgs[tipo]||'';
+  document.getElementById('c-nombre').value = tipo==='limpieza'?'Recordatorio Limpieza':tipo==='reactivacion'?'Reactivación Pacientes':tipo==='cumpleanos'?'Felicitación Cumpleaños':'Seguimiento Tratamiento';
+  openModal('campana');
+}
+
+function enviarRecordatorios(){
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate()+1);
+  const citasMañana = citas.filter(c=>new Date(c.scheduled_at).toDateString()===tomorrow.toDateString());
+  if(!citasMañana.length){toast('Sin citas mañana para recordar','warning');return;}
+  citasMañana.forEach(c=>{
+    recordatoriosEnviados.push({paciente:c.patient_name,fecha:new Date().toISOString()});
+  });
+  localStorage.setItem('dentalpro_recordatorios', JSON.stringify(recordatoriosEnviados));
+  toast(`${citasMañana.length} recordatorios marcados como enviados`);
+  renderKPIs();
+}
+
+function contactarInactivos(){
+  const inactivos = getInactivos();
+  if(!inactivos.length){toast('Sin pacientes inactivos','warning');return;}
+  toast(`Abriendo WhatsApp para ${inactivos.length} pacientes inactivos`);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+  loadData();
+});
+</script>
+</body>
+</html>
