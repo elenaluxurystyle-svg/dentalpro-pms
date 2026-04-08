@@ -1175,6 +1175,61 @@ function printQR(){
 
 loadDashboard();
 setInterval(loadDashboard,60000);
+
+function renderHuddle(pts, apts, inv){
+  const hc = document.getElementById('huddle-cards');
+  if(!hc) return;
+  const now = new Date();
+  const today = now.toDateString();
+  const tomorrow = new Date(now.getTime()+24*60*60*1000).toDateString();
+  const days=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const months=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const hd = document.getElementById('huddle-date');
+  if(hd) hd.textContent = days[now.getDay()]+' '+now.getDate()+' de '+months[now.getMonth()];
+  const todayApts=apts.filter(a=>new Date(a.scheduled_at).toDateString()===today);
+  const tomorrowApts=apts.filter(a=>new Date(a.scheduled_at).toDateString()===tomorrow);
+  const lowInv=inv.filter(i=>parseFloat(i.stock)<=parseFloat(i.min_stock));
+  const urgentToday=todayApts.filter(a=>a.urgency_level==='red');
+  const weekAgo=new Date(now.getTime()-7*24*60*60*1000);
+  const newPts=pts.filter(p=>new Date(p.created_at)>weekAgo);
+  const ingresoProyectado=todayApts.length*800;
+  const metaDiaria=8000;
+  const metaPct=Math.min(100,Math.round(ingresoProyectado/metaDiaria*100));
+  hc.innerHTML=`
+    <div style="background:#EEF2FF;border-radius:16px;padding:14px;border-left:3px solid #1B4FD8">
+      <div style="font-size:11px;font-weight:700;color:#1B4FD8;margin-bottom:8px;text-transform:uppercase">🎯 Meta del Día</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>Proyectado: <strong>$${ingresoProyectado.toLocaleString('es-MX')}</strong></span><span style="color:#94A3B8">Meta: $${metaDiaria.toLocaleString('es-MX')}</span></div>
+      <div style="height:8px;background:#E2E8F0;border-radius:4px"><div style="height:100%;width:${metaPct}%;background:#1B4FD8;border-radius:4px"></div></div>
+      <div style="font-size:11px;color:#94A3B8;margin-top:4px">${metaPct}% · ${todayApts.length} citas hoy</div>
+    </div>
+    <div style="background:${urgentToday.length>0?'#FFF1F2':'#F0FDF4'};border-radius:16px;padding:14px;border-left:3px solid ${urgentToday.length>0?'#DC2626':'#16A34A'}">
+      <div style="font-size:11px;font-weight:700;color:${urgentToday.length>0?'#DC2626':'#16A34A'};margin-bottom:8px;text-transform:uppercase">🚨 Urgencias</div>
+      ${urgentToday.length>0?urgentToday.map(a=>`<div style="font-size:12px;font-weight:600">${a.patient_name} · ${new Date(a.scheduled_at).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</div>`).join(''):'<div style="font-size:12px;color:#16A34A">✅ Sin emergencias hoy</div>'}
+    </div>
+    <div style="background:#FFFBEB;border-radius:16px;padding:14px;border-left:3px solid #D97706">
+      <div style="font-size:11px;font-weight:700;color:#D97706;margin-bottom:8px;text-transform:uppercase">📞 Confirmar Mañana</div>
+      ${tomorrowApts.length>0?tomorrowApts.slice(0,3).map(a=>`<div style="font-size:12px;font-weight:600;padding:3px 0">${a.patient_name} · ${new Date(a.scheduled_at).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</div>`).join(''):'<div style="font-size:12px;color:#94A3B8">Sin citas mañana</div>'}
+    </div>
+    <div style="background:${lowInv.length>0?'#FFF1F2':'#F0FDF4'};border-radius:16px;padding:14px;border-left:3px solid ${lowInv.length>0?'#DC2626':'#16A34A'}">
+      <div style="font-size:11px;font-weight:700;color:${lowInv.length>0?'#DC2626':'#16A34A'};margin-bottom:8px;text-transform:uppercase">⚠️ Inventario</div>
+      ${lowInv.length>0?lowInv.slice(0,4).map(i=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0"><span>${i.name}</span><strong style="color:${parseFloat(i.stock)===0?'#DC2626':'#D97706'}">${parseFloat(i.stock)===0?'AGOTADO':i.stock}</strong></div>`).join(''):'<div style="font-size:12px;color:#16A34A">✅ Inventario OK</div>'}
+    </div>
+    <div style="background:#F5F3FF;border-radius:16px;padding:14px;border-left:3px solid #7C3AED">
+      <div style="font-size:11px;font-weight:700;color:#7C3AED;margin-bottom:8px;text-transform:uppercase">🆕 Nuevos esta Semana</div>
+      ${newPts.length>0?newPts.slice(0,3).map(p=>`<div style="font-size:12px;font-weight:600;padding:2px 0">${p.name}</div>`).join(''):'<div style="font-size:12px;color:#94A3B8">Sin pacientes nuevos</div>'}
+    </div>
+    <div style="background:#F0FDF4;border-radius:16px;padding:14px;border-left:3px solid #16A34A">
+      <div style="font-size:11px;font-weight:700;color:#16A34A;margin-bottom:8px;text-transform:uppercase">💡 Oportunidades</div>
+      <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+        <span>💰 $${ingresoProyectado.toLocaleString('es-MX')} proyectados</span>
+        <span>📅 ${todayApts.length} hoy · ${tomorrowApts.length} mañana</span>
+        <span>👥 ${pts.length} pacientes</span>
+        ${lowInv.length>0?`<span style="color:#DC2626">⚠️ ${lowInv.length} productos bajos</span>`:''}
+      </div>
+    </div>`;
+}
+function refreshHuddle(){loadDashboard();toast('Huddle actualizado');}
+
 </script>
 </body>
 </html>
