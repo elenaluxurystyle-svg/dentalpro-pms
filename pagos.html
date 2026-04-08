@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagos y Facturación — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<style>
+:root{
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;
+  --surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-lg:0 20px 48px rgba(15,23,42,.12);
+  --r:16px;--r-sm:10px;--r-xs:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased}
+.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,23,42,.04)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s;text-decoration:none}
+.back-btn:hover{border-color:var(--brand);color:var(--brand)}
+.header-title{font-size:16px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px}
+.content{padding:24px;max-width:1360px;margin:0 auto}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border-radius:var(--r);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.kpi-icon{width:36px;height:36px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.kpi-icon svg{width:18px;height:18px;stroke:currentColor}
+.kpi-val{font-size:26px;font-weight:800;letter-spacing:-0.03em;color:var(--text-primary);margin-bottom:4px}
+.kpi-label{font-size:12px;color:var(--text-muted);font-weight:500}
+.grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.panel-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light)}
+.panel-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:7px}
+.panel-title svg{width:15px;height:15px;color:var(--brand)}
+.btn{padding:8px 16px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--brand-dark)}
+.btn-outline{background:var(--surface);border:1.5px solid var(--border);color:var(--text-secondary)}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-green{background:var(--green);color:white}
+.btn-green:hover{background:#15803d}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 16px;text-align:left;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;border-bottom:1px solid var(--border)}
+td{padding:13px 16px;font-size:13px;border-bottom:1px solid var(--border-light);color:var(--text-secondary)}
+tbody tr:hover td{background:var(--bg)}
+tbody tr:last-child td{border-bottom:none}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-blue{background:var(--brand-light);color:var(--brand)}
+.badge-gray{background:var(--bg);color:var(--text-muted);border:1px solid var(--border)}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.3);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px;padding:28px;width:100%;max-width:480px;border:1px solid var(--border);box-shadow:var(--shadow-lg);animation:modalIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-header h3{font-size:17px;font-weight:700;color:var(--text-primary)}
+.modal-close{width:32px;height:32px;background:var(--bg);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.modal-close:hover{background:var(--red-bg);color:var(--red)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px rgba(27,79,216,.08)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light)}
+.metodo-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.metodo-btn{padding:10px;border:1.5px solid var(--border);border-radius:var(--r-xs);background:var(--bg);cursor:pointer;text-align:center;font-size:12px;font-weight:600;color:var(--text-secondary);transition:all .2s;font-family:'DM Sans',sans-serif}
+.metodo-btn:hover,.metodo-btn.active{border-color:var(--brand);background:var(--brand-light);color:var(--brand)}
+.cierre-box{background:linear-gradient(135deg,var(--brand-dark),var(--brand));border-radius:var(--r);padding:24px;color:white;margin-bottom:20px}
+.cierre-title{font-size:13px;font-weight:600;opacity:.8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.cierre-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cierre-item{text-align:center}
+.cierre-val{font-size:24px;font-weight:800;letter-spacing:-0.03em}
+.cierre-label{font-size:11px;opacity:.7;margin-top:4px}
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--text-primary);color:white;padding:12px 16px;border-radius:var(--r-xs);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
+.toast.success{background:#15803d}.toast.error{background:#dc2626}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.empty-state{padding:36px;text-align:center;color:var(--text-muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back-btn" href="index.html">
+    <i data-lucide="arrow-left" style="width:14px;height:14px"></i> Volver
+  </a>
+  <div class="header-title">
+    <i data-lucide="credit-card" style="width:18px;height:18px;color:var(--brand)"></i>
+    Pagos y Facturación
+  </div>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="btn btn-outline btn-sm" onclick="exportarCorte()">
+      <i data-lucide="download" style="width:13px;height:13px"></i> Corte del Día
+    </button>
+    <button class="btn btn-sm" onclick="openModal('pago')">
+      <i data-lucide="plus" style="width:13px;height:13px"></i> Registrar Pago
+    </button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--green-bg);color:var(--green)"><i data-lucide="trending-up"></i></div>
+      <div class="kpi-val" id="kpi-hoy">$0</div>
+      <div class="kpi-label">Ingresos de hoy</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--brand-light);color:var(--brand)"><i data-lucide="calendar"></i></div>
+      <div class="kpi-val" id="kpi-semana">$0</div>
+      <div class="kpi-label">Esta semana</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--purple-bg);color:var(--purple)"><i data-lucide="bar-chart-2"></i></div>
+      <div class="kpi-val" id="kpi-mes">$0</div>
+      <div class="kpi-label">Este mes</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--red-bg);color:var(--red)"><i data-lucide="alert-circle"></i></div>
+      <div class="kpi-val" id="kpi-pendiente">$0</div>
+      <div class="kpi-label">Por cobrar</div>
+    </div>
+  </div>
+
+  <!-- Cierre del día -->
+  <div class="cierre-box">
+    <div class="cierre-title"><i data-lucide="sun" style="width:16px;height:16px"></i> Cierre del Día</div>
+    <div class="cierre-grid">
+      <div class="cierre-item">
+        <div class="cierre-val" id="cierre-efectivo">$0</div>
+        <div class="cierre-label">💵 Efectivo</div>
+      </div>
+      <div class="cierre-item">
+        <div class="cierre-val" id="cierre-tarjeta">$0</div>
+        <div class="cierre-label">💳 Tarjeta</div>
+      </div>
+      <div class="cierre-item">
+        <div class="cierre-val" id="cierre-transfer">$0</div>
+        <div class="cierre-label">📱 Transferencia</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <!-- Gráfica de ingresos -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><i data-lucide="trending-up"></i> Ingresos Últimos 7 Días</div>
+      </div>
+      <div id="ingresos-chart" style="padding:8px"></div>
+    </div>
+
+    <!-- Por cobrar -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><i data-lucide="alert-circle" style="color:var(--red)"></i> Cuentas por Cobrar</div>
+      </div>
+      <div id="por-cobrar-list"></div>
+    </div>
+  </div>
+
+  <!-- Historial de pagos -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><i data-lucide="list"></i> Historial de Pagos</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="filtrarPagos('hoy',this)">Hoy</button>
+        <button class="btn btn-outline btn-sm" onclick="filtrarPagos('semana',this)">Semana</button>
+        <button class="btn btn-outline btn-sm" onclick="filtrarPagos('mes',this)">Mes</button>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Paciente</th><th>Concepto</th><th>Método</th><th>Monto</th><th>Fecha</th><th>Estado</th></tr></thead>
+      <tbody id="pagos-table"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL PAGO -->
+<div class="modal" id="modal-pago">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>💳 Registrar Pago</h3>
+      <button class="modal-close" onclick="closeModal('pago')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <div class="form-group">
+      <label>Paciente *</label>
+      <select id="pago-paciente"><option value="">Seleccionar...</option></select>
+    </div>
+    <div class="form-group">
+      <label>Concepto *</label>
+      <input id="pago-concepto" placeholder="Limpieza, extracción, consulta...">
+    </div>
+    <div class="form-group">
+      <label>Monto ($) *</label>
+      <input id="pago-monto" type="number" placeholder="0.00" min="0">
+    </div>
+    <div class="form-group">
+      <label>Método de Pago</label>
+      <div class="metodo-btns">
+        <button class="metodo-btn active" onclick="selectMetodo('efectivo',this)">💵 Efectivo</button>
+        <button class="metodo-btn" onclick="selectMetodo('tarjeta',this)">💳 Tarjeta</button>
+        <button class="metodo-btn" onclick="selectMetodo('transferencia',this)">📱 Transferencia</button>
+      </div>
+      <input type="hidden" id="pago-metodo" value="efectivo">
+    </div>
+    <div class="form-group">
+      <label>Estado</label>
+      <select id="pago-estado">
+        <option value="pagado">✅ Pagado</option>
+        <option value="pendiente">⏳ Pendiente</option>
+        <option value="parcial">🔶 Pago parcial</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notas</label>
+      <input id="pago-notas" placeholder="Referencia, número de transacción...">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('pago')">Cancelar</button>
+      <button class="btn btn-green" onclick="registrarPago()">
+        <i data-lucide="check" style="width:13px;height:13px"></i> Registrar Pago
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
+let pagos = JSON.parse(localStorage.getItem('dentalpro_pagos') || '[]');
+let pacientes = [];
+let metodoSeleccionado = 'efectivo';
+let filtroActual = 'mes';
+
+function toast(msg, type='success'){
+  const w = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = (type==='success'?'✅':'❌') + ' ' + msg;
+  w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)}, 3500);
+}
+
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  if(id==='pago') cargarPacientesSelect();
+  setTimeout(()=>lucide.createIcons(), 50);
+}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+
+function selectMetodo(m, btn){
+  metodoSeleccionado = m;
+  document.getElementById('pago-metodo').value = m;
+  document.querySelectorAll('.metodo-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function cargarPacientesSelect(){
+  try{
+    const data = await fetch(API+'/patients').then(r=>r.json());
+    pacientes = data;
+    const sel = document.getElementById('pago-paciente');
+    sel.innerHTML = '<option value="">Seleccionar paciente...</option>';
+    data.forEach(p => sel.innerHTML += `<option value="${p.id}">${p.name}</option>`);
+  }catch(e){}
+}
+
+function registrarPago(){
+  const pacienteId = document.getElementById('pago-paciente').value;
+  const pacienteNombre = document.getElementById('pago-paciente').selectedOptions[0]?.text || '—';
+  const concepto = document.getElementById('pago-concepto').value.trim();
+  const monto = parseFloat(document.getElementById('pago-monto').value);
+  const estado = document.getElementById('pago-estado').value;
+  const notas = document.getElementById('pago-notas').value;
+
+  if(!pacienteId || !concepto || !monto){
+    toast('Paciente, concepto y monto son obligatorios', 'error');
+    return;
+  }
+
+  const pago = {
+    id: Date.now(),
+    paciente_id: pacienteId,
+    paciente: pacienteNombre,
+    concepto,
+    monto,
+    metodo: metodoSeleccionado,
+    estado,
+    notas,
+    fecha: new Date().toISOString()
+  };
+
+  pagos.unshift(pago);
+  localStorage.setItem('dentalpro_pagos', JSON.stringify(pagos));
+  closeModal('pago');
+  toast('Pago registrado: $' + monto.toLocaleString('es-MX'));
+
+  // Limpiar formulario
+  document.getElementById('pago-paciente').value = '';
+  document.getElementById('pago-concepto').value = '';
+  document.getElementById('pago-monto').value = '';
+  document.getElementById('pago-notas').value = '';
+
+  renderAll();
+}
+
+function filtrarPagos(f, btn){
+  filtroActual = f;
+  document.querySelectorAll('.panel-header .btn-outline').forEach(b=>{
+    b.style.background = 'var(--surface)';
+    b.style.color = 'var(--text-secondary)';
+    b.style.borderColor = 'var(--border)';
+  });
+  if(btn){
+    btn.style.background = 'var(--brand-light)';
+    btn.style.color = 'var(--brand)';
+    btn.style.borderColor = 'var(--brand)';
+  }
+  renderTabla();
+}
+
+function getPagosFiltered(periodo){
+  const now = new Date();
+  const today = now.toDateString();
+  const weekAgo = new Date(now.getTime()-7*24*60*60*1000);
+  const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  if(periodo==='hoy') return pagos.filter(p=>new Date(p.fecha).toDateString()===today);
+  if(periodo==='semana') return pagos.filter(p=>new Date(p.fecha)>=weekAgo);
+  return pagos.filter(p=>new Date(p.fecha)>=monthAgo);
+}
+
+function renderAll(){
+  renderKPIs();
+  renderCierre();
+  renderChart();
+  renderPorCobrar();
+  renderTabla();
+  lucide.createIcons();
+}
+
+function renderKPIs(){
+  const now = new Date();
+  const today = now.toDateString();
+  const weekAgo = new Date(now.getTime()-7*24*60*60*1000);
+  const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const pagadosHoy = pagos.filter(p=>new Date(p.fecha).toDateString()===today&&p.estado==='pagado');
+  const pagadosSemana = pagos.filter(p=>new Date(p.fecha)>=weekAgo&&p.estado==='pagado');
+  const pagadosMes = pagos.filter(p=>new Date(p.fecha)>=monthAgo&&p.estado==='pagado');
+  const pendientes = pagos.filter(p=>p.estado==='pendiente');
+
+  const sum = arr => arr.reduce((a,p)=>a+p.monto, 0);
+
+  document.getElementById('kpi-hoy').textContent = '$'+sum(pagadosHoy).toLocaleString('es-MX');
+  document.getElementById('kpi-semana').textContent = '$'+sum(pagadosSemana).toLocaleString('es-MX');
+  document.getElementById('kpi-mes').textContent = '$'+sum(pagadosMes).toLocaleString('es-MX');
+  document.getElementById('kpi-pendiente').textContent = '$'+sum(pendientes).toLocaleString('es-MX');
+}
+
+function renderCierre(){
+  const today = new Date().toDateString();
+  const hoy = pagos.filter(p=>new Date(p.fecha).toDateString()===today&&p.estado==='pagado');
+  const efectivo = hoy.filter(p=>p.metodo==='efectivo').reduce((a,p)=>a+p.monto,0);
+  const tarjeta = hoy.filter(p=>p.metodo==='tarjeta').reduce((a,p)=>a+p.monto,0);
+  const transfer = hoy.filter(p=>p.metodo==='transferencia').reduce((a,p)=>a+p.monto,0);
+  document.getElementById('cierre-efectivo').textContent = '$'+efectivo.toLocaleString('es-MX');
+  document.getElementById('cierre-tarjeta').textContent = '$'+tarjeta.toLocaleString('es-MX');
+  document.getElementById('cierre-transfer').textContent = '$'+transfer.toLocaleString('es-MX');
+}
+
+function renderChart(){
+  const days = [];
+  const data = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    days.push(d.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit'}));
+    const dayStr = d.toDateString();
+    const total = pagos.filter(p=>new Date(p.fecha).toDateString()===dayStr&&p.estado==='pagado').reduce((a,p)=>a+p.monto,0);
+    data.push(total);
+  }
+
+  document.getElementById('ingresos-chart').innerHTML = '';
+  new ApexCharts(document.getElementById('ingresos-chart'),{
+    series:[{name:'Ingresos',data}],
+    chart:{height:220,type:'area',toolbar:{show:false},fontFamily:'DM Sans,sans-serif'},
+    colors:['#1B4FD8'],
+    stroke:{curve:'smooth',width:2},
+    fill:{type:'gradient',gradient:{opacityFrom:.15,opacityTo:.01}},
+    xaxis:{categories:days,labels:{style:{fontSize:'11px',colors:'#94A3B8'}}},
+    yaxis:{labels:{formatter:v=>'$'+Math.round(v/1000)+'k',style:{fontSize:'10px',colors:'#94A3B8'}}},
+    grid:{borderColor:'#F1F5F9'},
+    dataLabels:{enabled:false},
+    tooltip:{y:{formatter:v=>'$'+v.toLocaleString('es-MX')}}
+  }).render();
+}
+
+function renderPorCobrar(){
+  const pendientes = pagos.filter(p=>p.estado==='pendiente'||p.estado==='parcial');
+  const div = document.getElementById('por-cobrar-list');
+  if(!pendientes.length){
+    div.innerHTML = '<div class="empty-state">✅ Sin cuentas pendientes</div>';
+    return;
+  }
+  div.innerHTML = pendientes.map(p=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border-light)">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--text-primary)">${p.paciente}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${p.concepto} · ${new Date(p.fecha).toLocaleDateString('es-MX')}</div>
+      </div>
+      <div style="font-size:14px;font-weight:700;color:var(--red)">$${p.monto.toLocaleString('es-MX')}</div>
+      <button onclick="cobrarPago(${p.id})" class="btn btn-green btn-sm">Cobrar</button>
+    </div>`).join('');
+}
+
+function renderTabla(){
+  const filtered = getPagosFiltered(filtroActual);
+  const tb = document.getElementById('pagos-table');
+  if(!filtered.length){
+    tb.innerHTML = '<tr><td colspan="6" class="empty-state">Sin pagos en este período</td></tr>';
+    return;
+  }
+  const metodoIcon = {efectivo:'💵',tarjeta:'💳',transferencia:'📱'};
+  const estadoBadge = {pagado:'badge-green',pendiente:'badge-amber',parcial:'badge-amber'};
+  const estadoText = {pagado:'Pagado',pendiente:'Pendiente',parcial:'Parcial'};
+  tb.innerHTML = filtered.map(p=>`<tr>
+    <td style="font-weight:600;color:var(--text-primary)">${p.paciente}</td>
+    <td>${p.concepto}</td>
+    <td>${metodoIcon[p.metodo]||'💳'} ${p.metodo}</td>
+    <td style="font-weight:700;color:${p.estado==='pagado'?'var(--green)':'var(--amber)'}">$${p.monto.toLocaleString('es-MX')}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px">${new Date(p.fecha).toLocaleDateString('es-MX')}</td>
+    <td><span class="badge ${estadoBadge[p.estado]||'badge-gray'}">${estadoText[p.estado]||p.estado}</span></td>
+  </tr>`).join('');
+}
+
+function cobrarPago(id){
+  const idx = pagos.findIndex(p=>p.id===id);
+  if(idx>=0){
+    pagos[idx].estado = 'pagado';
+    localStorage.setItem('dentalpro_pagos', JSON.stringify(pagos));
+    toast('Pago marcado como cobrado');
+    renderAll();
+  }
+}
+
+function exportarCorte(){
+  const today = new Date().toDateString();
+  const hoy = pagos.filter(p=>new Date(p.fecha).toDateString()===today);
+  const total = hoy.filter(p=>p.estado==='pagado').reduce((a,p)=>a+p.monto,0);
+  const w = window.open('');
+  w.document.write(`<html><body style="font-family:sans-serif;padding:40px;max-width:600px;margin:0 auto">
+    <h1 style="color:#0a2463">DentalPro — Corte del Día</h1>
+    <p style="color:#64748b">${new Date().toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>
+    <hr style="margin:20px 0">
+    <h2>Total del día: $${total.toLocaleString('es-MX')}</h2>
+    <table style="width:100%;border-collapse:collapse;margin-top:20px">
+      <thead><tr style="background:#f1f5f9"><th style="padding:8px;text-align:left">Paciente</th><th style="padding:8px">Concepto</th><th style="padding:8px">Método</th><th style="padding:8px">Monto</th><th style="padding:8px">Estado</th></tr></thead>
+      <tbody>${hoy.map(p=>`<tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px">${p.paciente}</td><td style="padding:8px">${p.concepto}</td><td style="padding:8px">${p.metodo}</td><td style="padding:8px;font-weight:bold">$${p.monto.toLocaleString('es-MX')}</td><td style="padding:8px">${p.estado}</td></tr>`).join('')}</tbody>
+    </table>
+    <p style="margin-top:20px;color:#64748b;font-size:12px">Generado por DentalPro PMS</p>
+  </body></html>`);
+  w.print();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+  renderAll();
+});
+</script>
+</body>
+</html>
