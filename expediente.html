@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expediente — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;
+  --surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-lg:0 20px 48px rgba(15,23,42,.12);
+  --r:16px;--r-sm:10px;--r-xs:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,23,42,.04)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s;text-decoration:none}
+.back-btn:hover{border-color:var(--brand);color:var(--brand)}
+.patient-header-info{display:flex;align-items:center;gap:12px;flex:1}
+.patient-avatar-lg{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:white;flex-shrink:0}
+.patient-header-name{font-size:16px;font-weight:700;color:var(--text-primary)}
+.patient-header-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+.header-actions{display:flex;gap:8px;margin-left:auto}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:280px 1fr;gap:20px;padding:20px 24px;max-width:1400px;margin:0 auto}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+
+/* SIDEBAR */
+.sidebar-card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:16px}
+.sidebar-card-header{padding:14px 16px;border-bottom:1px solid var(--border-light);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+.sidebar-card-header svg{width:14px;height:14px;color:var(--brand)}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 16px;border-bottom:1px solid var(--border-light);gap:8px}
+.info-row:last-child{border-bottom:none}
+.info-label{font-size:11px;color:var(--text-muted);font-weight:500;flex-shrink:0}
+.info-value{font-size:12px;color:var(--text-primary);font-weight:500;text-align:right}
+.edit-btn{padding:5px 14px;background:var(--brand);color:white;border:none;border-radius:var(--r-xs);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;width:calc(100% - 32px);margin:12px 16px;display:block}
+.edit-btn:hover{background:var(--brand-dark)}
+
+/* TABS */
+.tabs{display:flex;gap:2px;padding:0 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab{padding:8px 16px;border-radius:var(--r-xs);border:none;background:none;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--text-muted);cursor:pointer;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tab svg{width:14px;height:14px}
+.tab.active{background:var(--brand-light);color:var(--brand);font-weight:600}
+.tab:hover:not(.active){background:var(--bg);color:var(--text-secondary)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* CARDS */
+.card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:16px}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center}
+.card-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:7px}
+.card-title svg{width:15px;height:15px;color:var(--brand)}
+.card-body{padding:18px}
+
+/* VISIT TIMELINE */
+.visit-item{display:flex;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border-light);transition:background .15s}
+.visit-item:hover{background:var(--bg)}
+.visit-item:last-child{border-bottom:none}
+.visit-date-col{width:80px;flex-shrink:0;text-align:center}
+.visit-date-day{font-size:22px;font-weight:700;color:var(--brand);line-height:1}
+.visit-date-month{font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-muted);letter-spacing:.05em}
+.visit-date-year{font-size:10px;color:var(--text-muted)}
+.visit-body{flex:1}
+.visit-title{font-size:13px;font-weight:600;color:var(--text-primary)}
+.visit-notes{font-size:12px;color:var(--text-secondary);margin-top:4px;line-height:1.5}
+.visit-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-blue{background:var(--brand-light);color:var(--brand)}
+.badge-gray{background:var(--bg);color:var(--text-muted);border:1px solid var(--border)}
+.badge-purple{background:var(--purple-bg);color:var(--purple)}
+
+/* PHOTOS GRID */
+.photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;padding:16px}
+.photo-item{border-radius:var(--r-xs);overflow:hidden;border:1px solid var(--border);aspect-ratio:1;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative}
+.photo-item:hover{box-shadow:var(--shadow);transform:scale(1.02)}
+.photo-item img{width:100%;height:100%;object-fit:cover}
+.photo-item .photo-label{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:rgba(15,23,42,.7);color:white;font-size:10px;font-weight:500}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--r-xs);padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin:16px}
+.upload-zone:hover{border-color:var(--brand);background:var(--brand-light)}
+.upload-zone svg{width:28px;height:28px;color:var(--text-muted);margin-bottom:8px}
+.upload-zone p{font-size:13px;color:var(--text-muted)}
+.upload-zone span{font-size:11px;color:var(--text-muted)}
+
+/* DOCS */
+.doc-item{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border-light);transition:background .15s}
+.doc-item:hover{background:var(--bg)}
+.doc-icon{width:36px;height:36px;background:var(--brand-light);border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.doc-icon svg{width:16px;height:16px;color:var(--brand)}
+.doc-name{font-size:13px;font-weight:500;color:var(--text-primary)}
+.doc-meta{font-size:11px;color:var(--text-muted);margin-top:1px}
+.doc-actions{margin-left:auto;display:flex;gap:6px}
+
+/* FORMS */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px rgba(27,79,216,.08)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .3s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--brand-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(27,79,216,.25)}
+.btn-outline{background:var(--surface);border:1.5px solid var(--border);color:var(--text-secondary)}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light);box-shadow:none;transform:none}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.btn-danger:hover{background:var(--red);color:white;box-shadow:0 4px 12px rgba(220,38,38,.2)}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.3);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px;padding:28px;width:100%;max-width:560px;border:1px solid var(--border);box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;animation:modalIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-header h3{font-size:17px;font-weight:700;color:var(--text-primary)}
+.modal-close{width:32px;height:32px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .2s}
+.modal-close:hover{background:var(--red-bg);color:var(--red)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light)}
+
+/* EMPTY */
+.empty-state{padding:36px;text-align:center;color:var(--text-muted)}
+.empty-icon{font-size:32px;margin-bottom:8px;display:block;animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.08);opacity:.8}}
+
+/* ALERGIAS TAGS */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:20px;font-size:11px;font-weight:600;color:var(--red);margin:2px}
+.tag-info{background:var(--brand-light);border-color:var(--brand);color:var(--brand)}
+
+/* SIGNATURE */
+.signature-box{border:2px dashed var(--border);border-radius:var(--r-xs);height:100px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:13px;margin-top:8px;background:var(--bg)}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--text-primary);color:white;padding:12px 16px;border-radius:var(--r-xs);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:toastIn .3s cubic-bezier(.4,0,.2,1);min-width:260px}
+.toast.success{background:#15803d}.toast.error{background:#dc2626}.toast.warning{background:#d97706}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back-btn" href="index.html">
+    <i data-lucide="arrow-left" style="width:14px;height:14px"></i>
+    Volver
+  </a>
+  <div class="patient-header-info">
+    <div class="patient-avatar-lg" id="header-avatar" style="background:#1B4FD8">—</div>
+    <div>
+      <div class="patient-header-name" id="header-name">Cargando...</div>
+      <div class="patient-header-sub" id="header-sub">Expediente clínico</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline btn-sm" onclick="openModal('edit-patient')">
+      <i data-lucide="pencil" style="width:13px;height:13px"></i> Editar
+    </button>
+    <button class="btn btn-sm" onclick="openModal('nueva-visita')">
+      <i data-lucide="plus" style="width:13px;height:13px"></i> Nueva Visita
+    </button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div id="patient-sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">
+        <i data-lucide="user"></i> Datos Personales
+      </div>
+      <div id="personal-info">
+        <div class="info-row"><span class="info-label">Email</span><span class="info-value" id="s-email">—</span></div>
+        <div class="info-row"><span class="info-label">Teléfono</span><span class="info-value" id="s-phone">—</span></div>
+        <div class="info-row"><span class="info-label">CURP</span><span class="info-value" id="s-curp">—</span></div>
+        <div class="info-row"><span class="info-label">Fecha nac.</span><span class="info-value" id="s-birth">—</span></div>
+        <div class="info-row"><span class="info-label">Dirección</span><span class="info-value" id="s-address">—</span></div>
+        <div class="info-row"><span class="info-label">Tel. emergencia</span><span class="info-value" id="s-emergency">—</span></div>
+        <div class="info-row"><span class="info-label">Seguro médico</span><span class="info-value" id="s-insurance">—</span></div>
+        <div class="info-row"><span class="info-label">Código portal</span><span class="info-value" id="s-code">—</span></div>
+        <div class="info-row"><span class="info-label">Registrado</span><span class="info-value" id="s-created">—</span></div>
+      </div>
+      <button class="edit-btn" onclick="openModal('edit-patient')">
+        <i data-lucide="pencil" style="width:13px;height:13px"></i> Editar datos
+      </button>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">
+        <i data-lucide="alert-triangle" style="color:var(--red)"></i> Alertas Médicas
+      </div>
+      <div style="padding:12px 16px">
+        <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Alergias</div>
+        <div id="s-alergias"><span class="badge badge-gray">Sin alergias registradas</span></div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 8px">Enfermedades crónicas</div>
+        <div id="s-enfermedades"><span class="badge badge-gray">Sin enfermedades registradas</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">
+        <i data-lucide="bar-chart-2"></i> Resumen
+      </div>
+      <div class="info-row"><span class="info-label">Total visitas</span><span class="info-value" id="s-visits">—</span></div>
+      <div class="info-row"><span class="info-label">Última visita</span><span class="info-value" id="s-last-visit">—</span></div>
+      <div class="info-row"><span class="info-label">Próxima cita</span><span class="info-value" id="s-next-visit">—</span></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('historial',this)">
+        <i data-lucide="clock"></i> Historial de Visitas
+      </button>
+      <button class="tab" onclick="showTab('odontograma',this)">
+        <i data-lucide="circle-dot"></i> Odontograma
+      </button>
+      <button class="tab" onclick="showTab('fotos',this)">
+        <i data-lucide="image"></i> Fotos y Radiografías
+      </button>
+      <button class="tab" onclick="showTab('recetas',this)">
+        <i data-lucide="file-text"></i> Recetas
+      </button>
+      <button class="tab" onclick="showTab('documentos',this)">
+        <i data-lucide="folder"></i> Documentos Legales
+      </button>
+    </div>
+
+    <!-- HISTORIAL -->
+    <div class="tab-content active" id="tab-historial">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i data-lucide="clock"></i> Historial de Visitas</div>
+          <button class="btn btn-sm" onclick="openModal('nueva-visita')">
+            <i data-lucide="plus" style="width:13px;height:13px"></i> Agregar visita
+          </button>
+        </div>
+        <div id="historial-list"><div class="empty-state"><span class="empty-icon">📋</span><p>Sin visitas registradas</p></div></div>
+      </div>
+    </div>
+
+    <!-- ODONTOGRAMA -->
+    <div class="tab-content" id="tab-odontograma">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i data-lucide="circle-dot"></i> Odontograma FDI</div>
+          <button class="btn btn-outline btn-sm" onclick="openOdontogram()">
+            <i data-lucide="external-link" style="width:13px;height:13px"></i> Abrir completo
+          </button>
+        </div>
+        <div class="card-body">
+          <iframe id="odonto-frame" style="width:100%;height:500px;border:none;border-radius:var(--r-xs)" src=""></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTOS -->
+    <div class="tab-content" id="tab-fotos">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i data-lucide="image"></i> Fotos y Radiografías</div>
+          <label class="btn btn-sm" style="cursor:pointer">
+            <i data-lucide="upload" style="width:13px;height:13px"></i> Subir archivo
+            <input type="file" accept="image/*,.pdf" multiple style="display:none" onchange="handleFileUpload(event)">
+          </label>
+        </div>
+        <div class="upload-zone" onclick="document.querySelector('input[type=file]').click()">
+          <i data-lucide="upload-cloud"></i>
+          <p>Arrastra fotos o radiografías aquí</p>
+          <span>JPG, PNG, PDF — máx 10MB por archivo</span>
+        </div>
+        <div class="photos-grid" id="photos-grid">
+          <div class="empty-state" style="grid-column:1/-1"><span class="empty-icon">📷</span><p>Sin fotos agregadas</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECETAS -->
+    <div class="tab-content" id="tab-recetas">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i data-lucide="file-text"></i> Recetas Emitidas</div>
+          <a class="btn btn-sm" id="nueva-receta-link" href="#">
+            <i data-lucide="plus" style="width:13px;height:13px"></i> Nueva receta
+          </a>
+        </div>
+        <div id="recetas-list"><div class="empty-state"><span class="empty-icon">💊</span><p>Sin recetas emitidas</p></div></div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTOS -->
+    <div class="tab-content" id="tab-documentos">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i data-lucide="folder"></i> Documentos Legales</div>
+          <button class="btn btn-sm" onclick="openModal('nuevo-doc')">
+            <i data-lucide="plus" style="width:13px;height:13px"></i> Agregar documento
+          </button>
+        </div>
+        <div id="docs-list">
+          <!-- Consentimiento informado por defecto -->
+          <div class="doc-item">
+            <div class="doc-icon"><i data-lucide="file-check"></i></div>
+            <div>
+              <div class="doc-name">Consentimiento Informado General</div>
+              <div class="doc-meta">Plantilla estándar · Pendiente de firma</div>
+            </div>
+            <div class="doc-actions">
+              <button class="btn btn-outline btn-sm" onclick="toast('Abriendo consentimiento...')">
+                <i data-lucide="eye" style="width:12px;height:12px"></i>
+              </button>
+              <button class="btn btn-sm" onclick="openModal('firma-doc')">
+                <i data-lucide="pen-line" style="width:12px;height:12px"></i> Firmar
+              </button>
+            </div>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon" style="background:var(--amber-bg)"><i data-lucide="file-text" style="color:var(--amber)"></i></div>
+            <div>
+              <div class="doc-name">Aviso de Privacidad LFPDPPP</div>
+              <div class="doc-meta">Requerido por ley · Pendiente</div>
+            </div>
+            <div class="doc-actions">
+              <button class="btn btn-sm" onclick="openModal('firma-doc')">
+                <i data-lucide="pen-line" style="width:12px;height:12px"></i> Firmar
+              </button>
+            </div>
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;padding:14px 18px;cursor:pointer;border-top:1px solid var(--border-light)">
+          <input type="file" accept=".pdf,.doc,.docx" style="display:none" onchange="handleDocUpload(event)">
+          <i data-lucide="upload" style="width:14px;height:14px;color:var(--brand)"></i>
+          <span style="font-size:13px;color:var(--brand);font-weight:500">Subir documento PDF o Word</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA VISITA -->
+<div class="modal" id="modal-nueva-visita">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📋 Registrar Visita</h3>
+      <button class="modal-close" onclick="closeModal('nueva-visita')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Fecha *</label><input type="date" id="v-date"></div>
+      <div class="form-group"><label>Hora</label><input type="time" id="v-time"></div>
+    </div>
+    <div class="form-group"><label>Motivo / Tratamiento *</label><input id="v-reason" placeholder="Limpieza, extracción, revisión..."></div>
+    <div class="form-group"><label>Diagnóstico</label><input id="v-diagnosis" placeholder="Ej: Caries clase II en diente 36..."></div>
+    <div class="form-group"><label>Procedimiento realizado</label><textarea id="v-procedure" placeholder="Describe detalladamente el procedimiento..." style="height:80px;resize:vertical"></textarea></div>
+    <div class="form-group"><label>Notas clínicas</label><textarea id="v-notes" placeholder="Observaciones adicionales, próximos pasos..." style="height:80px;resize:vertical"></textarea></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Costo ($)</label><input type="number" id="v-cost" placeholder="0.00"></div>
+      <div class="form-group"><label>Estado de pago</label>
+        <select id="v-payment">
+          <option value="pagado">✅ Pagado</option>
+          <option value="pendiente">⏳ Pendiente</option>
+          <option value="parcial">🔶 Pago parcial</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('nueva-visita')">Cancelar</button>
+      <button class="btn" onclick="saveVisita()"><i data-lucide="save" style="width:13px;height:13px"></i> Guardar visita</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR PACIENTE -->
+<div class="modal" id="modal-edit-patient">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>✏️ Editar Datos del Paciente</h3>
+      <button class="modal-close" onclick="closeModal('edit-patient')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Nombre completo *</label><input id="e-name"></div>
+      <div class="form-group"><label>Fecha de nacimiento</label><input type="date" id="e-birth"></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Email</label><input type="email" id="e-email"></div>
+      <div class="form-group"><label>Teléfono</label><input id="e-phone"></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>CURP</label><input id="e-curp" style="text-transform:uppercase"></div>
+      <div class="form-group"><label>Tel. emergencia</label><input id="e-emergency"></div>
+    </div>
+    <div class="form-group"><label>Dirección</label><input id="e-address"></div>
+    <div class="form-group"><label>Seguro médico</label><input id="e-insurance"></div>
+    <div class="form-group"><label>Alergias (separadas por coma)</label><input id="e-alergias" placeholder="Penicilina, látex, aspirina..."></div>
+    <div class="form-group"><label>Enfermedades crónicas</label><input id="e-enfermedades" placeholder="Diabetes, hipertensión..."></div>
+    <div class="form-group"><label>Ocupación</label><input id="e-ocupacion"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('edit-patient')">Cancelar</button>
+      <button class="btn" onclick="savePatientEdit()"><i data-lucide="save" style="width:13px;height:13px"></i> Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FIRMA -->
+<div class="modal" id="modal-firma-doc">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>✍️ Firma Digital</h3>
+      <button class="modal-close" onclick="closeModal('firma-doc')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">El paciente debe firmar en el espacio de abajo para confirmar su consentimiento.</p>
+    <canvas id="signature-canvas" width="500" height="150" style="border:2px solid var(--border);border-radius:var(--r-xs);width:100%;touch-action:none;background:white;cursor:crosshair"></canvas>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn btn-outline btn-sm" onclick="clearSignature()">🗑️ Limpiar</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('firma-doc')">Cancelar</button>
+      <button class="btn" onclick="saveSignature()"><i data-lucide="check" style="width:13px;height:13px"></i> Confirmar firma</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO DOC -->
+<div class="modal" id="modal-nuevo-doc">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📄 Nuevo Documento</h3>
+      <button class="modal-close" onclick="closeModal('nuevo-doc')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <div class="form-group"><label>Nombre del documento</label><input id="d-name" placeholder="Consentimiento cirugía, carta responsiva..."></div>
+    <div class="form-group"><label>Tipo</label>
+      <select id="d-type">
+        <option>Consentimiento informado</option>
+        <option>Aviso de privacidad</option>
+        <option>Carta responsiva</option>
+        <option>Historial médico</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Notas</label><textarea id="d-notes" placeholder="Observaciones sobre este documento..." style="height:60px"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('nuevo-doc')">Cancelar</button>
+      <button class="btn" onclick="saveDoc()"><i data-lucide="save" style="width:13px;height:13px"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
+const params = new URLSearchParams(window.location.search);
+const patientId = params.get('id');
+const patientName = decodeURIComponent(params.get('name') || 'Paciente');
+
+let patientData = null;
+let visitasData = JSON.parse(localStorage.getItem('visitas_' + patientId) || '[]');
+let photosData = JSON.parse(localStorage.getItem('photos_' + patientId) || '[]');
+let docsData = JSON.parse(localStorage.getItem('docs_' + patientId) || '[]');
+let patientExtra = JSON.parse(localStorage.getItem('extra_' + patientId) || '{}');
+
+// AVATAR
+const COLORS = ['#1B4FD8','#7C3AED','#059669','#D97706','#DC2626','#0891B2'];
+function getColor(name){let h=0;for(let c of name)h+=c.charCodeAt(0);return COLORS[h%COLORS.length];}
+function getInitials(name){return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+
+// TOAST
+function toast(msg,type='success'){
+  const w=document.getElementById('toast-wrap');
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  t.innerHTML=(type==='success'?'✅':type==='error'?'❌':'⚠️')+' '+msg;
+  w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},3500);
+}
+
+// TABS
+function showTab(tab, btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+  if(tab==='odontograma') loadOdontograma();
+  lucide.createIcons();
+}
+
+// MODALS
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  if(id==='edit-patient') fillEditForm();
+  if(id==='firma-doc') initSignature();
+  setTimeout(()=>lucide.createIcons(),50);
+}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+
+// LOAD PATIENT
+async function loadPatient(){
+  try{
+    const data = await fetch(API+'/patients/'+patientId).then(r=>r.json());
+    patientData = {...data, ...patientExtra};
+
+    const color = getColor(patientName);
+    const initials = getInitials(patientName);
+    document.getElementById('header-avatar').textContent = initials;
+    document.getElementById('header-avatar').style.background = color;
+    document.getElementById('header-name').textContent = patientName;
+
+    document.getElementById('s-email').textContent = patientData.email || '—';
+    document.getElementById('s-phone').textContent = patientData.phone || '—';
+    document.getElementById('s-curp').textContent = patientExtra.curp || '—';
+    document.getElementById('s-birth').textContent = patientExtra.birth ? new Date(patientExtra.birth).toLocaleDateString('es-MX') : '—';
+    document.getElementById('s-address').textContent = patientExtra.address || '—';
+    document.getElementById('s-emergency').textContent = patientExtra.emergency || '—';
+    document.getElementById('s-insurance').textContent = patientExtra.insurance || '—';
+    document.getElementById('s-code').textContent = patientData.portal_code || '—';
+    document.getElementById('s-created').textContent = new Date(patientData.created_at).toLocaleDateString('es-MX');
+    document.getElementById('header-sub').textContent = 'Código: '+(patientData.portal_code||'—');
+
+    // Alertas médicas
+    const alergias = patientExtra.alergias ? patientExtra.alergias.split(',').map(a=>a.trim()).filter(Boolean) : [];
+    const enf = patientExtra.enfermedades ? patientExtra.enfermedades.split(',').map(a=>a.trim()).filter(Boolean) : [];
+    document.getElementById('s-alergias').innerHTML = alergias.length ? alergias.map(a=>`<span class="tag">${a}</span>`).join('') : '<span class="badge badge-gray">Sin alergias</span>';
+    document.getElementById('s-enfermedades').innerHTML = enf.length ? enf.map(e=>`<span class="tag tag-info">${e}</span>`).join('') : '<span class="badge badge-gray">Sin registros</span>';
+
+    // Receta link
+    document.getElementById('nueva-receta-link').href = 'receta.html?patient='+patientId;
+
+  }catch(e){console.error(e);}
+}
+
+// LOAD APPOINTMENTS
+async function loadAppointments(){
+  try{
+    const apts = await fetch(API+'/appointments').then(r=>r.json());
+    const myApts = apts.filter(a=>a.patient_name===patientName);
+    const past = myApts.filter(a=>new Date(a.scheduled_at)<=new Date()).sort((a,b)=>new Date(b.scheduled_at)-new Date(a.scheduled_at));
+    const upcoming = myApts.filter(a=>new Date(a.scheduled_at)>new Date()).sort((a,b)=>new Date(a.scheduled_at)-new Date(b.scheduled_at));
+
+    document.getElementById('s-visits').textContent = myApts.length;
+    document.getElementById('s-last-visit').textContent = past[0] ? new Date(past[0].scheduled_at).toLocaleDateString('es-MX') : 'Sin visitas';
+    document.getElementById('s-next-visit').textContent = upcoming[0] ? new Date(upcoming[0].scheduled_at).toLocaleDateString('es-MX') : 'Sin próximas';
+
+    renderHistorial(past);
+  }catch(e){console.error(e);}
+}
+
+function renderHistorial(apts){
+  const allVisitas = [...visitasData, ...apts.map(a=>({
+    date: a.scheduled_at,
+    reason: a.reason || 'Consulta',
+    notes: a.notes || '',
+    status: a.status,
+    source: 'cita'
+  }))].sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  const container = document.getElementById('historial-list');
+  if(!allVisitas.length){
+    container.innerHTML='<div class="empty-state"><span class="empty-icon">📋</span><p>Sin visitas registradas</p></div>';
+    return;
+  }
+  container.innerHTML = allVisitas.map((v,i)=>{
+    const d = new Date(v.date);
+    const payColors = {pagado:'badge-green',pendiente:'badge-amber',parcial:'badge-amber'};
+    return `<div class="visit-item">
+      <div class="visit-date-col">
+        <div class="visit-date-day">${d.getDate()}</div>
+        <div class="visit-date-month">${d.toLocaleString('es-MX',{month:'short'})}</div>
+        <div class="visit-date-year">${d.getFullYear()}</div>
+      </div>
+      <div class="visit-body">
+        <div class="visit-title">${v.reason || 'Consulta general'}</div>
+        ${v.diagnosis?`<div style="font-size:12px;color:var(--brand);margin-top:3px;font-weight:500">Dx: ${v.diagnosis}</div>`:''}
+        ${v.procedure?`<div class="visit-notes">${v.procedure}</div>`:''}
+        ${v.notes?`<div class="visit-notes" style="color:var(--text-muted);font-style:italic">${v.notes}</div>`:''}
+        <div class="visit-tags">
+          ${v.cost?`<span class="badge badge-green">$${parseFloat(v.cost).toLocaleString('es-MX')}</span>`:''}
+          ${v.payment?`<span class="badge ${payColors[v.payment]||'badge-gray'}">${v.payment}</span>`:''}
+          ${v.source==='cita'?'<span class="badge badge-blue">Cita agendada</span>':'<span class="badge badge-gray">Visita manual</span>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ODONTOGRAMA
+function loadOdontograma(){
+  const frame = document.getElementById('odonto-frame');
+  frame.src = 'odontogram.html?patient='+patientId+'&name='+encodeURIComponent(patientName);
+}
+function openOdontogram(){
+  window.open('odontogram.html?patient='+patientId+'&name='+encodeURIComponent(patientName),'_blank');
+}
+
+// FOTOS
+function handleFileUpload(e){
+  const files = Array.from(e.target.files);
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = ev=>{
+      photosData.push({name:file.name, data:ev.target.result, date:new Date().toISOString(), type:file.type});
+      localStorage.setItem('photos_'+patientId, JSON.stringify(photosData));
+      renderPhotos();
+      toast('Archivo subido: '+file.name);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderPhotos(){
+  const grid = document.getElementById('photos-grid');
+  if(!photosData.length){
+    grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><span class="empty-icon">📷</span><p>Sin fotos agregadas</p></div>';
+    return;
+  }
+  grid.innerHTML = photosData.map((p,i)=>`
+    <div class="photo-item" onclick="viewPhoto(${i})">
+      ${p.type&&p.type.startsWith('image')?
+        `<img src="${p.data}" alt="${p.name}">`:
+        `<div style="text-align:center;padding:16px"><i data-lucide="file-text" style="width:32px;height:32px;color:var(--brand)"></i><p style="font-size:10px;color:var(--text-muted);margin-top:4px">${p.name}</p></div>`
+      }
+      <div class="photo-label">${p.name.substring(0,20)}</div>
+    </div>`).join('');
+  lucide.createIcons();
+}
+
+function viewPhoto(i){
+  const p = photosData[i];
+  const w = window.open('');
+  w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh">
+    <img src="${p.data}" style="max-width:100%;max-height:100vh;object-fit:contain">
+  </body></html>`);
+}
+
+// DOCUMENTOS
+function handleDocUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    docsData.push({name:file.name, data:ev.target.result, date:new Date().toISOString(), type:'uploaded'});
+    localStorage.setItem('docs_'+patientId, JSON.stringify(docsData));
+    toast('Documento subido: '+file.name);
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveDoc(){
+  const name = document.getElementById('d-name').value.trim();
+  if(!name){toast('El nombre es obligatorio','warning');return;}
+  docsData.push({name, type:document.getElementById('d-type').value, notes:document.getElementById('d-notes').value, date:new Date().toISOString()});
+  localStorage.setItem('docs_'+patientId, JSON.stringify(docsData));
+  closeModal('nuevo-doc');
+  toast('Documento guardado');
+}
+
+// VISITA
+function saveVisita(){
+  const date = document.getElementById('v-date').value;
+  const reason = document.getElementById('v-reason').value.trim();
+  if(!date||!reason){toast('Fecha y motivo son obligatorios','warning');return;}
+  const visita = {
+    date: date+'T'+(document.getElementById('v-time').value||'09:00'),
+    reason,
+    diagnosis: document.getElementById('v-diagnosis').value,
+    procedure: document.getElementById('v-procedure').value,
+    notes: document.getElementById('v-notes').value,
+    cost: document.getElementById('v-cost').value,
+    payment: document.getElementById('v-payment').value,
+    source: 'manual'
+  };
+  visitasData.unshift(visita);
+  localStorage.setItem('visitas_'+patientId, JSON.stringify(visitasData));
+  closeModal('nueva-visita');
+  toast('Visita registrada');
+  loadAppointments();
+  // Limpiar
+  ['v-date','v-time','v-reason','v-diagnosis','v-procedure','v-notes','v-cost'].forEach(id=>document.getElementById(id).value='');
+}
+
+// EDITAR PACIENTE
+function fillEditForm(){
+  if(!patientData) return;
+  document.getElementById('e-name').value = patientName;
+  document.getElementById('e-email').value = patientData.email||'';
+  document.getElementById('e-phone').value = patientData.phone||'';
+  document.getElementById('e-curp').value = patientExtra.curp||'';
+  document.getElementById('e-birth').value = patientExtra.birth||'';
+  document.getElementById('e-address').value = patientExtra.address||'';
+  document.getElementById('e-emergency').value = patientExtra.emergency||'';
+  document.getElementById('e-insurance').value = patientExtra.insurance||'';
+  document.getElementById('e-alergias').value = patientExtra.alergias||'';
+  document.getElementById('e-enfermedades').value = patientExtra.enfermedades||'';
+  document.getElementById('e-ocupacion').value = patientExtra.ocupacion||'';
+}
+
+function savePatientEdit(){
+  patientExtra = {
+    curp: document.getElementById('e-curp').value.toUpperCase(),
+    birth: document.getElementById('e-birth').value,
+    address: document.getElementById('e-address').value,
+    emergency: document.getElementById('e-emergency').value,
+    insurance: document.getElementById('e-insurance').value,
+    alergias: document.getElementById('e-alergias').value,
+    enfermedades: document.getElementById('e-enfermedades').value,
+    ocupacion: document.getElementById('e-ocupacion').value,
+  };
+  localStorage.setItem('extra_'+patientId, JSON.stringify(patientExtra));
+  closeModal('edit-patient');
+  toast('Datos actualizados');
+  loadPatient();
+}
+
+// FIRMA DIGITAL
+let isDrawing = false;
+let signCtx = null;
+
+function initSignature(){
+  setTimeout(()=>{
+    const canvas = document.getElementById('signature-canvas');
+    signCtx = canvas.getContext('2d');
+    signCtx.strokeStyle = '#0F172A';
+    signCtx.lineWidth = 2;
+    signCtx.lineCap = 'round';
+    canvas.addEventListener('mousedown', e=>{isDrawing=true;signCtx.beginPath();signCtx.moveTo(e.offsetX,e.offsetY)});
+    canvas.addEventListener('mousemove', e=>{if(isDrawing){signCtx.lineTo(e.offsetX,e.offsetY);signCtx.stroke()}});
+    canvas.addEventListener('mouseup', ()=>isDrawing=false);
+    canvas.addEventListener('touchstart', e=>{e.preventDefault();isDrawing=true;const r=canvas.getBoundingClientRect();signCtx.beginPath();signCtx.moveTo(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top)},{passive:false});
+    canvas.addEventListener('touchmove', e=>{e.preventDefault();const r=canvas.getBoundingClientRect();signCtx.lineTo(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);signCtx.stroke()},{passive:false});
+    canvas.addEventListener('touchend', ()=>isDrawing=false);
+  },100);
+}
+
+function clearSignature(){
+  if(signCtx){
+    const canvas = document.getElementById('signature-canvas');
+    signCtx.clearRect(0,0,canvas.width,canvas.height);
+  }
+}
+
+function saveSignature(){
+  const canvas = document.getElementById('signature-canvas');
+  const sig = canvas.toDataURL();
+  localStorage.setItem('signature_'+patientId, sig);
+  closeModal('firma-doc');
+  toast('Firma guardada correctamente');
+}
+
+// INIT
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+  if(!patientId){window.location.href='index.html';return;}
+  loadPatient();
+  loadAppointments();
+  renderPhotos();
+});
+</script>
+</body>
+</html>

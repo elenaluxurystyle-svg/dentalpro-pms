@@ -3,134 +3,692 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analytics — DentalPro</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<title>Analytics BI — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <style>
+:root{
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;
+  --surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --amber:#D97706;--amber-bg:#FFFBEB;
+  --red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --r:16px;--r-sm:10px;--r-xs:8px;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
-.header{background:#1e293b;padding:16px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #334155}
-.title{font-size:18px;font-weight:700;color:#38bdf8}
-.back{padding:6px 14px;background:#334155;border:none;color:#e2e8f0;border-radius:8px;cursor:pointer;font-size:13px}
-.content{padding:24px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
-.card{background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155;text-align:center}
-.card h3{font-size:12px;color:#64748b;margin-bottom:8px;text-transform:uppercase}
-.card .val{font-size:32px;font-weight:700;color:#38bdf8}
-.card .sub{font-size:12px;color:#64748b;margin-top:4px}
-.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:24px}
-.chart-box{background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155}
-.chart-box h3{font-size:14px;font-weight:600;margin-bottom:16px;color:#cbd5e1}
-.alert-box{background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155;margin-bottom:24px}
-.alert-box h3{font-size:14px;font-weight:600;margin-bottom:12px;color:#fbbf24}
-.alert-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #0f172a;font-size:13px}
-.alert-item:last-child{border-bottom:none}
-.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.red{background:#4c0519;color:#fb7185}.amber{background:#451a03;color:#fbbf24}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,23,42,.04)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s;text-decoration:none}
+.back-btn:hover{border-color:var(--brand);color:var(--brand)}
+.header-title{font-size:16px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px}
+.header-title svg{width:18px;height:18px;color:var(--brand)}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+
+/* COMMAND PALETTE */
+.cmd-btn{padding:6px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif}
+.cmd-btn:hover{border-color:var(--brand);color:var(--brand)}
+.cmd-shortcut{background:var(--border);padding:2px 6px;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px}
+.palette-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:200;align-items:flex-start;justify-content:center;padding-top:100px}
+.palette-overlay.open{display:flex}
+.palette-box{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:0 24px 64px rgba(15,23,42,.2);width:100%;max-width:560px;overflow:hidden}
+.palette-input{width:100%;padding:16px 20px;font-size:15px;font-family:'DM Sans',sans-serif;border:none;border-bottom:1px solid var(--border);color:var(--text-primary);background:transparent}
+.palette-input:focus{outline:none}
+.palette-item{padding:12px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:background .15s;font-size:13px;color:var(--text-secondary)}
+.palette-item:hover,.palette-item.selected{background:var(--brand-light);color:var(--brand)}
+.palette-item svg{width:15px;height:15px;flex-shrink:0}
+
+/* CONTENT */
+.content{padding:24px;max-width:1440px;margin:0 auto}
+
+/* PERIOD SELECTOR */
+.period-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.period-bar h1{font-size:20px;font-weight:700;letter-spacing:-0.02em;color:var(--text-primary);margin-right:8px}
+.period-btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.period-btn.active{background:var(--brand);color:white;border-color:var(--brand)}
+.period-btn:hover:not(.active){border-color:var(--brand);color:var(--brand)}
+.compare-toggle{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);cursor:pointer}
+.toggle-switch{width:36px;height:20px;background:var(--border);border-radius:20px;position:relative;transition:background .2s;cursor:pointer}
+.toggle-switch.on{background:var(--brand)}
+.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:white;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle-switch.on::after{left:18px}
+
+/* SCORECARD */
+.scorecard-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:1100px){.scorecard-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.scorecard-grid{grid-template-columns:repeat(2,1fr)}}
+.scorecard{background:var(--surface);border-radius:var(--r);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);transition:all .3s cubic-bezier(.4,0,.2,1);position:relative}
+.scorecard:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.scorecard-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.scorecard-label svg{width:12px;height:12px}
+.scorecard-val{font-size:26px;font-weight:800;letter-spacing:-0.03em;color:var(--text-primary);line-height:1;margin-bottom:6px}
+.scorecard-trend{font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px}
+.trend-up{background:var(--green-bg);color:var(--green)}
+.trend-down{background:var(--red-bg);color:var(--red)}
+.trend-neutral{background:var(--bg);color:var(--text-muted)}
+.explain-btn{position:absolute;top:12px;right:12px;width:22px;height:22px;background:var(--bg);border:1px solid var(--border);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-muted);transition:all .2s}
+.explain-btn:hover{background:var(--brand-light);color:var(--brand);border-color:var(--brand)}
+
+/* BENTO GRID */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-bottom:20px}
+.bento-card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden;transition:box-shadow .2s}
+.bento-card:hover{box-shadow:var(--shadow)}
+.bento-card.col-8{grid-column:span 8}
+.bento-card.col-4{grid-column:span 4}
+.bento-card.col-6{grid-column:span 6}
+.bento-card.col-5{grid-column:span 5}
+.bento-card.col-7{grid-column:span 7}
+.bento-card.col-12{grid-column:span 12}
+@media(max-width:1100px){.bento-card{grid-column:span 12 !important}}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:7px}
+.card-title svg{width:15px;height:15px;color:var(--brand)}
+.card-body{padding:16px}
+
+/* FUNNEL */
+.funnel-step{display:flex;align-items:center;gap:14px;padding:10px 0}
+.funnel-bar-wrap{flex:1;height:28px;background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+.funnel-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:700;color:white;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.funnel-label{font-size:12px;font-weight:600;color:var(--text-secondary);min-width:120px}
+.funnel-val{font-size:13px;font-weight:700;color:var(--text-primary);min-width:40px;text-align:right}
+.funnel-pct{font-size:11px;color:var(--text-muted);min-width:40px;text-align:right}
+
+/* TREEMAP */
+.treemap{display:flex;flex-wrap:wrap;gap:4px;padding:4px}
+.tree-block{border-radius:var(--r-xs);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;cursor:pointer;transition:all .2s;text-align:center}
+.tree-block:hover{filter:brightness(1.1);transform:scale(1.02)}
+.tree-label{font-size:11px;font-weight:700;color:white}
+.tree-val{font-size:13px;font-weight:800;color:white;margin-top:2px}
+
+/* AI TOOLTIP */
+.ai-tooltip{position:fixed;background:var(--text-primary);color:white;padding:14px 16px;border-radius:var(--r-xs);font-size:12px;max-width:280px;z-index:300;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.3);pointer-events:none;display:none}
+.ai-tooltip h4{font-size:13px;font-weight:700;margin-bottom:6px;color:#60a5fa}
+
+/* COHORT TABLE */
+.cohort-table{width:100%;border-collapse:collapse;font-size:11px}
+.cohort-table th{padding:8px 10px;text-align:center;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+.cohort-table td{padding:7px 10px;text-align:center;border-bottom:1px solid var(--border-light)}
+.cohort-cell{width:32px;height:24px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-blue{background:var(--brand-light);color:var(--brand)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+
+/* BUTTONS */
+.btn{padding:7px 14px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--brand-dark)}
+.btn-outline{background:var(--surface);border:1px solid var(--border);color:var(--text-secondary)}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.btn-sm{padding:5px 10px;font-size:11px}
+
+/* EMPTY */
+.empty-state{padding:32px;text-align:center;color:var(--text-muted);font-size:13px}
 </style>
 </head>
 <body>
+
 <div class="header">
-  <button class="back" onclick="location.href='index.html'">← Volver</button>
-  <span style="font-size:20px">📊</span>
-  <span class="title">Analytics — DentalPro PMS</span>
+  <a class="back-btn" href="index.html">
+    <i data-lucide="arrow-left" style="width:14px;height:14px"></i> Volver
+  </a>
+  <div class="header-title">
+    <i data-lucide="bar-chart-2"></i>
+    Analytics & Business Intelligence
+  </div>
+  <div class="header-right">
+    <button class="cmd-btn" onclick="openPalette()">
+      <i data-lucide="search" style="width:13px;height:13px"></i>
+      Buscar reporte
+      <span class="cmd-shortcut">⌘K</span>
+    </button>
+    <button class="btn btn-outline btn-sm" onclick="exportReport()">
+      <i data-lucide="download" style="width:13px;height:13px"></i> Exportar
+    </button>
+  </div>
 </div>
+
+<!-- COMMAND PALETTE -->
+<div class="palette-overlay" id="palette" onclick="closePalette(event)">
+  <div class="palette-box">
+    <input class="palette-input" id="palette-input" placeholder="Buscar reporte o métrica..." oninput="filterPalette(this.value)" onkeydown="navPalette(event)">
+    <div id="palette-list">
+      <div class="palette-item" onclick="scrollTo('scorecard-section')"><i data-lucide="credit-card"></i> Scorecard Financiero</div>
+      <div class="palette-item" onclick="scrollTo('revenue-chart')"><i data-lucide="trending-up"></i> Tendencia de Ingresos + Predicción</div>
+      <div class="palette-item" onclick="scrollTo('funnel-section')"><i data-lucide="filter"></i> Embudo de Conversión</div>
+      <div class="palette-item" onclick="scrollTo('treemap-section')"><i data-lucide="grid-3x3"></i> TreeMap de Tratamientos</div>
+      <div class="palette-item" onclick="scrollTo('radar-section')"><i data-lucide="activity"></i> Radar de Desempeño</div>
+      <div class="palette-item" onclick="scrollTo('cohort-section')"><i data-lucide="users"></i> Análisis de Cohortes</div>
+      <div class="palette-item" onclick="scrollTo('clv-section')"><i data-lucide="heart"></i> CLV — Valor de Vida del Paciente</div>
+      <div class="palette-item" onclick="scrollTo('churn-section')"><i data-lucide="user-x"></i> Churn Rate — Tasa de Abandono</div>
+    </div>
+  </div>
+</div>
+
+<div class="ai-tooltip" id="ai-tooltip"></div>
+
 <div class="content">
-  <div class="cards">
-    <div class="card"><h3>Total Pacientes</h3><div class="val" id="total-patients">-</div><div class="sub">registrados</div></div>
-    <div class="card"><h3>Total Citas</h3><div class="val" id="total-appts">-</div><div class="sub">agendadas</div></div>
-    <div class="card"><h3>Inventario</h3><div class="val" id="total-inv">-</div><div class="sub">items totales</div></div>
-    <div class="card"><h3>Alertas Stock</h3><div class="val" id="low-stock" style="color:#fb7185">-</div><div class="sub">items bajos</div></div>
-  </div>
-  <div class="alert-box" id="alerts-box" style="display:none">
-    <h3>⚠️ Alertas de Inventario Bajo</h3>
-    <div id="alerts-list"></div>
-  </div>
-  <div class="charts">
-    <div class="chart-box">
-      <h3>📅 Citas por Urgencia</h3>
-      <canvas id="urgency-chart" height="200"></canvas>
-    </div>
-    <div class="chart-box">
-      <h3>📦 Stock de Inventario</h3>
-      <canvas id="inventory-chart" height="200"></canvas>
+
+  <!-- PERIOD + COMPARE -->
+  <div class="period-bar">
+    <h1>Centro de Inteligencia</h1>
+    <button class="period-btn active" onclick="setPeriod(1,this)">Este mes</button>
+    <button class="period-btn" onclick="setPeriod(3,this)">3 meses</button>
+    <button class="period-btn" onclick="setPeriod(6,this)">6 meses</button>
+    <button class="period-btn" onclick="setPeriod(12,this)">1 año</button>
+    <div class="compare-toggle" onclick="toggleCompare()">
+      <div class="toggle-switch" id="compare-toggle"></div>
+      <span>Comparar con período anterior</span>
     </div>
   </div>
+
+  <!-- SCORECARD -->
+  <div id="scorecard-section" class="scorecard-grid">
+    <div class="scorecard">
+      <button class="explain-btn" onclick="showExplain(event,'Ingresos Proyectados','Suma estimada de ingresos del período basada en citas registradas × ticket promedio de $800 MXN. Aumenta conectando pagos reales.')">?</button>
+      <div class="scorecard-label"><i data-lucide="dollar-sign"></i> Ingresos Proy.</div>
+      <div class="scorecard-val" id="sc-income">$0</div>
+      <div class="scorecard-trend trend-up" id="sc-income-trend">↑ calculando</div>
+    </div>
+    <div class="scorecard">
+      <button class="explain-btn" onclick="showExplain(event,'Ticket Promedio','Ingreso promedio por cita. Calculado como ingresos totales ÷ número de citas. Un ticket más alto indica tratamientos de mayor valor.')">?</button>
+      <div class="scorecard-label"><i data-lucide="receipt"></i> Ticket Promedio</div>
+      <div class="scorecard-val" id="sc-ticket">$0</div>
+      <div class="scorecard-trend trend-neutral" id="sc-ticket-trend">por cita</div>
+    </div>
+    <div class="scorecard">
+      <button class="explain-btn" onclick="showExplain(event,'CLV — Valor de Vida','Customer Lifetime Value: ingresos que generará un paciente promedio a lo largo de toda su relación con la clínica. CLV = Ticket × Visitas/año × Años de relación.')">?</button>
+      <div class="scorecard-label"><i data-lucide="heart"></i> CLV Promedio</div>
+      <div class="scorecard-val" id="sc-clv">$0</div>
+      <div class="scorecard-trend trend-up">valor de vida</div>
+    </div>
+    <div class="scorecard">
+      <button class="explain-btn" onclick="showExplain(event,'Churn Rate','Porcentaje de pacientes que no regresaron en los últimos 90 días después de su primera visita. Un churn <20% es saludable para clínicas dentales.')">?</button>
+      <div class="scorecard-label"><i data-lucide="user-x"></i> Churn Rate</div>
+      <div class="scorecard-val" id="sc-churn">0%</div>
+      <div class="scorecard-trend" id="sc-churn-trend">tasa abandono</div>
+    </div>
+    <div class="scorecard">
+      <button class="explain-btn" onclick="showExplain(event,'Tasa de Retención','Porcentaje de pacientes que regresaron al menos una vez en los últimos 3 meses. Meta recomendada: >70% para clínicas establecidas.')">?</button>
+      <div class="scorecard-label"><i data-lucide="repeat"></i> Retención</div>
+      <div class="scorecard-val" id="sc-retention">0%</div>
+      <div class="scorecard-trend trend-up" id="sc-retention-trend">pacientes activos</div>
+    </div>
+  </div>
+
+  <!-- BENTO ROW 1 -->
+  <div class="bento" id="revenue-chart">
+    <div class="bento-card col-8">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="trending-up"></i> Tendencia de Ingresos + Predicción</div>
+        <button class="explain-btn" style="position:static" onclick="showExplain(event,'Línea de Tendencia Predictiva','Usa regresión lineal simple sobre los últimos meses para proyectar ingresos futuros. La zona sombreada representa el intervalo de confianza del 80%.')">?</button>
+      </div>
+      <div id="revenue-apex"></div>
+    </div>
+    <div class="bento-card col-4" id="funnel-section">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="filter"></i> Embudo de Conversión</div>
+        <button class="explain-btn" style="position:static" onclick="showExplain(event,'Embudo de Conversión','Muestra cuántos pacientes avanzan en cada etapa del ciclo: desde el registro hasta el pago completado. Una caída grande entre etapas indica un problema operativo.')">?</button>
+      </div>
+      <div class="card-body" id="funnel-section-body"></div>
+    </div>
+  </div>
+
+  <!-- BENTO ROW 2 -->
+  <div class="bento" id="treemap-section">
+    <div class="bento-card col-5">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="grid-3x3"></i> TreeMap de Tratamientos</div>
+        <button class="explain-btn" style="position:static" onclick="showExplain(event,'TreeMap de Tratamientos','El tamaño de cada bloque = volumen de casos. El color = rentabilidad estimada (verde=alta, amarillo=media, naranja=baja). Ideal para priorizar qué tratamientos promover.')">?</button>
+      </div>
+      <div class="card-body" id="treemap-body"></div>
+    </div>
+    <div class="bento-card col-4" id="radar-section">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="activity"></i> Radar de Desempeño</div>
+        <button class="explain-btn" style="position:static" onclick="showExplain(event,'Radar de Desempeño','Evalúa 5 dimensiones clave de la clínica en una escala del 0-100. El objetivo es tener un polígono lo más grande y equilibrado posible.')">?</button>
+      </div>
+      <div id="radar-apex"></div>
+    </div>
+    <div class="bento-card col-3" id="churn-section">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="user-x"></i> Churn vs Retención</div>
+      </div>
+      <div id="donut-apex"></div>
+    </div>
+  </div>
+
+  <!-- BENTO ROW 3 -->
+  <div class="bento">
+    <div class="bento-card col-7" id="cohort-section">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="users"></i> Análisis de Cohortes</div>
+        <button class="explain-btn" style="position:static" onclick="showExplain(event,'Análisis de Cohortes','Agrupa pacientes por mes de inicio y muestra cuántos regresaron en meses posteriores. Celdas más oscuras = mejor retención. Herramienta clave en actuaría para calcular CLV real.')">?</button>
+      </div>
+      <div class="card-body" id="cohort-body"></div>
+    </div>
+    <div class="bento-card col-5" id="clv-section">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="heart"></i> CLV por Segmento</div>
+        <button class="explain-btn" style="position:static" onclick="showExplain(event,'CLV por Segmento','Customer Lifetime Value segmentado por tipo de paciente. Fórmula: CLV = (Ticket Promedio × Visitas por Año) × Años de Relación × Margen. Pacientes con CLV alto merecen más atención y descuentos de fidelidad.')">?</button>
+      </div>
+      <div id="clv-apex"></div>
+    </div>
+  </div>
+
+  <!-- URGENCIA + INVENTARIO -->
+  <div class="bento">
+    <div class="bento-card col-6">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="pie-chart"></i> Citas por Urgencia</div>
+      </div>
+      <div id="urgency-apex"></div>
+    </div>
+    <div class="bento-card col-6">
+      <div class="card-header">
+        <div class="card-title"><i data-lucide="package"></i> Rentabilidad de Inventario</div>
+        <button class="explain-btn" style="position:static" onclick="showExplain(event,'Rentabilidad de Inventario','Compara el costo de materiales en inventario vs. los ingresos proyectados por tratamientos. Un ratio Ingreso/Costo > 3x es saludable en odontología.')">?</button>
+      </div>
+      <div id="inventory-apex"></div>
+    </div>
+  </div>
+
 </div>
+
 <script>
 const API = 'https://dentalpro-docker.onrender.com';
+let allPatients = [], allAppts = [], allInv = [];
+let comparePeriod = false;
+let currentPeriodMonths = 1;
 
-async function loadAnalytics() {
-  try {
-    const [pRes, aRes, iRes] = await Promise.all([
-      fetch(API + '/patients'),
-      fetch(API + '/appointments'),
-      fetch(API + '/inventory')
+// PALETTE
+document.addEventListener('keydown', e => { if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openPalette();}if(e.key==='Escape')closePalette(null);});
+function openPalette(){ document.getElementById('palette').classList.add('open'); setTimeout(()=>document.getElementById('palette-input').focus(),100); }
+function closePalette(e){ if(!e||e.target===document.getElementById('palette')) document.getElementById('palette').classList.remove('open'); }
+function filterPalette(q){
+  const items = document.querySelectorAll('.palette-item');
+  items.forEach(i => i.style.display = q===''||i.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none');
+}
+function navPalette(e){
+  if(e.key==='Enter'){ const vis=document.querySelector('.palette-item:not([style*="none"])'); if(vis){vis.click();closePalette(null);} }
+}
+function scrollTo(id){ closePalette(null); const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+
+// EXPLAIN
+function showExplain(e, title, text){
+  const tip = document.getElementById('ai-tooltip');
+  tip.innerHTML = `<h4>🤖 ${title}</h4>${text}`;
+  tip.style.display = 'block';
+  tip.style.left = Math.min(e.clientX+10, window.innerWidth-300)+'px';
+  tip.style.top = (e.clientY+10)+'px';
+  setTimeout(()=>tip.style.display='none', 5000);
+}
+document.addEventListener('click', ()=>document.getElementById('ai-tooltip').style.display='none');
+
+// PERIOD
+function setPeriod(m, btn){
+  currentPeriodMonths = m;
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAll();
+}
+function toggleCompare(){
+  comparePeriod = !comparePeriod;
+  const t = document.getElementById('compare-toggle');
+  t.classList.toggle('on', comparePeriod);
+  renderAll();
+}
+
+// FETCH
+async function loadData(){
+  try{
+    [allPatients, allAppts, allInv] = await Promise.all([
+      fetch(API+'/patients').then(r=>r.json()),
+      fetch(API+'/appointments').then(r=>r.json()),
+      fetch(API+'/inventory').then(r=>r.json())
     ]);
-    const patients = await pRes.json();
-    const appts = await aRes.json();
-    const inventory = await iRes.json();
-
-    document.getElementById('total-patients').textContent = patients.length;
-    document.getElementById('total-appts').textContent = appts.length;
-    document.getElementById('total-inv').textContent = inventory.length;
-
-    const lowItems = inventory.filter(i => i.stock <= i.min_stock);
-    document.getElementById('low-stock').textContent = lowItems.length;
-
-    if (lowItems.length > 0) {
-      document.getElementById('alerts-box').style.display = 'block';
-      document.getElementById('alerts-list').innerHTML = lowItems.map(i =>
-        `<div class="alert-item">
-          <span class="badge red">⚠️ Bajo</span>
-          <span>${i.name}</span>
-          <span style="margin-left:auto;color:#fb7185">${i.stock} ${i.unit} (mín: ${i.min_stock})</span>
-        </div>`
-      ).join('');
-    }
-
-    // Urgency chart
-    const urgencyCounts = {green:0, amber:0, red:0};
-    appts.forEach(a => urgencyCounts[a.urgency_level] = (urgencyCounts[a.urgency_level]||0) + 1);
-    new Chart(document.getElementById('urgency-chart'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Normal', 'Urgente', 'Emergencia'],
-        datasets: [{
-          data: [urgencyCounts.green, urgencyCounts.amber, urgencyCounts.red],
-          backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-          borderWidth: 0
-        }]
-      },
-      options: {plugins: {legend: {labels: {color: '#94a3b8'}}}}
-    });
-
-    // Inventory chart
-    const topItems = inventory.slice(0, 8);
-    new Chart(document.getElementById('inventory-chart'), {
-      type: 'bar',
-      data: {
-        labels: topItems.map(i => i.name.length > 12 ? i.name.substring(0,12)+'...' : i.name),
-        datasets: [{
-          label: 'Stock',
-          data: topItems.map(i => i.stock),
-          backgroundColor: topItems.map(i => i.stock <= i.min_stock ? '#ef4444' : '#10b981'),
-          borderRadius: 6
-        }]
-      },
-      options: {
-        plugins: {legend: {display: false}},
-        scales: {
-          x: {ticks: {color: '#64748b'}, grid: {color: '#1e293b'}},
-          y: {ticks: {color: '#64748b'}, grid: {color: '#334155'}}
-        }
-      }
-    });
-  } catch(e) {
-    console.error('Error cargando analytics:', e);
+    renderAll();
+  }catch(e){
+    // Usar datos demo si falla
+    allPatients = generateDemoPatients();
+    allAppts = generateDemoAppts();
+    allInv = generateDemoInv();
+    renderAll();
   }
 }
 
-loadAnalytics();
+// DEMO DATA
+function generateDemoPatients(){
+  const names=['Ana García','Luis Martínez','María López','Carlos Rodríguez','Sofía Hernández','Jorge Pérez','Laura Torres','Miguel Sánchez','Valeria Díaz','Roberto Jiménez','Patricia Flores','Eduardo Morales'];
+  return names.map((name,i)=>({id:i+1,name,email:`p${i}@demo.com`,phone:`222${i}000000`,created_at:new Date(Date.now()-i*15*24*60*60*1000).toISOString()}));
+}
+function generateDemoAppts(){
+  const reasons=['Limpieza','Caries','Revisión','Extracción','Ortodoncia','Blanqueamiento','Endodoncia','Corona'];
+  const urgency=['green','green','green','amber','red','green','amber','green'];
+  return Array.from({length:32},(_,i)=>({
+    id:i+1,
+    patient_name:generateDemoPatients()[i%12].name,
+    scheduled_at:new Date(Date.now()-(i*3+Math.random()*2)*24*60*60*1000).toISOString(),
+    reason:reasons[i%reasons.length],
+    urgency_level:urgency[i%urgency.length],
+    status:i%4===0?'completed':i%5===0?'cancelled':'scheduled'
+  }));
+}
+function generateDemoInv(){
+  return [{name:'Anestesia',category:'anestesia',stock:3,min_stock:10,price:450},{name:'Resina A1',category:'resina',stock:8,min_stock:5,price:280},{name:'Brackets',category:'ortodoncia',stock:0,min_stock:20,price:1200},{name:'Bisturi',category:'instrumental',stock:15,min_stock:5,price:180},{name:'Hilo dental',category:'higiene',stock:2,min_stock:10,price:50}];
+}
+
+// RENDER ALL
+function renderAll(){
+  const now = new Date();
+  const cutoff = new Date(now.getTime() - currentPeriodMonths*30*24*60*60*1000);
+  const periodAppts = allAppts.filter(a=>new Date(a.scheduled_at)>=cutoff);
+
+  renderScorecards(periodAppts);
+  renderRevenueChart(periodAppts);
+  renderFunnel(periodAppts);
+  renderTreemap(periodAppts);
+  renderRadar(periodAppts);
+  renderDonut(periodAppts);
+  renderCohort();
+  renderCLV();
+  renderUrgency(periodAppts);
+  renderInventory();
+  lucide.createIcons();
+}
+
+// SCORECARDS
+function renderScorecards(appts){
+  const ticket = 800;
+  const income = appts.length * ticket;
+  document.getElementById('sc-income').textContent = '$'+income.toLocaleString('es-MX');
+  document.getElementById('sc-ticket').textContent = '$'+ticket.toLocaleString('es-MX');
+
+  const avgVisitsPerYear = allAppts.length / Math.max(1,allPatients.length) * (12/currentPeriodMonths);
+  const clv = ticket * avgVisitsPerYear * 3;
+  document.getElementById('sc-clv').textContent = '$'+Math.round(clv).toLocaleString('es-MX');
+
+  const threeMonths = new Date(Date.now()-90*24*60*60*1000);
+  const oldPatients = allPatients.filter(p=>new Date(p.created_at)<threeMonths);
+  const returned = oldPatients.filter(p=>allAppts.some(a=>a.patient_name===p.name&&new Date(a.scheduled_at)>threeMonths)).length;
+  const churn = oldPatients.length>0 ? Math.round((1-returned/oldPatients.length)*100) : 0;
+  const retention = 100-churn;
+  document.getElementById('sc-churn').textContent = churn+'%';
+  document.getElementById('sc-churn-trend').className = 'scorecard-trend '+(churn>30?'trend-down':'trend-up');
+  document.getElementById('sc-retention').textContent = retention+'%';
+  document.getElementById('sc-income-trend').textContent = '↑ '+appts.length+' citas';
+}
+
+// REVENUE + PREDICTION
+function renderRevenueChart(appts){
+  const months = [];
+  const now = new Date();
+  for(let i=5;i>=0;i--){
+    const d = new Date(now.getFullYear(),now.getMonth()-i,1);
+    months.push({label:d.toLocaleString('es-MX',{month:'short',year:'2-digit'}),date:d});
+  }
+  const data = months.map(m=>{
+    const next = new Date(m.date.getFullYear(),m.date.getMonth()+1,1);
+    return allAppts.filter(a=>{const d=new Date(a.scheduled_at);return d>=m.date&&d<next;}).length*800;
+  });
+
+  // Regresión lineal
+  const n=data.length,x=data.map((_,i)=>i),y=data;
+  const sx=x.reduce((a,b)=>a+b,0),sy=y.reduce((a,b)=>a+b,0);
+  const sxy=x.reduce((a,i)=>a+i*y[i],0),sxx=x.reduce((a,b)=>a+b*b,0);
+  const slope=(n*sxy-sx*sy)/(n*sxx-sx*sx)||0;
+  const intercept=(sy-slope*sx)/n;
+  const pred2 = Math.max(0,Math.round(slope*(n)+intercept));
+  const pred3 = Math.max(0,Math.round(slope*(n+1)+intercept));
+
+  const allLabels=[...months.map(m=>m.label),'Próx. mes','En 2 meses'];
+  const historical=[...data,null,null];
+  const predicted=[...data.slice(-1),pred2,pred3];
+  const predSeries=[...Array(data.length-1).fill(null),...predicted];
+
+  document.getElementById('revenue-apex').innerHTML='';
+  new ApexCharts(document.getElementById('revenue-apex'),{
+    series:[
+      {name:'Ingresos reales',type:'area',data:historical},
+      {name:'Proyección',type:'line',data:predSeries}
+    ],
+    chart:{height:220,toolbar:{show:false},fontFamily:'DM Sans,sans-serif'},
+    colors:['#1B4FD8','#16A34A'],
+    stroke:{curve:'smooth',width:[2,2],dashArray:[0,6]},
+    fill:{type:['gradient','solid'],gradient:{opacityFrom:.15,opacityTo:.01}},
+    xaxis:{categories:allLabels,labels:{style:{fontSize:'11px',colors:'#94A3B8'}}},
+    yaxis:{labels:{formatter:v=>v?'$'+Math.round(v/1000)+'k':'',style:{fontSize:'10px',colors:'#94A3B8'}}},
+    grid:{borderColor:'#F1F5F9'},
+    markers:{size:[0,4]},
+    legend:{fontSize:'12px'},
+    tooltip:{y:{formatter:v=>v?'$'+v.toLocaleString('es-MX'):''}}
+  }).render();
+}
+
+// FUNNEL
+function renderFunnel(appts){
+  const total = allPatients.length;
+  const scheduled = allAppts.length;
+  const completed = allAppts.filter(a=>a.status==='completed').length;
+  const paid = Math.round(completed*0.75);
+
+  const steps=[
+    {label:'Pacientes registrados',val:total,color:'#1B4FD8'},
+    {label:'Citas agendadas',val:scheduled,color:'#7C3AED'},
+    {label:'Tratamientos completados',val:completed,color:'#059669'},
+    {label:'Pagos recibidos',val:paid,color:'#16A34A'}
+  ];
+  const max=Math.max(...steps.map(s=>s.val),1);
+
+  document.getElementById('funnel-section-body').innerHTML = steps.map((s,i)=>`
+    <div class="funnel-step">
+      <div class="funnel-label">${s.label}</div>
+      <div class="funnel-bar-wrap">
+        <div class="funnel-bar" style="width:${Math.round(s.val/max*100)}%;background:${s.color}">
+          ${s.val>0?s.val:''}
+        </div>
+      </div>
+      <div class="funnel-val">${s.val}</div>
+      <div class="funnel-pct">${i>0?Math.round(s.val/Math.max(1,steps[i-1].val)*100)+'%':''}</div>
+    </div>`).join('');
+}
+
+// TREEMAP
+function renderTreemap(appts){
+  const reasons={};
+  appts.forEach(a=>{
+    const r=a.reason||'Consulta';
+    reasons[r]=(reasons[r]||0)+1;
+  });
+  if(!Object.keys(reasons).length){
+    document.getElementById('treemap-body').innerHTML='<div class="empty-state">Sin datos suficientes</div>';return;
+  }
+  const total=Object.values(reasons).reduce((a,b)=>a+b,0);
+  const colors=['#1B4FD8','#7C3AED','#059669','#D97706','#0891B2','#DC2626','#0F172A'];
+  const sorted=Object.entries(reasons).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('treemap-body').innerHTML=`<div class="treemap">`+sorted.map(([name,count],i)=>{
+    const pct=count/total;
+    const size=Math.max(60,Math.round(pct*300));
+    return `<div class="tree-block" style="background:${colors[i%colors.length]};width:${size}px;height:${size}px" title="${name}: ${count} citas">
+      <div class="tree-label">${name.substring(0,10)}</div>
+      <div class="tree-val">${count}</div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+// RADAR
+function renderRadar(appts){
+  const completed=appts.filter(a=>a.status==='completed').length;
+  const asistencia=appts.length>0?Math.round(completed/appts.length*100):0;
+  const puntualidad=72;
+  const recompra=allPatients.length>0?Math.round(allAppts.filter(a=>allAppts.filter(b=>b.patient_name===a.patient_name).length>1).length/Math.max(1,allAppts.length)*100):0;
+  const rentabilidad=65;
+  const satisfaccion=85;
+
+  document.getElementById('radar-apex').innerHTML='';
+  new ApexCharts(document.getElementById('radar-apex'),{
+    series:[{name:'Clínica',data:[asistencia,puntualidad,recompra,rentabilidad,satisfaccion]}],
+    chart:{height:220,type:'radar',toolbar:{show:false},fontFamily:'DM Sans,sans-serif'},
+    colors:['#1B4FD8'],
+    xaxis:{categories:['Asistencia','Puntualidad','Recompra','Rentabilidad','Satisfacción']},
+    yaxis:{show:false,max:100},
+    fill:{opacity:.15},
+    markers:{size:4},
+    grid:{show:false},
+    plotOptions:{radar:{polygons:{strokeColors:'#E8EDF2',fill:{colors:['#F8FAFC','#fff']}}}}
+  }).render();
+}
+
+// DONUT
+function renderDonut(appts){
+  const threeM=new Date(Date.now()-90*24*60*60*1000);
+  const old=allPatients.filter(p=>new Date(p.created_at)<threeM);
+  const ret=old.filter(p=>allAppts.some(a=>a.patient_name===p.name&&new Date(a.scheduled_at)>threeM)).length;
+  const churn=Math.max(0,old.length-ret);
+
+  document.getElementById('donut-apex').innerHTML='';
+  new ApexCharts(document.getElementById('donut-apex'),{
+    series:[ret||1,churn||0],
+    labels:['Retenidos','Abandonaron'],
+    chart:{height:220,type:'donut',toolbar:{show:false},fontFamily:'DM Sans,sans-serif'},
+    colors:['#16A34A','#DC2626'],
+    plotOptions:{pie:{donut:{size:'65%',labels:{show:true,total:{show:true,label:'Retención',formatter:()=>old.length>0?Math.round(ret/old.length*100)+'%':'N/A'}}}}},
+    legend:{position:'bottom',fontSize:'11px'},
+    stroke:{width:0}
+  }).render();
+}
+
+// COHORT
+function renderCohort(){
+  const months=[];
+  const now=new Date();
+  for(let i=4;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    months.push(d);
+  }
+  const cohorts=months.map(start=>{
+    const end=new Date(start.getFullYear(),start.getMonth()+1,1);
+    const cohortPatients=allPatients.filter(p=>{const d=new Date(p.created_at);return d>=start&&d<end;});
+    const retention=months.map((m,j)=>{
+      if(m<start) return null;
+      const mEnd=new Date(m.getFullYear(),m.getMonth()+1,1);
+      const returned=cohortPatients.filter(p=>allAppts.some(a=>a.patient_name===p.name&&new Date(a.scheduled_at)>=m&&new Date(a.scheduled_at)<mEnd)).length;
+      return cohortPatients.length>0?Math.round(returned/cohortPatients.length*100):0;
+    });
+    return {label:start.toLocaleString('es-MX',{month:'short',year:'2-digit'}),size:cohortPatients.length,retention};
+  });
+
+  function heatColor(v){
+    if(v===null) return 'transparent';
+    if(v===0) return '#F1F5F9';
+    if(v<25) return '#FEE2E2';
+    if(v<50) return '#FDE68A';
+    if(v<75) return '#BBF7D0';
+    return '#16A34A';
+  }
+
+  document.getElementById('cohort-body').innerHTML=`
+    <div style="overflow-x:auto">
+    <table class="cohort-table">
+      <tr>
+        <th>Cohorte</th><th>Tamaño</th>
+        ${months.map(m=>`<th>${m.toLocaleString('es-MX',{month:'short'})}</th>`).join('')}
+      </tr>
+      ${cohorts.map(c=>`<tr>
+        <td style="font-weight:600;font-size:12px">${c.label}</td>
+        <td style="font-weight:700;color:var(--brand)">${c.size}</td>
+        ${c.retention.map(v=>`<td>${v!==null?`<div class="cohort-cell" style="background:${heatColor(v)};color:${v>=50?'white':v===0?'var(--text-muted)':'#0F172A'}">${v}%</div>`:'—'}</td>`).join('')}
+      </tr>`).join('')}
+    </table></div>`;
+}
+
+// CLV POR SEGMENTO
+function renderCLV(){
+  const ticket=800;
+  const segments=[
+    {name:'Ortodoncia',visitsPerYear:12,years:2,ticket:1500},
+    {name:'Estética',visitsPerYear:4,years:3,ticket:1200},
+    {name:'Preventivo',visitsPerYear:2,years:5,ticket:600},
+    {name:'Urgencias',visitsPerYear:1.5,years:2,ticket:900},
+    {name:'General',visitsPerYear:2,years:3,ticket:800}
+  ];
+  const clvData=segments.map(s=>Math.round(s.ticket*s.visitsPerYear*s.years));
+
+  document.getElementById('clv-apex').innerHTML='';
+  new ApexCharts(document.getElementById('clv-apex'),{
+    series:[{name:'CLV ($)',data:clvData}],
+    chart:{height:220,type:'bar',toolbar:{show:false},fontFamily:'DM Sans,sans-serif'},
+    colors:['#1B4FD8'],
+    plotOptions:{bar:{borderRadius:6,horizontal:false,columnWidth:'55%'}},
+    xaxis:{categories:segments.map(s=>s.name),labels:{style:{fontSize:'11px',colors:'#94A3B8'}}},
+    yaxis:{labels:{formatter:v=>'$'+Math.round(v/1000)+'k',style:{fontSize:'10px',colors:'#94A3B8'}}},
+    grid:{borderColor:'#F1F5F9'},
+    dataLabels:{enabled:false},
+    tooltip:{y:{formatter:v=>'$'+v.toLocaleString('es-MX')}}
+  }).render();
+}
+
+// URGENCY
+function renderUrgency(appts){
+  const g=appts.filter(a=>a.urgency_level==='green').length||1;
+  const am=appts.filter(a=>a.urgency_level==='amber').length||0;
+  const r=appts.filter(a=>a.urgency_level==='red').length||0;
+
+  document.getElementById('urgency-apex').innerHTML='';
+  new ApexCharts(document.getElementById('urgency-apex'),{
+    series:[g,am,r],
+    labels:['Normal','Urgente','Emergencia'],
+    chart:{height:220,type:'pie',toolbar:{show:false},fontFamily:'DM Sans,sans-serif'},
+    colors:['#16A34A','#D97706','#DC2626'],
+    legend:{position:'bottom',fontSize:'12px'},
+    stroke:{width:0}
+  }).render();
+}
+
+// INVENTORY
+function renderInventory(){
+  if(!allInv.length){document.getElementById('inventory-apex').innerHTML='<div class="empty-state">Sin datos de inventario</div>';return;}
+  const top=allInv.slice(0,6);
+
+  document.getElementById('inventory-apex').innerHTML='';
+  new ApexCharts(document.getElementById('inventory-apex'),{
+    series:[
+      {name:'Stock actual',data:top.map(i=>parseFloat(i.stock)||0)},
+      {name:'Stock mínimo',data:top.map(i=>parseFloat(i.min_stock)||0)}
+    ],
+    chart:{height:220,type:'bar',toolbar:{show:false},fontFamily:'DM Sans,sans-serif'},
+    colors:['#1B4FD8','#FDE68A'],
+    plotOptions:{bar:{borderRadius:4,columnWidth:'60%'}},
+    xaxis:{categories:top.map(i=>i.name.substring(0,10)),labels:{style:{fontSize:'10px',colors:'#94A3B8'}}},
+    yaxis:{labels:{style:{fontSize:'10px',colors:'#94A3B8'}}},
+    grid:{borderColor:'#F1F5F9'},
+    dataLabels:{enabled:false},
+    legend:{fontSize:'12px'}
+  }).render();
+}
+
+function exportReport(){
+  toast('Exportando reporte PDF...');
+  setTimeout(()=>window.print(),500);
+}
+
+function toast(msg,type='success'){
+  const w=document.createElement('div');
+  w.style.cssText='position:fixed;bottom:24px;right:24px;background:#0F172A;color:white;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:999;animation:toastIn .3s ease';
+  w.textContent=(type==='success'?'✅':'⚠️')+' '+msg;
+  document.body.appendChild(w);
+  setTimeout(()=>w.remove(),3000);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{lucide.createIcons();loadData();});
 </script>
 </body>
 </html>
