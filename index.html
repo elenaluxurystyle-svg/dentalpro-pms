@@ -310,6 +310,12 @@ select option{background:var(--surface)}
   <button class="nav-item" onclick="location.href='seguimiento.html'">
     <i data-lucide="heart-pulse"></i> Seguimiento Post-Op
   </button>
+  <button class="nav-item" id="nav-staff" onclick="location.href='staff.html'" style="display:none">
+    <i data-lucide="users"></i> Personal
+  </button>
+  <button class="nav-item" id="nav-setup" onclick="location.href='setup.html'" style="display:none">
+    <i data-lucide="settings"></i> Mi Clínica
+  </button>
 </div>
 
 <div class="content">
@@ -662,12 +668,55 @@ let allInv=[];
 const _user=localStorage.getItem('dentalpro_user');
 if(!_user) window.location.href='login.html';
 const _ud=_user?JSON.parse(_user):{};
+
+// Redirigir si es usuario nuevo
+if(_ud.role==='new') window.location.href='setup.html';
+
+const _perms=_ud.permissions||{};
+const _role=_ud.role||'owner';
+
+// Ocultar menú según permisos
+function checkPerms(){
+  const permMap={
+    'analytics.html':'analytics',
+    'pagos.html':'payments',
+    'marketing.html':'marketing',
+    'staff.html':'staff',
+  };
+  document.querySelectorAll('.nav-item[onclick]').forEach(btn=>{
+    const onclick=btn.getAttribute('onclick')||'';
+    const match=onclick.match(/location\.href='([^']+)'/);
+    if(match){
+      const page=match[1];
+      const perm=permMap[page];
+      if(perm&&_role!=='owner'&&_role!=='co_owner'&&_perms[perm]===false){
+        btn.style.display='none';
+      }
+    }
+  });
+  // Mostrar nav admin solo para owners
+  if(_role==='owner'||_role==='co_owner'){
+    const ns=document.getElementById('nav-staff');
+    const nset=document.getElementById('nav-setup');
+    if(ns)ns.style.display='flex';
+    if(nset)nset.style.display='flex';
+  }
+  // Mostrar badge de rol
+  const roleBadge=document.getElementById('role-badge');
+  if(roleBadge){
+    const roleNames={owner:'Propietario',co_owner:'Co-dueño',doctor:'Doctor',receptionist:'Recepcionista',assistant:'Asistente'};
+    roleBadge.textContent=roleNames[_role]||_role;
+    roleBadge.style.display='inline-flex';
+  }
+}
+
 function logout(){localStorage.removeItem('dentalpro_user');window.location.href='login.html';}
 if(_ud.picture){const av=document.getElementById('user-avatar');av.src=_ud.picture;av.style.display='inline-block';}
 if(_ud.name) document.getElementById('user-name').textContent=_ud.name.split(' ')[0];
 
 // LUCIDE
 document.addEventListener('DOMContentLoaded',()=>{
+  checkPerms();
   lucide.createIcons();
   document.getElementById('search-patients')?.addEventListener('input',renderPatients);
 });
