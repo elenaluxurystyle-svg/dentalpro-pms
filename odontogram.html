@@ -161,6 +161,37 @@ textarea.notes:focus{outline:none;border-color:var(--brand)}
 .t-toast.ok{background:#15803d}
 @keyframes tIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
 .empty{padding:16px;text-align:center;color:var(--text-muted);font-size:11px}
+
+/* HERRAMIENTAS BORRADO */
+.erase-faces{display:flex;flex-wrap:wrap;gap:3px;padding:6px 12px}
+.ef-btn{padding:3px 7px;border-radius:4px;border:1px solid var(--border);background:var(--bg);font-size:10px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text-secondary);transition:all .15s;display:flex;align-items:center;gap:3px}
+.ef-btn:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+
+/* PRECIO EDITABLE */
+.price-editable{font-weight:700;color:var(--brand);font-family:'DM Mono',monospace;cursor:pointer;padding:1px 4px;border-radius:3px;transition:background .15s}
+.price-editable:hover{background:var(--brand-light)}
+.price-input{font-weight:700;color:var(--brand);font-family:'DM Mono',monospace;border:1.5px solid var(--brand);border-radius:3px;padding:1px 4px;width:80px;font-size:11px;background:var(--surface)}
+
+/* DROPZONE */
+.dz-area{margin:6px 12px;border:2px dashed var(--border);border-radius:var(--r-xs);padding:12px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
+.dz-area:hover,.dz-area.drag{border-color:var(--brand);background:var(--brand-light)}
+.dz-area.drag{border-style:solid}
+.dz-icons{display:flex;justify-content:center;gap:12px;margin-bottom:6px}
+.dz-icon-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:9px;font-weight:600;color:var(--text-muted);transition:all .15s;font-family:'DM Sans',sans-serif}
+.dz-icon-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.dz-icon-btn svg{width:16px;height:16px}
+
+/* FIRMA CANVAS */
+.sig-canvas{border:2px solid var(--border);border-radius:var(--r-xs);width:100%;touch-action:none;cursor:crosshair;background:white;display:block}
+
+/* FULLSCREEN */
+.fs-overlay{display:none;position:fixed;inset:0;background:#0a0f1e;z-index:500;padding:24px;overflow-y:auto}
+.fs-overlay.on{display:block}
+.fs-close{position:fixed;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;color:white;padding:8px 14px;border-radius:var(--r-xs);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;z-index:501}
+.fs-title{color:white;font-size:20px;font-weight:700;text-align:center;margin-bottom:20px}
+.fs-jaw{display:flex;justify-content:center;gap:4px;padding:8px 0}
+.fs-tooth{display:flex;flex-direction:column;align-items:center;gap:1px}
+.fs-num{font-size:8px;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace}
 </style>
 </head>
 <body>
@@ -204,6 +235,8 @@ textarea.notes:focus{outline:none;border-color:var(--brand)}
     <button class="btn btn-outline btn-sm" id="btn-exp" style="display:none" onclick="verExp()"><i data-lucide="folder-open" style="width:11px;height:11px"></i> Expediente</button>
     <button class="btn btn-outline btn-sm" onclick="showSel()"><i data-lucide="users" style="width:11px;height:11px"></i> Cambiar</button>
     <button class="btn btn-outline btn-sm" onclick="openModal('compare')"><i data-lucide="sliders-horizontal" style="width:11px;height:11px"></i> Comparar</button>
+    <button class="btn btn-outline btn-sm" onclick="openModal('firma')"><i data-lucide="pen-line" style="width:11px;height:11px"></i> Firma</button>
+    <button class="btn btn-outline btn-sm" onclick="toggleFS()"><i data-lucide="maximize" style="width:11px;height:11px"></i> Pantalla</button>
     <button class="btn btn-green btn-sm" onclick="guardar()"><i data-lucide="save" style="width:11px;height:11px"></i> Guardar</button>
   </div>
 </div>
@@ -279,26 +312,50 @@ textarea.notes:focus{outline:none;border-color:var(--brand)}
       <div id="thist" style="max-height:120px;overflow-y:auto"><div class="empty">Sin historial</div></div>
     </div>
 
+    <!-- BORRADO SELECTIVO -->
+    <div class="s-sec">
+      <div class="s-hdr"><div class="s-hdr-title"><i data-lucide="eraser"></i> Borrar Caras</div></div>
+      <div class="erase-faces" id="erase-faces">
+        <div style="font-size:10px;color:var(--text-muted);padding:4px;width:100%">Selecciona un diente para borrar caras</div>
+      </div>
+    </div>
+
     <!-- ARCHIVOS Y MULTIMEDIA -->
     <div class="s-sec">
       <div class="s-hdr">
-        <div class="s-hdr-title"><i data-lucide="paperclip"></i> Archivos / Radiografías</div>
-        <button class="btn btn-outline btn-sm" id="btn-upload" style="display:none" onclick="document.getElementById('file-input').click()">
-          <i data-lucide="upload" style="width:10px;height:10px"></i>
-        </button>
+        <div class="s-hdr-title"><i data-lucide="paperclip"></i> Evidencia Clínica</div>
       </div>
-      <input type="file" id="file-input" accept="image/*,video/*,.pdf,.doc,.docx" multiple style="display:none" onchange="handleFiles(event)">
-      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" style="display:none">
-        <i data-lucide="upload-cloud"></i>
-        <p>Arrastra fotos, videos, PDFs</p>
-        <span>Radiografías, fotos clínicas, documentos</span>
+      <input type="file" id="file-input" accept="image/*,video/*,.pdf,.doc,.docx,.mp4,.mov" multiple style="display:none" onchange="handleFiles(event)">
+      <input type="file" id="cam-input" accept="image/*" capture="environment" style="display:none" onchange="handleFiles(event)">
+      <input type="file" id="vid-input" accept="video/*" capture="environment" style="display:none" onchange="handleFiles(event)">
+
+      <!-- Dropzone -->
+      <div class="dz-area" id="dz-area"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event)">
+        <div class="dz-icons">
+          <button class="dz-icon-btn" onclick="document.getElementById('cam-input').click()">
+            <i data-lucide="camera"></i> Foto
+          </button>
+          <button class="dz-icon-btn" onclick="document.getElementById('vid-input').click()">
+            <i data-lucide="video"></i> Video
+          </button>
+          <button class="dz-icon-btn" onclick="document.getElementById('file-input').click()">
+            <i data-lucide="file-up"></i> Archivo
+          </button>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted)">O arrastra archivos aquí</div>
+        <div style="font-size:9px;color:var(--text-muted);margin-top:2px">JPG, PNG, PDF, MP4, Word...</div>
       </div>
+
       <div id="media-grid" class="media-grid"></div>
+
       <!-- URL -->
-      <div style="padding:0 12px 8px;display:none" id="url-section">
-        <div style="display:flex;gap:5px">
-          <input id="url-input" placeholder="https://... (video, imagen, enlace)" style="flex:1;padding:6px 8px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:11px;font-family:'DM Sans',sans-serif;color:var(--text-primary)" onkeydown="if(event.key==='Enter')addUrl()">
-          <button class="btn btn-sm" onclick="addUrl()">+ URL</button>
+      <div style="padding:0 12px 8px" id="url-section">
+        <div style="display:flex;gap:5px;margin-bottom:4px">
+          <input id="url-input" placeholder="https://... enlace, video, imagen" style="flex:1;padding:5px 8px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:11px;font-family:'DM Sans',sans-serif;color:var(--text-primary)" onkeydown="if(event.key==='Enter')addUrl()">
+          <button class="btn btn-sm" onclick="addUrl()"><i data-lucide="link" style="width:10px;height:10px"></i></button>
         </div>
         <div id="url-list"></div>
       </div>
@@ -372,6 +429,45 @@ textarea.notes:focus{outline:none;border-color:var(--brand)}
   </div>
 </div>
 
+
+<!-- MODAL FIRMA -->
+<div class="modal" id="modal-firma">
+  <div class="mbox" style="max-width:500px">
+    <div class="mhdr"><h3>✍️ Firma Digital del Paciente</h3><button class="mclose" onclick="closeModal('firma')"><i data-lucide="x" style="width:11px;height:11px"></i></button></div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">El paciente firma para confirmar el diagnóstico y plan de tratamiento</p>
+    <canvas id="sig-c" class="sig-canvas" width="460" height="150"></canvas>
+    <div style="display:flex;gap:6px;margin-top:8px">
+      <button class="btn btn-outline btn-sm" onclick="clearSig()"><i data-lucide="trash-2" style="width:10px;height:10px"></i> Limpiar</button>
+      <span style="font-size:10px;color:var(--text-muted);align-self:center">Firmado: <span id="sig-date">—</span></span>
+    </div>
+    <div class="mfooter">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('firma')">Cancelar</button>
+      <button class="btn btn-green btn-sm" onclick="saveSig()"><i data-lucide="check" style="width:10px;height:10px"></i> Confirmar Firma</button>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN DIAGNÓSTICO -->
+<div class="fs-overlay" id="fs-overlay">
+  <button class="fs-close" onclick="toggleFS()"><i data-lucide="minimize" style="width:13px;height:13px;vertical-align:middle"></i> Salir</button>
+  <div class="fs-title">🦷 Diagnóstico Dental — <span id="fs-patient">Paciente</span></div>
+  <div style="background:rgba(255,255,255,.05);border-radius:var(--r);padding:20px;margin-bottom:16px">
+    <div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Superior Derecho — Superior Izquierdo</div>
+    <div class="fs-jaw" id="fs-uj"></div>
+    <div style="height:1px;background:rgba(255,255,255,.1);margin:12px 0"></div>
+    <div class="fs-jaw" id="fs-lj"></div>
+    <div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-top:12px;text-align:right">Inferior Derecho — Inferior Izquierdo</div>
+  </div>
+  <!-- Leyenda FS -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px" id="fs-legend"></div>
+  <!-- Presupuesto FS -->
+  <div style="background:rgba(255,255,255,.05);border-radius:var(--r);padding:16px" id="fs-budget-section">
+    <div style="font-size:13px;font-weight:700;color:white;margin-bottom:10px">💰 Plan de Tratamiento y Presupuesto</div>
+    <div id="fs-budget-list"></div>
+    <div id="fs-budget-total" style="font-size:16px;font-weight:800;color:#60a5fa;text-align:right;margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)"></div>
+  </div>
+</div>
+
 <div class="twrap" id="twrap"></div>
 
 <script>
@@ -414,6 +510,7 @@ function toast(m,t='ok'){
 }
 function openModal(id){
   document.getElementById('modal-'+id).classList.add('open');
+  if(id==='firma')setTimeout(initSig,100);
   if(id==='sessions')renderSess();
   if(id==='budget'){renderBudgGlobal();}
   if(id==='compare')fillCompare();
@@ -543,7 +640,7 @@ function selTooth(n){
   document.getElementById('btn-upload').style.display='flex';
   document.getElementById('upload-zone').style.display='block';
   document.getElementById('url-section').style.display='block';
-  renderFaces(n);renderToothHist(n);renderBudgTooth(n);renderMedia(n);
+  renderFaces(n);renderToothHist(n);renderBudgTooth(n);renderMedia(n);renderEraseFaces(n);
 }
 
 // FACES GRID
@@ -636,11 +733,13 @@ function renderBudgTooth(n){
   const items=BUDG.filter(b=>b.d===n);
   const div=document.getElementById('budg-tooth');
   if(!items.length){div.innerHTML='<div class="empty">Sin tratamientos</div>';return;}
-  div.innerHTML=items.map(b=>`
-    <div class="budget-row">
+  div.innerHTML=items.map((b,i)=>{
+    const gi=BUDG.findIndex(x=>x===b);
+    return `<div class="budget-row">
       <span>${C[b.c]?.ico||''} ${b.cn} - ${FN[b.f]||b.f}</span>
-      <span style="font-weight:700;color:var(--brand);font-family:'DM Mono',monospace">$${b.p.toLocaleString('es-MX')}</span>
-    </div>`).join('');
+      <span id="price-${gi}" class="price-editable" onclick="editPrice(${gi})" title="Click para editar precio">$${b.p.toLocaleString('es-MX')}</span>
+    </div>`;
+  }).join('');
 }
 
 function addBudget(){
@@ -842,6 +941,171 @@ async function crearPac(){
 function verExp(){
   if(!curr)return;
   window.open('expediente.html?id='+curr.id+'&name='+encodeURIComponent(curr.name),'_blank');
+}
+
+
+// ── BORRADO SELECTIVO ─────────────────────────────────────────────
+function renderEraseFaces(n){
+  const div=document.getElementById('erase-faces');
+  const faces=['V','M','O','D','L'];
+  const fn={V:'Vest.',M:'Mesial',O:'Oclusal',D:'Distal',L:'Lingual'};
+  div.innerHTML=`
+    <div style="display:flex;flex-wrap:wrap;gap:3px;width:100%">
+      ${faces.map(f=>{
+        const st=TS[n]?.[f]||'healthy';
+        const c=C[st];
+        return `<button class="ef-btn" onclick="eraseFace(${n},'${f}')"
+          style="${st!=='healthy'?`background:${c.f}22;border-color:${c.s};color:${c.s}`:''}"
+          title="Borrar cara ${fn[f]}">
+          <i data-lucide="eraser" style="width:9px;height:9px"></i> ${fn[f]} ${st!=='healthy'?c.ico:''}
+        </button>`;
+      }).join('')}
+      <button class="ef-btn" onclick="resetTooth(${n})" style="background:var(--red-bg);border-color:var(--red);color:var(--red)">
+        <i data-lucide="rotate-ccw" style="width:9px;height:9px"></i> Resetear todo
+      </button>
+    </div>`;
+  setTimeout(()=>lucide.createIcons(),30);
+}
+
+function eraseFace(n,face){
+  if(!TS[n])return;
+  const old=TS[n][face]||'healthy';
+  if(old==='healthy'){toast('Cara ya está sana');return;}
+  TS[n][face]='healthy';
+  // Remover del presupuesto
+  const idx=BUDG.findIndex(b=>b.d===n&&b.f===face);
+  if(idx>=0)BUDG.splice(idx,1);
+  rf(n);renderFaces(n);renderEraseFaces(n);renderBudgTooth(n);
+  toast('Cara '+face+' borrada');
+}
+
+function resetTooth(n){
+  if(!confirm('¿Resetear diente '+n+'?'))return;
+  TS[n]={};
+  BUDG=BUDG.filter(b=>b.d!==n);
+  rf(n);renderFaces(n);renderEraseFaces(n);renderBudgTooth(n);
+  toast('Diente '+n+' reseteado');
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('dz-area').classList.remove('drag');
+  if(!selT){toast('Selecciona un diente primero');return;}
+  const files=Array.from(e.dataTransfer.files);
+  processFiles(files);
+}
+
+function handleFiles(e){
+  if(!selT){toast('Selecciona un diente primero');return;}
+  processFiles(Array.from(e.target.files));
+  e.target.value='';
+}
+
+function processFiles(files){
+  if(!MEDIA[selT])MEDIA[selT]=[];
+  let count=0;
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      MEDIA[selT].push({name:file.name,data:ev.target.result,type:file.type,size:file.size,dt:new Date().toISOString(),tooth:selT});
+      count++;
+      if(count===files.length){saveToLS();renderMedia(selT);toast(count+' archivo(s) guardado(s)');}
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── PRECIOS EDITABLES ─────────────────────────────────────────────
+function makeEditablePrice(b,i){
+  return `<span class="price-editable" onclick="editPrice(${i})" id="price-${i}" title="Click para editar precio">$${b.p.toLocaleString('es-MX')}</span>`;
+}
+
+function editPrice(i){
+  const el=document.getElementById('price-'+i);
+  if(!el)return;
+  const curr2=BUDG[i].p;
+  el.outerHTML=`<input class="price-input" id="price-input-${i}" type="number" value="${curr2}" onblur="savePrice(${i})" onkeydown="if(event.key==='Enter')savePrice(${i})">`;
+  setTimeout(()=>document.getElementById('price-input-'+i)?.focus(),50);
+}
+
+function savePrice(i){
+  const inp=document.getElementById('price-input-'+i);
+  if(!inp)return;
+  const val=parseFloat(inp.value)||0;
+  BUDG[i].p=val;
+  inp.outerHTML=`<span class="price-editable" onclick="editPrice(${i})" id="price-${i}" title="Click para editar">$${val.toLocaleString('es-MX')}</span>`;
+  saveToLS();toast('Precio actualizado');
+}
+
+// ── FIRMA DIGITAL ─────────────────────────────────────────────────
+let sigCtx=null,sigDrawing=false,sigSaved=null;
+
+function initSig(){
+  const canvas=document.getElementById('sig-c');
+  if(!canvas)return;
+  sigCtx=canvas.getContext('2d');
+  sigCtx.strokeStyle='#0F172A';sigCtx.lineWidth=2;sigCtx.lineCap='round';sigCtx.lineJoin='round';
+  canvas.addEventListener('mousedown',e=>{sigDrawing=true;sigCtx.beginPath();const r=canvas.getBoundingClientRect();sigCtx.moveTo(e.clientX-r.left,e.clientY-r.top);});
+  canvas.addEventListener('mousemove',e=>{if(!sigDrawing)return;const r=canvas.getBoundingClientRect();sigCtx.lineTo(e.clientX-r.left,e.clientY-r.top);sigCtx.stroke();});
+  canvas.addEventListener('mouseup',()=>sigDrawing=false);
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();sigDrawing=true;const r=canvas.getBoundingClientRect();sigCtx.beginPath();sigCtx.moveTo(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!sigDrawing)return;const r=canvas.getBoundingClientRect();sigCtx.lineTo(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);sigCtx.stroke();},{passive:false});
+  canvas.addEventListener('touchend',()=>sigDrawing=false);
+}
+
+function clearSig(){if(sigCtx){const c=document.getElementById('sig-c');sigCtx.clearRect(0,0,c.width,c.height);}}
+
+function saveSig(){
+  const canvas=document.getElementById('sig-c');
+  sigSaved=canvas.toDataURL();
+  const dt=new Date().toLocaleString('es-MX');
+  document.getElementById('sig-date').textContent=dt;
+  if(curr)localStorage.setItem('odonto_sig_'+curr.id,JSON.stringify({data:sigSaved,date:dt,patient:curr.name}));
+  closeModal('firma');
+  toast('Firma guardada ✅');
+}
+
+// ── PANTALLA COMPLETA ─────────────────────────────────────────────
+function toggleFS(){
+  const ov=document.getElementById('fs-overlay');
+  ov.classList.toggle('on');
+  if(ov.classList.contains('on')){renderFS();lucide.createIcons();}
+}
+
+function renderFS(){
+  document.getElementById('fs-patient').textContent=curr?.name||'Sin paciente';
+
+  // Dientes en fullscreen
+  const mkFS=(n)=>{
+    const all=Object.values(TS[n]||{});
+    const mc=all.find(v=>v!=='healthy')||'healthy';
+    const cv=C[mc];
+    return `<div class="fs-tooth" title="D${n}">
+      <div class="fs-num">${n}</div>
+      <div style="width:22px;height:22px;border-radius:5px;background:${cv.f};border:2px solid ${cv.s};display:flex;align-items:center;justify-content:center;font-size:10px">${mc!=='healthy'?cv.ico:''}</div>
+    </div>`;
+  };
+
+  document.getElementById('fs-uj').innerHTML=[18,17,16,15,14,13,12,11].map(mkFS).join('')+'<div style="width:2px;height:30px;background:rgba(255,255,255,.2);margin:0 4px"></div>'+[21,22,23,24,25,26,27,28].map(mkFS).join('');
+  document.getElementById('fs-lj').innerHTML=[48,47,46,45,44,43,42,41].map(mkFS).join('')+'<div style="width:2px;height:30px;background:rgba(255,255,255,.2);margin:0 4px"></div>'+[31,32,33,34,35,36,37,38].map(mkFS).join('');
+
+  // Leyenda
+  const usedConds=[...new Set(Object.values(TS).flatMap(t=>Object.values(t)))].filter(v=>v!=='healthy');
+  document.getElementById('fs-legend').innerHTML=usedConds.map(c=>`
+    <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;background:${C[c]?.f}22;border:1px solid ${C[c]?.s};border-radius:20px;font-size:11px;font-weight:600;color:${C[c]?.s}">
+      ${C[c]?.ico} ${C[c]?.n}
+    </div>`).join('');
+
+  // Presupuesto
+  if(!BUDG.length){document.getElementById('fs-budget-list').innerHTML='<div style="color:rgba(255,255,255,.4);font-size:12px;text-align:center;padding:8px">Sin tratamientos en presupuesto</div>';document.getElementById('fs-budget-total').textContent='';return;}
+  const total=BUDG.reduce((a,b)=>a+b.p,0);
+  document.getElementById('fs-budget-list').innerHTML=BUDG.map(b=>`
+    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px">
+      <div><span style="color:white;font-weight:600">${C[b.c]?.ico} ${b.cn}</span><span style="color:rgba(255,255,255,.4);margin-left:8px">D${b.d}</span></div>
+      <span style="font-family:'DM Mono',monospace;color:#60a5fa;font-weight:700">$${b.p.toLocaleString('es-MX')}</span>
+    </div>`).join('');
+  document.getElementById('fs-budget-total').textContent='Total: $'+total.toLocaleString('es-MX');
 }
 
 // ── ATAJOS ───────────────────────────────────────────────────────────
