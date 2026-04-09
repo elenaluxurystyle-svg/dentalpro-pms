@@ -18,490 +18,811 @@
   --cyan:#0891B2;--cyan-bg:#ECFEFF;
   --shadow-sm:0 2px 8px rgba(15,23,42,.06);
   --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-lg:0 20px 48px rgba(15,23,42,.12);
   --r:16px;--r-xs:8px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased;min-height:100vh}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased}
 
 /* HEADER */
-.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,23,42,.04)}
+.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}
 .back-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s;text-decoration:none}
 .back-btn:hover{border-color:var(--brand);color:var(--brand)}
-.header-title{font-size:16px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px}
-.patient-chip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;background:var(--brand-light);border:1px solid var(--brand);border-radius:40px;font-size:12px;font-weight:600;color:var(--brand)}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--brand),var(--brand-dark));border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(27,79,216,.3)}
+.brand-name{font-size:15px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,var(--brand-dark),var(--brand));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.patient-chip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;background:var(--brand-light);border:1.5px solid var(--brand);border-radius:40px;font-size:12px;font-weight:600;color:var(--brand)}
 .patient-avatar{width:26px;height:26px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white}
 
-/* CONTENT */
-.content{padding:20px 24px;max-width:1200px;margin:0 auto}
+/* SELECTOR MODAL */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.selector-box{background:var(--surface);border-radius:20px;padding:32px;width:100%;max-width:480px;border:1px solid var(--border);box-shadow:var(--shadow-lg);animation:modalIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.selector-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px}
+.selector-title{font-size:20px;font-weight:700;letter-spacing:-0.02em;color:var(--text-primary);text-align:center;margin-bottom:6px}
+.selector-sub{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:24px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-muted);pointer-events:none}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text-primary);transition:all .2s}
+.search-input:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px rgba(27,79,216,.08)}
+.patients-list{max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r-xs);background:var(--surface)}
+.patient-option{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border-light)}
+.patient-option:last-child{border-bottom:none}
+.patient-option:hover{background:var(--brand-light)}
+.patient-option-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0}
+.patient-option-name{font-size:13px;font-weight:600;color:var(--text-primary)}
+.patient-option-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
+.btn-new-patient{width:100%;padding:10px;background:var(--brand-light);border:1.5px dashed var(--brand);border-radius:var(--r-xs);color:var(--brand);font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-new-patient:hover{background:var(--brand);color:white}
 
-/* LEYENDA */
-.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center}
-.legend-title{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-right:4px}
-.legend-item{display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:all .2s;font-size:12px;font-weight:500;color:var(--text-secondary)}
-.legend-item:hover{border-color:var(--brand);color:var(--brand)}
-.legend-item.selected{border-width:2px;font-weight:700}
-.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+/* CONTENT */
+.content{padding:20px 24px;max-width:1280px;margin:0 auto}
+
+/* SESION INFO */
+.session-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:16px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+.session-info{flex:1;display:flex;gap:16px;flex-wrap:wrap}
+.session-field{display:flex;flex-direction:column;gap:2px}
+.session-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+.session-value{font-size:13px;font-weight:600;color:var(--text-primary)}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center}
+.legend-title{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-right:4px}
+.legend-item{display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;cursor:pointer;transition:all .2s;font-size:11px;font-weight:500;color:var(--text-secondary)}
+.legend-item:hover,.legend-item.active{font-weight:700}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 
 /* ODONTOGRAMA */
-.odonto-panel{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);padding:24px;box-shadow:var(--shadow-sm);margin-bottom:20px}
-.jaw-section{margin-bottom:8px}
-.jaw-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.jaw-label::after{content:'';flex:1;height:1px;background:var(--border)}
-.jaw{display:flex;justify-content:center;gap:6px;flex-wrap:nowrap}
-.jaw-divider{width:1px;background:var(--border);margin:0 8px;border-radius:1px}
-.divider-line{height:1px;background:var(--border);margin:16px 0;position:relative}
-.divider-line::after{content:'Centro';position:absolute;left:50%;transform:translateX(-50%);top:-8px;font-size:10px;color:var(--text-muted);background:var(--surface);padding:0 8px;font-weight:600;letter-spacing:.05em}
+.odonto-panel{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);padding:20px 24px;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.jaw-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.jaw-label::after{content:'';flex:1;height:1px;background:var(--border-light)}
+.jaw{display:flex;justify-content:center;gap:5px;align-items:flex-end}
+.jaw-divider{width:2px;height:48px;background:var(--border);border-radius:1px;margin:0 6px;align-self:center}
+.divider-line{height:1px;background:var(--border);margin:14px 0;position:relative}
+.divider-line span{position:absolute;left:50%;transform:translateX(-50%);top:-8px;font-size:9px;color:var(--text-muted);background:var(--surface);padding:0 8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 
 /* DIENTE */
-.tooth-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:transform .15s}
-.tooth-wrap:hover{transform:scale(1.1)}
-.tooth-wrap.selected .tooth-body{box-shadow:0 0 0 3px var(--brand),0 0 0 5px var(--brand-light)}
-.tooth-num{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:var(--text-muted)}
-.tooth-body{width:32px;height:32px;border-radius:8px;border:2px solid var(--border);background:var(--surface);transition:all .2s;position:relative;display:flex;align-items:center;justify-content:center}
-.tooth-body.healthy{background:var(--surface);border-color:var(--border)}
-.tooth-body.crown{background:#dbeafe;border-color:#3b82f6}
-.tooth-body.caries{background:#fef3c7;border-color:#f59e0b}
-.tooth-body.extraction{background:var(--red-bg);border-color:var(--red)}
-.tooth-body.endo{background:var(--purple-bg);border-color:var(--purple)}
-.tooth-body.filling{background:var(--green-bg);border-color:var(--green)}
-.tooth-body.implant{background:var(--cyan-bg);border-color:var(--cyan)}
-.tooth-body.bridge{background:#fef9c3;border-color:#ca8a04}
-.tooth-body.ortho{background:#fce7f3;border-color:#db2777}
-.tooth-body.fracture{background:#fee2e2;border-color:#ef4444}
-.tooth-body.seal{background:#f0fdf4;border-color:#4ade80}
-.tooth-root{width:4px;height:12px;border-radius:0 0 3px 3px;background:var(--border);transition:background .2s}
-/* Raíz hereda color del diente */
-.tooth-wrap[data-state="crown"] .tooth-root{background:#3b82f6}
-.tooth-wrap[data-state="caries"] .tooth-root{background:#f59e0b}
-.tooth-wrap[data-state="extraction"] .tooth-root{background:var(--red)}
-.tooth-wrap[data-state="endo"] .tooth-root{background:var(--purple)}
-.tooth-wrap[data-state="filling"] .tooth-root{background:var(--green)}
-.tooth-wrap[data-state="implant"] .tooth-root{background:var(--cyan)}
-/* Icono de extraccion */
-.extraction-x{position:absolute;font-size:16px;font-weight:900;color:var(--red);line-height:1}
+.tooth-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;transition:transform .15s;padding:2px}
+.tooth-wrap:hover{transform:scale(1.12)}
+.tooth-wrap.selected .tooth-crown{box-shadow:0 0 0 3px var(--brand),0 0 0 5px rgba(27,79,216,.2)}
+.tooth-num{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:var(--text-muted);line-height:1}
+/* Corona del diente */
+.tooth-crown{width:30px;height:28px;border-radius:7px 7px 4px 4px;border:2px solid #CBD5E1;background:var(--surface);transition:all .2s;position:relative;display:flex;align-items:center;justify-content:center}
+/* Raíces */
+.tooth-roots{display:flex;gap:3px;justify-content:center;margin-top:1px}
+.tooth-root{width:5px;height:11px;border-radius:0 0 3px 3px;background:#CBD5E1;transition:background .2s}
+.tooth-root.single{width:8px}
+/* Estados */
+.tooth-crown.healthy{background:#fff;border-color:#CBD5E1}
+.tooth-crown.crown{background:#DBEAFE;border-color:#3B82F6}
+.tooth-crown.caries{background:#FEF3C7;border-color:#F59E0B}
+.tooth-crown.extraction{background:#FEE2E2;border-color:#EF4444}
+.tooth-crown.endo{background:#EDE9FE;border-color:#7C3AED}
+.tooth-crown.filling{background:#DCFCE7;border-color:#16A34A}
+.tooth-crown.implant{background:#CFFAFE;border-color:#0891B2}
+.tooth-crown.bridge{background:#FEF9C3;border-color:#CA8A04}
+.tooth-crown.ortho{background:#FCE7F3;border-color:#DB2777}
+.tooth-crown.fracture{background:#FEE2E2;border-color:#EF4444}
+.tooth-crown.seal{background:#F0FDF4;border-color:#4ADE80}
+/* Símbolo extracción */
+.x-mark{position:absolute;font-size:14px;font-weight:900;color:#DC2626;line-height:1;user-select:none}
+/* Número dentro de diente para molar */
+.tooth-type-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.15);bottom:4px;right:4px}
 
-/* PANEL INFERIOR */
-.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:768px){.bottom-grid{grid-template-columns:1fr}}
+/* BOTTOM GRID */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.bottom-grid{grid-template-columns:1fr}}
 
 .panel{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm)}
-.panel-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light)}
-.panel-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:7px}
-.panel-title svg{width:15px;height:15px;color:var(--brand)}
+.panel-header{padding:13px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light)}
+.panel-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:6px}
+.panel-title svg{width:14px;height:14px;color:var(--brand)}
 
-/* CONDICION SELECTOR */
-.conditions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px}
-.cond-btn{padding:8px;border-radius:var(--r-xs);border:1.5px solid var(--border);background:var(--bg);cursor:pointer;text-align:center;transition:all .2s;font-family:'DM Sans',sans-serif}
+/* CONDITIONS GRID */
+.cond-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:14px}
+.cond-btn{padding:8px 4px;border-radius:var(--r-xs);border:1.5px solid var(--border);background:var(--bg);cursor:pointer;text-align:center;transition:all .2s;font-family:'DM Sans',sans-serif}
 .cond-btn:hover{border-color:var(--brand);background:var(--brand-light)}
-.cond-btn.active{border-width:2px;font-weight:700}
-.cond-icon{font-size:18px;margin-bottom:4px}
-.cond-name{font-size:10px;font-weight:600;color:var(--text-secondary)}
+.cond-btn.active{font-weight:700}
+.cond-emoji{font-size:16px;display:block;margin-bottom:3px}
+.cond-label{font-size:9px;font-weight:600;color:var(--text-secondary);display:block}
 
-/* HISTORIAL */
-.history-item{display:flex;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border-light);align-items:flex-start}
-.history-item:last-child{border-bottom:none}
-.history-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
-.history-info{flex:1}
-.history-title{font-size:12px;font-weight:600;color:var(--text-primary)}
-.history-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
-
-/* SELECTED TOOTH INFO */
-.tooth-info-panel{padding:16px 18px}
-.selected-tooth-display{display:flex;align-items:center;gap:14px;padding:14px;background:var(--bg);border-radius:var(--r-xs);border:1px solid var(--border);margin-bottom:14px}
-.selected-tooth-num{width:48px;height:48px;border-radius:12px;background:var(--brand-light);border:2px solid var(--brand);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--brand);font-family:'DM Mono',monospace;flex-shrink:0}
-.selected-tooth-info{flex:1}
-.selected-tooth-name{font-size:14px;font-weight:700;color:var(--text-primary)}
-.selected-tooth-state{font-size:12px;color:var(--text-muted);margin-top:2px}
+/* SELECTED INFO */
+.sel-display{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg);border-bottom:1px solid var(--border-light)}
+.sel-num{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;font-family:'DM Mono',monospace;flex-shrink:0;border:2px solid var(--border);background:var(--surface)}
+.sel-info{flex:1}
+.sel-name{font-size:13px;font-weight:600;color:var(--text-primary)}
+.sel-state{font-size:11px;color:var(--text-muted);margin-top:2px}
 
 /* NOTES */
-.notes-area{width:100%;padding:9px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text-primary);resize:vertical;min-height:70px;transition:border .2s}
-.notes-area:focus{outline:none;border-color:var(--brand);background:var(--surface)}
+.notes-wrap{padding:14px 18px}
+.notes-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+textarea.notes{width:100%;padding:9px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text-primary);resize:vertical;min-height:80px;transition:border .2s}
+textarea.notes:focus{outline:none;border-color:var(--brand);background:var(--surface)}
+
+/* HISTORIAL */
+.hist-item{display:flex;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border-light);align-items:flex-start}
+.hist-item:last-child{border-bottom:none}
+.hist-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.hist-title{font-size:12px;font-weight:600;color:var(--text-primary)}
+.hist-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
+
+/* SESIONES GUARDADAS */
+.session-saved-item{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .15s}
+.session-saved-item:hover{background:var(--bg)}
+.session-saved-item:last-child{border-bottom:none}
 
 /* BTNS */
-.btn{padding:8px 16px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{background:var(--brand-dark)}
+.btn{padding:7px 16px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--brand-dark);transform:translateY(-1px)}
 .btn-outline{background:var(--surface);border:1.5px solid var(--border);color:var(--text-secondary)}
-.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
-.btn-sm{padding:5px 12px;font-size:12px}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light);transform:none}
+.btn-sm{padding:4px 10px;font-size:11px}
 .btn-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-.btn-danger:hover{background:var(--red);color:white}
+.btn-danger:hover{background:var(--red);color:white;transform:none}
+.btn-green{background:var(--green);color:white}
+.btn-green:hover{background:#15803d}
+
+/* FORM */
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--brand);background:var(--surface)}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.3);backdrop-filter:blur(8px);z-index:300;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px;padding:24px;width:100%;max-width:480px;border:1px solid var(--border);box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;animation:modalIn .25s cubic-bezier(.4,0,.2,1)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-header h3{font-size:16px;font-weight:700;color:var(--text-primary)}
+.modal-close{width:30px;height:30px;background:var(--bg);border:1px solid var(--border);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.modal-close:hover{background:var(--red-bg);color:var(--red)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid var(--border-light)}
 
 /* TOAST */
-.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
-.toast{background:var(--text-primary);color:white;padding:12px 16px;border-radius:var(--r-xs);font-size:13px;font-weight:500;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:400;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--text-primary);color:white;padding:11px 15px;border-radius:var(--r-xs);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
 .toast.success{background:#15803d}
 @keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-
 .empty-state{padding:24px;text-align:center;color:var(--text-muted);font-size:13px}
 </style>
 </head>
 <body>
 
+<!-- SELECTOR DE PACIENTE (aparece primero) -->
+<div class="overlay" id="patient-selector">
+  <div class="selector-box">
+    <div class="selector-logo">
+      <div style="width:40px;height:40px;background:linear-gradient(135deg,#1B4FD8,#1239A6);border-radius:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(27,79,216,.3)">
+        <svg viewBox="0 0 60 60" fill="none" style="width:22px;height:22px">
+          <path d="M30 6C20 6 12 13 12 22C12 29 14 34 16 41C17 46 18 54 21 56C22 58 25 58 26 55C27 51 28 45 30 45C32 45 33 51 34 55C35 58 38 58 39 56C42 54 43 46 44 41C46 34 48 29 48 22C48 13 40 6 30 6Z" fill="white" opacity="0.95"/>
+          <path d="M14 24Q30 19 46 24" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-size:16px;font-weight:800;background:linear-gradient(135deg,#0a2463,#1B4FD8);-webkit-background-clip:text;-webkit-text-fill-color:transparent">DentalPro</div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:500">Odontograma FDI</div>
+      </div>
+    </div>
+    <div class="selector-title">Seleccionar Paciente</div>
+    <div class="selector-sub">Busca y selecciona el paciente para asignar el odontograma</div>
+    <div class="search-wrap">
+      <i data-lucide="search"></i>
+      <input class="search-input" id="search-patient" placeholder="Buscar por nombre o teléfono..." oninput="filterPatients(this.value)">
+    </div>
+    <div class="patients-list" id="patients-list">
+      <div class="empty-state">Cargando pacientes...</div>
+    </div>
+    <button class="btn-new-patient" onclick="abrirModalNuevoPaciente()">
+      <i data-lucide="user-plus" style="width:14px;height:14px"></i>
+      Crear nuevo paciente
+    </button>
+    <div style="margin-top:16px;text-align:center">
+      <button onclick="continuarSinPaciente()" style="background:none;border:none;font-size:12px;color:var(--text-muted);cursor:pointer;font-family:'DM Sans',sans-serif">Continuar sin asignar paciente →</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
 <div class="header">
   <a class="back-btn" href="index.html">
     <i data-lucide="arrow-left" style="width:14px;height:14px"></i> Volver
   </a>
-  <div class="header-title">
-    <i data-lucide="circle-dot" style="width:18px;height:18px;color:var(--brand)"></i>
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 60 60" fill="none" style="width:18px;height:18px">
+        <path d="M30 6C20 6 12 13 12 22C12 29 14 34 16 41C17 46 18 54 21 56C22 58 25 58 26 55C27 51 28 45 30 45C32 45 33 51 34 55C35 58 38 58 39 56C42 54 43 46 44 41C46 34 48 29 48 22C48 13 40 6 30 6Z" fill="white" opacity="0.95"/>
+        <path d="M14 24Q30 19 46 24" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="brand-name">DentalPro</div>
+  </div>
+  <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+  <div style="font-size:14px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:6px">
+    <i data-lucide="circle-dot" style="width:15px;height:15px;color:var(--brand)"></i>
     Odontograma FDI
   </div>
-  <div id="patient-chip" style="margin-left:12px;display:none" class="patient-chip">
-    <div class="patient-avatar" id="p-initials">P</div>
-    <span id="p-name-chip">Paciente</span>
+  <div id="patient-chip-header" class="patient-chip" style="display:none">
+    <div class="patient-avatar" id="p-av">P</div>
+    <span id="p-nm">Paciente</span>
   </div>
   <div style="margin-left:auto;display:flex;gap:8px">
-    <button class="btn btn-outline btn-sm" onclick="limpiarTodo()">
-      <i data-lucide="refresh-cw" style="width:13px;height:13px"></i> Limpiar
+    <button class="btn btn-outline btn-sm" onclick="cambiarPaciente()">
+      <i data-lucide="users" style="width:12px;height:12px"></i> Cambiar
     </button>
-    <button class="btn btn-sm" onclick="guardarOdontograma()">
-      <i data-lucide="save" style="width:13px;height:13px"></i> Guardar
+    <button class="btn btn-outline btn-sm" onclick="limpiarOdonto()">
+      <i data-lucide="refresh-cw" style="width:12px;height:12px"></i> Limpiar
+    </button>
+    <button class="btn btn-sm btn-green" onclick="guardarSesion()">
+      <i data-lucide="save" style="width:12px;height:12px"></i> Guardar Sesión
     </button>
   </div>
 </div>
 
+<!-- CONTENT -->
 <div class="content">
+
+  <!-- BARRA DE SESIÓN -->
+  <div class="session-bar" id="session-bar">
+    <div class="session-info">
+      <div class="session-field">
+        <span class="session-label">Paciente</span>
+        <span class="session-value" id="sb-paciente">Sin paciente</span>
+      </div>
+      <div class="session-field">
+        <span class="session-label">Fecha</span>
+        <span class="session-value" id="sb-fecha">—</span>
+      </div>
+      <div class="session-field">
+        <span class="session-label">Hora</span>
+        <span class="session-value" id="sb-hora">—</span>
+      </div>
+      <div class="session-field">
+        <span class="session-label">Doctor</span>
+        <span class="session-value" id="sb-doctor">—</span>
+      </div>
+      <div class="session-field">
+        <span class="session-label">Sesiones guardadas</span>
+        <span class="session-value" id="sb-sesiones">0</span>
+      </div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="openModal('sesiones')">
+      <i data-lucide="clock" style="width:12px;height:12px"></i> Ver historial
+    </button>
+  </div>
 
   <!-- LEYENDA -->
   <div class="legend">
-    <span class="legend-title">Condición:</span>
-    <div class="legend-item selected" id="leg-healthy" onclick="selectCondicion('healthy',this)" style="border-color:var(--border)">
-      <div class="legend-dot" style="background:var(--surface);border:2px solid var(--border)"></div> Sano
+    <span class="legend-title">Condición activa:</span>
+    <div class="legend-item active" id="leg-healthy" onclick="selLegend('healthy',this)" style="border-color:#CBD5E1">
+      <div class="legend-dot" style="background:#fff;border:2px solid #CBD5E1"></div>Sano
     </div>
-    <div class="legend-item" id="leg-crown" onclick="selectCondicion('crown',this)" style="">
-      <div class="legend-dot" style="background:#3b82f6"></div> Corona
+    <div class="legend-item" id="leg-crown" onclick="selLegend('crown',this)">
+      <div class="legend-dot" style="background:#3B82F6"></div>Corona
     </div>
-    <div class="legend-item" id="leg-caries" onclick="selectCondicion('caries',this)">
-      <div class="legend-dot" style="background:#f59e0b"></div> Caries
+    <div class="legend-item" id="leg-caries" onclick="selLegend('caries',this)">
+      <div class="legend-dot" style="background:#F59E0B"></div>Caries
     </div>
-    <div class="legend-item" id="leg-extraction" onclick="selectCondicion('extraction',this)">
-      <div class="legend-dot" style="background:var(--red)"></div> Extracción
+    <div class="legend-item" id="leg-extraction" onclick="selLegend('extraction',this)">
+      <div class="legend-dot" style="background:#DC2626"></div>Extracción
     </div>
-    <div class="legend-item" id="leg-endo" onclick="selectCondicion('endo',this)">
-      <div class="legend-dot" style="background:var(--purple)"></div> Endodoncia
+    <div class="legend-item" id="leg-endo" onclick="selLegend('endo',this)">
+      <div class="legend-dot" style="background:#7C3AED"></div>Endodoncia
     </div>
-    <div class="legend-item" id="leg-filling" onclick="selectCondicion('filling',this)">
-      <div class="legend-dot" style="background:var(--green)"></div> Obturación
+    <div class="legend-item" id="leg-filling" onclick="selLegend('filling',this)">
+      <div class="legend-dot" style="background:#16A34A"></div>Obturación
     </div>
-    <div class="legend-item" id="leg-implant" onclick="selectCondicion('implant',this)">
-      <div class="legend-dot" style="background:var(--cyan)"></div> Implante
+    <div class="legend-item" id="leg-implant" onclick="selLegend('implant',this)">
+      <div class="legend-dot" style="background:#0891B2"></div>Implante
     </div>
-    <div class="legend-item" id="leg-bridge" onclick="selectCondicion('bridge',this)">
-      <div class="legend-dot" style="background:#ca8a04"></div> Puente
+    <div class="legend-item" id="leg-bridge" onclick="selLegend('bridge',this)">
+      <div class="legend-dot" style="background:#CA8A04"></div>Puente
     </div>
-    <div class="legend-item" id="leg-ortho" onclick="selectCondicion('ortho',this)">
-      <div class="legend-dot" style="background:#db2777"></div> Ortodoncia
+    <div class="legend-item" id="leg-ortho" onclick="selLegend('ortho',this)">
+      <div class="legend-dot" style="background:#DB2777"></div>Ortodoncia
     </div>
-    <div class="legend-item" id="leg-fracture" onclick="selectCondicion('fracture',this)">
-      <div class="legend-dot" style="background:#ef4444"></div> Fractura
+    <div class="legend-item" id="leg-fracture" onclick="selLegend('fracture',this)">
+      <div class="legend-dot" style="background:#EF4444"></div>Fractura
     </div>
-    <div class="legend-item" id="leg-seal" onclick="selectCondicion('seal',this)">
-      <div class="legend-dot" style="background:#4ade80"></div> Sellador
+    <div class="legend-item" id="leg-seal" onclick="selLegend('seal',this)">
+      <div class="legend-dot" style="background:#4ADE80"></div>Sellador
     </div>
   </div>
 
   <!-- ODONTOGRAMA -->
   <div class="odonto-panel">
-    <!-- Superior -->
-    <div class="jaw-section">
-      <div class="jaw-label">Superior Derecho — Superior Izquierdo</div>
-      <div class="jaw" id="upper-jaw"></div>
-    </div>
-
-    <div class="divider-line"></div>
-
-    <!-- Inferior -->
-    <div class="jaw-section">
-      <div class="jaw" id="lower-jaw"></div>
-      <div class="jaw-label" style="margin-top:12px;margin-bottom:0">Inferior Derecho — Inferior Izquierdo</div>
+    <div class="jaw-label">Superior Derecho — Superior Izquierdo</div>
+    <div class="jaw" id="upper-jaw"></div>
+    <div class="divider-line"><span>Centro</span></div>
+    <div class="jaw" id="lower-jaw"></div>
+    <div class="jaw-label" style="margin-top:12px;margin-bottom:0;flex-direction:row-reverse">
+      Inferior Derecho — Inferior Izquierdo
+      <span style="flex:1;height:1px;background:var(--border-light);display:block"></span>
     </div>
   </div>
 
-  <!-- PANEL INFERIOR -->
+  <!-- BOTTOM -->
   <div class="bottom-grid">
 
-    <!-- Info diente seleccionado + condiciones -->
+    <!-- PANEL IZQUIERDO: diente seleccionado -->
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title">
-          <i data-lucide="mouse-pointer-click"></i>
-          Diente Seleccionado
-        </div>
-        <span id="selected-badge" style="font-size:12px;color:var(--text-muted)">Haz click en un diente</span>
+        <div class="panel-title"><i data-lucide="mouse-pointer-click"></i> Diente Seleccionado</div>
+        <span id="sel-badge" style="font-size:11px;color:var(--text-muted)">Click en un diente</span>
       </div>
-      <div class="tooth-info-panel">
-        <div class="selected-tooth-display" id="selected-display">
-          <div class="selected-tooth-num" id="selected-num">—</div>
-          <div class="selected-tooth-info">
-            <div class="selected-tooth-name" id="selected-name">Sin selección</div>
-            <div class="selected-tooth-state" id="selected-state">Haz click en cualquier diente para editarlo</div>
-          </div>
+      <div class="sel-display" id="sel-display">
+        <div class="sel-num" id="sel-num" style="color:var(--text-muted)">—</div>
+        <div class="sel-info">
+          <div class="sel-name" id="sel-name">Sin selección</div>
+          <div class="sel-state" id="sel-state">Haz click en cualquier diente del odontograma</div>
         </div>
-        <div style="margin-bottom:10px">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px">Cambiar condición:</div>
-          <div class="conditions-grid" id="conditions-grid"></div>
-        </div>
-        <div>
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px">Notas clínicas:</div>
-          <textarea class="notes-area" id="tooth-notes" placeholder="Observaciones sobre este diente..." onblur="saveNotes()"></textarea>
+      </div>
+      <div class="cond-grid" id="cond-grid">
+        <div style="grid-column:span 4;padding:12px;text-align:center;color:var(--text-muted);font-size:12px">Selecciona un diente para ver opciones</div>
+      </div>
+      <div class="notes-wrap">
+        <div class="notes-label">Notas clínicas del diente:</div>
+        <textarea class="notes" id="tooth-notes" placeholder="Observaciones, indicaciones especiales..." onblur="saveNotes()"></textarea>
+        <div style="margin-top:8px;display:flex;justify-content:flex-end">
+          <button class="btn btn-sm" onclick="saveNotes()">
+            <i data-lucide="save" style="width:12px;height:12px"></i> Guardar nota
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Historial -->
+    <!-- PANEL DERECHO: historial -->
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title">
-          <i data-lucide="clock"></i>
-          Historial de Cambios
-        </div>
+        <div class="panel-title"><i data-lucide="clock"></i> Historial de Cambios</div>
         <button class="btn btn-danger btn-sm" onclick="limpiarHistorial()">
-          <i data-lucide="trash-2" style="width:12px;height:12px"></i> Limpiar
+          <i data-lucide="trash-2" style="width:11px;height:11px"></i> Limpiar
         </button>
       </div>
-      <div id="historial-list" style="max-height:380px;overflow-y:auto">
-        <div class="empty-state">Sin cambios registrados</div>
+      <div id="historial-list" style="max-height:400px;overflow-y:auto">
+        <div class="empty-state">Sin cambios en esta sesión</div>
       </div>
     </div>
 
+  </div>
+
+  <!-- NOTAS DE SESIÓN -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><i data-lucide="file-text"></i> Notas de la Sesión</div>
+    </div>
+    <div style="padding:16px 18px">
+      <textarea class="notes" id="session-notes" style="min-height:100px" placeholder="Diagnóstico general, plan de tratamiento, observaciones de la consulta..."></textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL SESIONES GUARDADAS -->
+<div class="modal" id="modal-sesiones">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-header">
+      <h3>📋 Historial de Sesiones</h3>
+      <button class="modal-close" onclick="closeModal('sesiones')"><i data-lucide="x" style="width:13px;height:13px"></i></button>
+    </div>
+    <div id="sesiones-list" style="max-height:400px;overflow-y:auto">
+      <div class="empty-state">Sin sesiones guardadas</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('sesiones')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO PACIENTE -->
+<div class="modal" id="modal-nuevo-paciente">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>👤 Nuevo Paciente</h3>
+      <button class="modal-close" onclick="closeModal('nuevo-paciente')"><i data-lucide="x" style="width:13px;height:13px"></i></button>
+    </div>
+    <div class="form-group"><label>Nombre completo *</label><input id="np-nombre" placeholder="María García López"></div>
+    <div class="form-group"><label>Email</label><input id="np-email" type="email" placeholder="maria@ejemplo.com"></div>
+    <div class="form-group"><label>Teléfono</label><input id="np-telefono" placeholder="222-123-4567"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('nuevo-paciente')">Cancelar</button>
+      <button class="btn" onclick="crearPaciente()">
+        <i data-lucide="save" style="width:12px;height:12px"></i> Crear y Seleccionar
+      </button>
+    </div>
   </div>
 </div>
 
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
+const API = 'https://dentalpro-docker.onrender.com';
+
 const CONDITIONS = {
-  healthy:  {nombre:'Sano',      color:'#94A3B8', bg:'#F8FAFC',  icon:'⬜'},
-  crown:    {nombre:'Corona',    color:'#3b82f6', bg:'#dbeafe',  icon:'👑'},
-  caries:   {nombre:'Caries',    color:'#f59e0b', bg:'#fef3c7',  icon:'🟡'},
-  extraction:{nombre:'Extracción',color:'#DC2626', bg:'#FFF1F2', icon:'❌'},
-  endo:     {nombre:'Endodoncia',color:'#7C3AED', bg:'#F5F3FF',  icon:'💜'},
-  filling:  {nombre:'Obturación',color:'#16A34A', bg:'#F0FDF4',  icon:'🟢'},
-  implant:  {nombre:'Implante',  color:'#0891B2', bg:'#ECFEFF',  icon:'🔵'},
-  bridge:   {nombre:'Puente',    color:'#ca8a04', bg:'#fef9c3',  icon:'🌉'},
-  ortho:    {nombre:'Ortodoncia',color:'#db2777', bg:'#fce7f3',  icon:'😁'},
-  fracture: {nombre:'Fractura',  color:'#ef4444', bg:'#fee2e2',  icon:'⚡'},
-  seal:     {nombre:'Sellador',  color:'#4ade80', bg:'#f0fdf4',  icon:'🛡️'},
+  healthy:  {nombre:'Sano',      color:'#94A3B8',bg:'#F8FAFC', icon:'⬜'},
+  crown:    {nombre:'Corona',    color:'#3B82F6',bg:'#DBEAFE', icon:'👑'},
+  caries:   {nombre:'Caries',    color:'#F59E0B',bg:'#FEF3C7', icon:'🟡'},
+  extraction:{nombre:'Extracción',color:'#DC2626',bg:'#FEE2E2',icon:'❌'},
+  endo:     {nombre:'Endodoncia',color:'#7C3AED',bg:'#EDE9FE', icon:'💜'},
+  filling:  {nombre:'Obturación',color:'#16A34A',bg:'#DCFCE7', icon:'🟢'},
+  implant:  {nombre:'Implante',  color:'#0891B2',bg:'#CFFAFE', icon:'🔵'},
+  bridge:   {nombre:'Puente',    color:'#CA8A04',bg:'#FEF9C3', icon:'🌉'},
+  ortho:    {nombre:'Ortodoncia',color:'#DB2777',bg:'#FCE7F3', icon:'😁'},
+  fracture: {nombre:'Fractura',  color:'#EF4444',bg:'#FEE2E2', icon:'⚡'},
+  seal:     {nombre:'Sellador',  color:'#4ADE80',bg:'#F0FDF4', icon:'🛡️'},
 };
 
 const TOOTH_NAMES = {
-  11:'Central sup. der.',12:'Lateral sup. der.',13:'Canino sup. der.',
-  14:'Premolar sup. der.',15:'Premolar sup. der.',16:'Molar sup. der.',
-  17:'Molar sup. der.',18:'Molar sup. der.',
-  21:'Central sup. izq.',22:'Lateral sup. izq.',23:'Canino sup. izq.',
-  24:'Premolar sup. izq.',25:'Premolar sup. izq.',26:'Molar sup. izq.',
-  27:'Molar sup. izq.',28:'Molar sup. izq.',
-  31:'Central inf. izq.',32:'Lateral inf. izq.',33:'Canino inf. izq.',
-  34:'Premolar inf. izq.',35:'Premolar inf. izq.',36:'Molar inf. izq.',
-  37:'Molar inf. izq.',38:'Molar inf. izq.',
-  41:'Central inf. der.',42:'Lateral inf. der.',43:'Canino inf. der.',
-  44:'Premolar inf. der.',45:'Premolar inf. der.',46:'Molar inf. der.',
-  47:'Molar inf. der.',48:'Molar inf. der.',
+  11:'Inc. central',12:'Inc. lateral',13:'Canino',14:'1er premolar',15:'2do premolar',
+  16:'1er molar',17:'2do molar',18:'3er molar (juicio)',
+  21:'Inc. central',22:'Inc. lateral',23:'Canino',24:'1er premolar',25:'2do premolar',
+  26:'1er molar',27:'2do molar',28:'3er molar (juicio)',
+  31:'Inc. central',32:'Inc. lateral',33:'Canino',34:'1er premolar',35:'2do premolar',
+  36:'1er molar',37:'2do molar',38:'3er molar (juicio)',
+  41:'Inc. central',42:'Inc. lateral',43:'Canino',44:'1er premolar',45:'2do premolar',
+  46:'1er molar',47:'2do molar',48:'3er molar (juicio)',
 };
 
-const params = new URLSearchParams(window.location.search);
-const patientId = params.get('patient');
-const patientName = decodeURIComponent(params.get('name')||'Paciente');
+const MOLARES = [6,7,8,16,17,18,26,27,28,36,37,38,46,47,48];
+const PREMOLARES = [4,5,14,15,24,25,34,35,44,45];
 
-let teethState = JSON.parse(localStorage.getItem('odonto_'+patientId)||'{}');
-let teethNotes = JSON.parse(localStorage.getItem('odonto_notes_'+patientId)||'{}');
-let historial = JSON.parse(localStorage.getItem('odonto_hist_'+patientId)||'[]');
+// Estado
+let teethState = {};
+let teethNotes = {};
+let historial = [];
+let sesiones = [];
 let selectedTooth = null;
-let selectedCondicion = 'healthy';
+let condActive = 'healthy';
+let currentPatient = null;
+let allPatients = [];
+const startTime = new Date();
 
-// Paciente info
-if(patientName && patientName !== 'Paciente'){
-  const chip = document.getElementById('patient-chip');
-  chip.style.display = 'flex';
-  document.getElementById('p-name-chip').textContent = patientName;
-  const initials = patientName.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
-  document.getElementById('p-initials').textContent = initials;
-}
+// URL params
+const params = new URLSearchParams(window.location.search);
+const urlPatientId = params.get('patient');
+const urlPatientName = params.get('name') ? decodeURIComponent(params.get('name')) : null;
 
-function toast(msg, type='success'){
-  const w = document.getElementById('toast-wrap');
-  const t = document.createElement('div');
-  t.className = 'toast ' + type;
-  t.innerHTML = '✅ ' + msg;
+// COLORS
+const COLORS=['#1B4FD8','#7C3AED','#059669','#D97706','#DC2626','#0891B2'];
+function getColor(n){let h=0;for(let c of n)h+=c.charCodeAt(0);return COLORS[h%COLORS.length];}
+function getInitials(n){return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+
+// TOAST
+function toast(msg,type='success'){
+  const w=document.getElementById('toast-wrap');
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  t.innerHTML='✅ '+msg;
   w.appendChild(t);
-  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)}, 2500);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2500);
 }
 
-// SELECCIONAR CONDICIÓN DESDE LEYENDA
-function selectCondicion(cond, el){
-  selectedCondicion = cond;
+// MODAL
+function openModal(id){document.getElementById('modal-'+id).classList.add('open');setTimeout(()=>lucide.createIcons(),50);}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+
+// CARGAR PACIENTES
+async function loadPatients(){
+  try{
+    const data = await fetch(API+'/patients').then(r=>r.json());
+    allPatients = data;
+  }catch(e){
+    allPatients = [];
+  }
+  renderPatientsList('');
+
+  // Si viene por URL, seleccionar automáticamente
+  if(urlPatientId && urlPatientName){
+    selectPatient({id:urlPatientId, name:urlPatientName, phone:''});
+  }
+}
+
+function filterPatients(q){
+  renderPatientsList(q.toLowerCase());
+}
+
+function renderPatientsList(q){
+  const div = document.getElementById('patients-list');
+  const filtered = q ? allPatients.filter(p=>p.name.toLowerCase().includes(q)||p.phone?.includes(q)) : allPatients;
+  if(!filtered.length){
+    div.innerHTML='<div class="empty-state">Sin pacientes encontrados</div>';
+    return;
+  }
+  div.innerHTML = filtered.map(p=>`
+    <div class="patient-option" onclick="selectPatient(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+      <div class="patient-option-avatar" style="background:${getColor(p.name)}">${getInitials(p.name)}</div>
+      <div>
+        <div class="patient-option-name">${p.name}</div>
+        <div class="patient-option-sub">${p.email||''} ${p.phone?'· '+p.phone:''}</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectPatient(p){
+  currentPatient = p;
+  document.getElementById('patient-selector').style.display = 'none';
+
+  // Header chip
+  const chip = document.getElementById('patient-chip-header');
+  chip.style.display = 'flex';
+  document.getElementById('p-nm').textContent = p.name;
+  document.getElementById('p-av').textContent = getInitials(p.name);
+
+  // Session bar
+  document.getElementById('sb-paciente').textContent = p.name;
+  const now = new Date();
+  document.getElementById('sb-fecha').textContent = now.toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('sb-hora').textContent = now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+
+  // Cargar datos del paciente
+  const stored = localStorage.getItem('odonto_state_'+p.id);
+  if(stored) teethState = JSON.parse(stored);
+  const storedNotes = localStorage.getItem('odonto_notes_'+p.id);
+  if(storedNotes) teethNotes = JSON.parse(storedNotes);
+  const storedSesiones = localStorage.getItem('odonto_sessions_'+p.id);
+  if(storedSesiones){
+    sesiones = JSON.parse(storedSesiones);
+    document.getElementById('sb-sesiones').textContent = sesiones.length;
+  }
+
+  // Doctor
+  const user = localStorage.getItem('dentalpro_user');
+  if(user) document.getElementById('sb-doctor').textContent = JSON.parse(user).name?.split(' ')[0]||'Doctor';
+
+  renderJaws();
+  lucide.createIcons();
+}
+
+function continuarSinPaciente(){
+  document.getElementById('patient-selector').style.display = 'none';
+  const now = new Date();
+  document.getElementById('sb-fecha').textContent = now.toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('sb-hora').textContent = now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  renderJaws();
+  lucide.createIcons();
+}
+
+function cambiarPaciente(){
+  document.getElementById('patient-selector').style.display = 'flex';
+  renderPatientsList('');
+}
+
+function abrirModalNuevoPaciente(){
+  openModal('nuevo-paciente');
+}
+
+async function crearPaciente(){
+  const nombre = document.getElementById('np-nombre').value.trim();
+  if(!nombre){toast('El nombre es obligatorio');return;}
+  try{
+    const r = await fetch(API+'/patients',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:nombre,email:document.getElementById('np-email').value,phone:document.getElementById('np-telefono').value})});
+    if(r.ok){
+      const nuevo = await r.json();
+      closeModal('nuevo-paciente');
+      await loadPatients();
+      selectPatient(nuevo);
+      toast('Paciente creado y seleccionado');
+    }
+  }catch(e){toast('Error creando paciente','error');}
+}
+
+// LEYENDA
+function selLegend(cond, el){
+  condActive = cond;
   document.querySelectorAll('.legend-item').forEach(b=>{
-    b.classList.remove('selected');
-    b.style.borderColor = '';
-    b.style.color = '';
-    b.style.fontWeight = '';
+    b.classList.remove('active');
+    b.style.borderColor='';b.style.color='';b.style.fontWeight='';b.style.background='';
   });
   if(el){
-    el.classList.add('selected');
-    el.style.borderColor = CONDITIONS[cond].color;
-    el.style.color = CONDITIONS[cond].color;
-    el.style.fontWeight = '700';
+    el.classList.add('active');
+    el.style.borderColor=CONDITIONS[cond].color;
+    el.style.color=CONDITIONS[cond].color;
+    el.style.fontWeight='700';
+    el.style.background=CONDITIONS[cond].bg;
   }
 }
 
 // RENDER DIENTE
-function toothHTML(num){
-  const state = teethState[num] || 'healthy';
-  const cond = CONDITIONS[state] || CONDITIONS.healthy;
-  return `<div class="tooth-wrap" id="tw-${num}" data-state="${state}" onclick="clickTooth(${num})" title="${num} — ${TOOTH_NAMES[num]||''}">
+function makeTooth(num){
+  const state = teethState[num]||'healthy';
+  const isMolar = [6,7,8].includes(num%10)||num===18||num===28||num===38||num===48;
+  const isPremolar = [4,5].includes(num%10);
+  const numRoots = isMolar?3:isPremolar?2:1;
+  const rootColor = state==='healthy'?'#CBD5E1':CONDITIONS[state]?.color||'#CBD5E1';
+  const rootHtml = Array(numRoots).fill('').map(()=>`<div class="tooth-root${numRoots===1?' single':''}" style="background:${rootColor}"></div>`).join('');
+
+  return `<div class="tooth-wrap" id="tw-${num}" onclick="clickTooth(${num})" title="Diente ${num} — ${TOOTH_NAMES[num]||''}">
     <div class="tooth-num">${num}</div>
-    <div class="tooth-body ${state}" id="tb-${num}">
-      ${state==='extraction'?'<span class="extraction-x">×</span>':''}
-      ${state==='ortho'?'<span style="font-size:10px">⊕</span>':''}
+    <div class="tooth-crown ${state}" id="tc-${num}">
+      ${state==='extraction'?'<span class="x-mark">×</span>':''}
     </div>
-    <div class="tooth-root" id="tr-${num}"></div>
+    <div class="tooth-roots" id="tr-${num}">${rootHtml}</div>
   </div>`;
 }
 
-// RENDER JAWS
 function renderJaws(){
-  const upperRight = [18,17,16,15,14,13,12,11];
-  const upperLeft  = [21,22,23,24,25,26,27,28];
-  const lowerRight = [48,47,46,45,44,43,42,41];
-  const lowerLeft  = [31,32,33,34,35,36,37,38];
+  const uR=[18,17,16,15,14,13,12,11];
+  const uL=[21,22,23,24,25,26,27,28];
+  const lR=[48,47,46,45,44,43,42,41];
+  const lL=[31,32,33,34,35,36,37,38];
 
   document.getElementById('upper-jaw').innerHTML =
-    upperRight.map(toothHTML).join('') +
-    '<div class="jaw-divider"></div>' +
-    upperLeft.map(toothHTML).join('');
-
+    uR.map(makeTooth).join('')+'<div class="jaw-divider"></div>'+uL.map(makeTooth).join('');
   document.getElementById('lower-jaw').innerHTML =
-    lowerRight.map(toothHTML).join('') +
-    '<div class="jaw-divider"></div>' +
-    lowerLeft.map(toothHTML).join('');
+    lR.map(makeTooth).join('')+'<div class="jaw-divider"></div>'+lL.map(makeTooth).join('');
 }
 
 // CLICK DIENTE
 function clickTooth(num){
-  // Aplicar condición seleccionada
-  const oldState = teethState[num] || 'healthy';
-  const newState = selectedCondicion;
-
+  const oldState = teethState[num]||'healthy';
+  const newState = condActive;
   teethState[num] = newState;
   selectedTooth = num;
 
-  // Actualizar visual
-  const tb = document.getElementById('tb-'+num);
+  // Visual
+  const tc = document.getElementById('tc-'+num);
   const tw = document.getElementById('tw-'+num);
-  tb.className = 'tooth-body ' + newState;
-  tw.dataset.state = newState;
-  tb.innerHTML = newState==='extraction'?'<span class="extraction-x">×</span>':newState==='ortho'?'<span style="font-size:10px">⊕</span>':'';
+  tc.className = 'tooth-crown '+newState;
+  tc.innerHTML = newState==='extraction'?'<span class="x-mark">×</span>':'';
 
-  // Resaltar seleccionado
+  // Actualizar raíces
+  const cond = CONDITIONS[newState];
+  const rootColor = newState==='healthy'?'#CBD5E1':cond.color;
+  const tr = document.getElementById('tr-'+num);
+  if(tr) tr.querySelectorAll('.tooth-root').forEach(r=>r.style.background=rootColor);
+
+  // Seleccionado
   document.querySelectorAll('.tooth-wrap').forEach(t=>t.classList.remove('selected'));
   tw.classList.add('selected');
 
-  // Actualizar panel info
-  updateInfoPanel(num);
+  // Info panel
+  updateSelPanel(num);
 
-  // Agregar al historial
-  if(oldState !== newState){
-    const cond = CONDITIONS[newState];
-    historial.unshift({
-      diente: num,
-      nombre: TOOTH_NAMES[num]||'Diente '+num,
-      de: CONDITIONS[oldState]?.nombre||oldState,
-      a: cond.nombre,
-      color: cond.color,
-      fecha: new Date().toISOString()
-    });
+  // Historial
+  if(oldState!==newState){
+    historial.unshift({diente:num,nombre:TOOTH_NAMES[num]||'Diente '+num,de:CONDITIONS[oldState]?.nombre||oldState,a:cond.nombre,color:cond.color,fecha:new Date().toISOString()});
     renderHistorial();
   }
 }
 
-// INFO PANEL
-function updateInfoPanel(num){
-  const state = teethState[num] || 'healthy';
+// SEL PANEL
+function updateSelPanel(num){
+  const state = teethState[num]||'healthy';
   const cond = CONDITIONS[state];
-  document.getElementById('selected-num').textContent = num;
-  document.getElementById('selected-num').style.color = cond.color;
-  document.getElementById('selected-num').style.borderColor = cond.color;
-  document.getElementById('selected-num').style.background = cond.bg;
-  document.getElementById('selected-name').textContent = TOOTH_NAMES[num]||'Diente '+num;
-  document.getElementById('selected-state').textContent = 'Estado: '+cond.nombre;
-  document.getElementById('selected-badge').textContent = 'Diente '+num;
-  document.getElementById('tooth-notes').value = teethNotes[num]||'';
-  renderConditionsGrid(num);
+  document.getElementById('sel-badge').textContent='Diente '+num;
+  document.getElementById('sel-num').textContent=num;
+  document.getElementById('sel-num').style.color=cond.color;
+  document.getElementById('sel-num').style.borderColor=cond.color;
+  document.getElementById('sel-num').style.background=cond.bg;
+  document.getElementById('sel-name').textContent=(TOOTH_NAMES[num]||'Diente '+num);
+  document.getElementById('sel-state').textContent='Estado: '+cond.nombre+' · Click para cambiar condición';
+  document.getElementById('tooth-notes').value=teethNotes[num]||'';
+  renderCondGrid(num);
 }
 
-// CONDITIONS GRID
-function renderConditionsGrid(num){
-  const current = teethState[num] || 'healthy';
-  document.getElementById('conditions-grid').innerHTML = Object.entries(CONDITIONS).map(([key,cond])=>`
+function renderCondGrid(num){
+  const current = teethState[num]||'healthy';
+  document.getElementById('cond-grid').innerHTML = Object.entries(CONDITIONS).map(([key,c])=>`
     <button class="cond-btn ${key===current?'active':''}"
-      style="${key===current?`border-color:${cond.color};background:${cond.bg};color:${cond.color}`:''}"
-      onclick="setCondition('${key}',${num})">
-      <div class="cond-icon">${cond.icon}</div>
-      <div class="cond-name">${cond.nombre}</div>
+      style="${key===current?`border-color:${c.color};background:${c.bg};color:${c.color}`:''}"
+      onclick="setCond('${key}',${num})">
+      <span class="cond-emoji">${c.icon}</span>
+      <span class="cond-label">${c.nombre}</span>
     </button>`).join('');
 }
 
-// SET CONDITION DESDE PANEL
-function setCondition(cond, num){
-  selectedCondicion = cond;
-  selectCondicion(cond, document.getElementById('leg-'+cond));
+function setCond(cond, num){
+  condActive=cond;
+  selLegend(cond, document.getElementById('leg-'+cond));
   clickTooth(num);
 }
 
 // NOTES
 function saveNotes(){
   if(!selectedTooth) return;
-  teethNotes[selectedTooth] = document.getElementById('tooth-notes').value;
-  localStorage.setItem('odonto_notes_'+patientId, JSON.stringify(teethNotes));
+  teethNotes[selectedTooth]=document.getElementById('tooth-notes').value;
+  if(currentPatient) localStorage.setItem('odonto_notes_'+currentPatient.id, JSON.stringify(teethNotes));
+  toast('Nota guardada');
 }
 
 // HISTORIAL
 function renderHistorial(){
-  const div = document.getElementById('historial-list');
-  if(!historial.length){div.innerHTML='<div class="empty-state">Sin cambios registrados</div>';return;}
-  div.innerHTML = historial.slice(0,20).map(h=>`
-    <div class="history-item">
-      <div class="history-dot" style="background:${h.color}"></div>
-      <div class="history-info">
-        <div class="history-title">Diente ${h.diente} — ${h.nombre}</div>
-        <div class="history-sub">${h.de} → <strong style="color:${h.color}">${h.a}</strong> · ${new Date(h.fecha).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</div>
+  const div=document.getElementById('historial-list');
+  if(!historial.length){div.innerHTML='<div class="empty-state">Sin cambios en esta sesión</div>';return;}
+  div.innerHTML=historial.slice(0,20).map(h=>`
+    <div class="hist-item">
+      <div class="hist-dot" style="background:${h.color}"></div>
+      <div>
+        <div class="hist-title">Diente ${h.diente} — ${h.nombre}</div>
+        <div class="hist-sub">${h.de} → <strong style="color:${h.color}">${h.a}</strong> · ${new Date(h.fecha).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</div>
       </div>
     </div>`).join('');
 }
 
-// GUARDAR
-function guardarOdontograma(){
-  if(patientId){
-    localStorage.setItem('odonto_'+patientId, JSON.stringify(teethState));
-    localStorage.setItem('odonto_notes_'+patientId, JSON.stringify(teethNotes));
-    localStorage.setItem('odonto_hist_'+patientId, JSON.stringify(historial));
-  }
-  toast('Odontograma guardado correctamente');
+function limpiarHistorial(){historial=[];renderHistorial();}
+
+// GUARDAR SESIÓN
+function guardarSesion(){
+  if(!currentPatient){toast('Selecciona un paciente primero','error');return;}
+  const sesion={
+    id:Date.now(),
+    fecha:new Date().toISOString(),
+    estado:JSON.parse(JSON.stringify(teethState)),
+    notas:document.getElementById('session-notes').value,
+    teethNotes:JSON.parse(JSON.stringify(teethNotes)),
+    historial:[...historial],
+    doctor:document.getElementById('sb-doctor').textContent
+  };
+  sesiones.unshift(sesion);
+  localStorage.setItem('odonto_state_'+currentPatient.id, JSON.stringify(teethState));
+  localStorage.setItem('odonto_notes_'+currentPatient.id, JSON.stringify(teethNotes));
+  localStorage.setItem('odonto_sessions_'+currentPatient.id, JSON.stringify(sesiones));
+  document.getElementById('sb-sesiones').textContent=sesiones.length;
+  toast('Sesión guardada correctamente ✅');
 }
 
-function limpiarTodo(){
-  if(!confirm('¿Limpiar todo el odontograma? Esta acción no se puede deshacer.')) return;
-  teethState = {};
-  teethNotes = {};
+// SESIONES GUARDADAS
+function renderSesiones(){
+  const div=document.getElementById('sesiones-list');
+  if(!sesiones.length){div.innerHTML='<div class="empty-state">Sin sesiones guardadas</div>';return;}
+  div.innerHTML=sesiones.map(s=>`
+    <div class="session-saved-item" onclick="cargarSesion(${s.id})">
+      <div style="width:36px;height:36px;background:var(--brand-light);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i data-lucide="calendar" style="width:16px;height:16px;color:var(--brand)"></i>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--text-primary)">${new Date(s.fecha).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${new Date(s.fecha).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})} · Dr. ${s.doctor||'—'} · ${Object.keys(s.estado).length} dientes modificados</div>
+        ${s.notas?`<div style="font-size:11px;color:var(--text-secondary);margin-top:3px;font-style:italic">"${s.notas.substring(0,60)}..."</div>`:''}
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();cargarSesion(${s.id})">Cargar</button>
+    </div>`).join('');
+  lucide.createIcons();
+}
+
+function cargarSesion(id){
+  const s=sesiones.find(x=>x.id===id);
+  if(!s) return;
+  teethState={...s.estado};
+  teethNotes={...s.teethNotes};
+  document.getElementById('session-notes').value=s.notas||'';
   renderJaws();
-  selectedTooth = null;
-  document.getElementById('selected-num').textContent = '—';
-  document.getElementById('selected-name').textContent = 'Sin selección';
-  document.getElementById('selected-state').textContent = 'Haz click en cualquier diente para editarlo';
-  document.getElementById('selected-badge').textContent = 'Haz click en un diente';
-  document.getElementById('conditions-grid').innerHTML = '';
+  closeModal('sesiones');
+  toast('Sesión del '+new Date(s.fecha).toLocaleDateString('es-MX')+' cargada');
+}
+
+function limpiarOdonto(){
+  if(!confirm('¿Limpiar odontograma actual?')) return;
+  teethState={};
+  renderJaws();
+  selectedTooth=null;
+  document.getElementById('sel-num').textContent='—';
+  document.getElementById('sel-name').textContent='Sin selección';
+  document.getElementById('sel-state').textContent='Haz click en cualquier diente';
+  document.getElementById('cond-grid').innerHTML='<div style="grid-column:span 4;padding:12px;text-align:center;color:var(--text-muted);font-size:12px">Selecciona un diente</div>';
   toast('Odontograma limpiado');
 }
 
-function limpiarHistorial(){
-  historial = [];
-  renderHistorial();
-}
-
 // INIT
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',async()=>{
   lucide.createIcons();
-  renderJaws();
-  renderHistorial();
+  await loadPatients();
+  // Si viene con paciente por URL, ya se seleccionó en loadPatients
+  // Si no, mostrar selector
+  if(!urlPatientId){
+    document.getElementById('patient-selector').style.display='flex';
+  }
+});
+
+// Abrir modal sesiones con datos frescos
+document.getElementById('modal-sesiones')?.addEventListener('click',e=>{
+  if(e.target.id==='modal-sesiones') closeModal('sesiones');
+});
+document.querySelector('[onclick="openModal(\'sesiones\')"]')?.addEventListener('click',renderSesiones);
+document.querySelectorAll('[onclick]').forEach(el=>{
+  if(el.getAttribute('onclick')==="openModal('sesiones')"){
+    el.addEventListener('click',renderSesiones);
+  }
 });
 </script>
 </body>
