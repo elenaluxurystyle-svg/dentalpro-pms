@@ -3,109 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DentalPro — Iniciar Sesión</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Iniciar Sesión — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:#F8FAFC;min-height:100vh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
-.card{background:white;border-radius:24px;padding:40px;width:100%;max-width:400px;border:1px solid #E8EDF2;box-shadow:0 20px 60px rgba(15,23,42,.08)}
-.logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px}
-.logo-mark{width:44px;height:44px;background:linear-gradient(135deg,#1e90ff,#0047ab);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(27,79,216,.3)}
-.logo-name{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:#0a2463}
-.logo-name span{color:#1e90ff}
-.title{font-size:20px;font-weight:700;color:#0F172A;text-align:center;margin-bottom:6px;letter-spacing:-0.3px}
-.subtitle{font-size:13px;color:#94A3B8;text-align:center;margin-bottom:28px}
-.features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
-.feature{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F8FAFC;border-radius:10px;border:1px solid #E8EDF2}
-.feature-icon{font-size:16px}
-.feature-text{font-size:12px;font-weight:600;color:#475569}
+body{font-family:"DM Sans",sans-serif;background:linear-gradient(135deg,#0a2463 0%,#1B4FD8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:white;border-radius:24px;padding:40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.logo{display:flex;justify-content:center;margin-bottom:24px}
+.title{font-size:22px;font-weight:800;color:#0F172A;text-align:center;margin-bottom:6px}
+.subtitle{font-size:13px;color:#94A3B8;text-align:center;margin-bottom:28px;line-height:1.5}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+.feat{display:flex;align-items:center;gap:8px;padding:10px;background:#F8FAFC;border-radius:10px;border:1px solid #E8EDF2;font-size:12px;font-weight:600;color:#475569}
+#google-btn{display:flex;justify-content:center;margin-bottom:16px}
 .divider{display:flex;align-items:center;gap:10px;margin-bottom:20px}
 .divider-line{flex:1;height:1px;background:#E8EDF2}
-.divider-text{font-size:11px;color:#94A3B8;font-weight:500}
-#google-btn{display:flex;justify-content:center;margin-bottom:16px}
-.error-msg{background:#FFF1F2;border:1px solid #FECDD3;color:#DC2626;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:500;text-align:center;display:none;margin-bottom:12px}
-.loading{display:none;text-align:center;padding:12px;font-size:13px;color:#64748b}
-.terms{font-size:11px;color:#94A3B8;text-align:center;line-height:1.5}
+.divider-text{font-size:11px;color:#94A3B8}
+.invite-section{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #E8EDF2}
+.invite-title{font-size:13px;font-weight:700;color:#0F172A;margin-bottom:10px;text-align:center}
+.invite-input-wrap{display:flex;gap:8px}
+.invite-input{flex:1;padding:10px 13px;background:#F8FAFC;border:1.5px solid #E8EDF2;border-radius:8px;font-size:14px;font-family:"DM Sans",sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#0F172A}
+.invite-input:focus{outline:none;border-color:#1B4FD8}
+.invite-btn{padding:10px 16px;background:#1B4FD8;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;white-space:nowrap}
+.invite-btn:hover{background:#1239A6}
+.invite-info{background:#EEF2FF;border:1px solid #1B4FD8;border-radius:8px;padding:12px;margin-top:10px;font-size:12px;color:#1B4FD8;display:none}
+.error-msg{background:#FFF1F2;border:1px solid #FECDD3;color:#DC2626;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:500;text-align:center;margin-bottom:12px;display:none}
+.loading{text-align:center;padding:16px;font-size:13px;color:#64748b;display:none}
+.loading-spinner{width:24px;height:24px;border:3px solid #E8EDF2;border-top-color:#1B4FD8;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.role-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;margin:8px auto;display:block;text-align:center}
+.terms{font-size:11px;color:#94A3B8;text-align:center;margin-top:14px;line-height:1.5}
 </style>
 </head>
 <body>
 <div class="card">
-  <div class="logo">
-    <div class="logo-mark">
-      <svg viewBox="0 0 60 60" fill="none" style="width:24px;height:24px">
-        <path d="M30 6C20 6 12 13 12 22C12 29 14 34 16 41C17 46 18 54 21 56C22 58 25 58 26 55C27 51 28 45 30 45C32 45 33 51 34 55C35 58 38 58 39 56C42 54 43 46 44 41C46 34 48 29 48 22C48 13 40 6 30 6Z" fill="white" opacity="0.95"/>
-        <path d="M14 24Q30 19 46 24" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
-      </svg>
-    </div>
-    <div class="logo-name">Dental<span>Pro</span></div>
-  </div>
-  <div class="title">Bienvenido de vuelta</div>
-  <div class="subtitle">Sistema de Gestión Dental Profesional</div>
+  <div class="logo"><img src="logo.svg" alt="DentalPro" style="height:56px;width:auto"></div>
+  <div class="title">Bienvenido a DentalPro</div>
+  <div class="subtitle">Sistema de gestión dental profesional para México y LATAM</div>
+
   <div class="features">
-    <div class="feature"><span class="feature-icon">👤</span><span class="feature-text">Pacientes</span></div>
-    <div class="feature"><span class="feature-icon">📅</span><span class="feature-text">Citas</span></div>
-    <div class="feature"><span class="feature-icon">🦷</span><span class="feature-text">Odontograma</span></div>
-    <div class="feature"><span class="feature-icon">📊</span><span class="feature-text">Analytics BI</span></div>
-    <div class="feature"><span class="feature-icon">📦</span><span class="feature-text">Inventario</span></div>
-    <div class="feature"><span class="feature-icon">💊</span><span class="feature-text">Recetas</span></div>
+    <div class="feat">🦷 Odontograma FDI</div>
+    <div class="feat">📅 Citas inteligentes</div>
+    <div class="feat">📊 Analytics actuarial</div>
+    <div class="feat">💓 Seguimiento post-op</div>
   </div>
+
+  <div id="error-msg" class="error-msg"></div>
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    Verificando acceso...
+  </div>
+
+  <div id="google-btn"></div>
+
   <div class="divider">
     <div class="divider-line"></div>
-    <div class="divider-text">Acceso seguro con Google</div>
+    <div class="divider-text">¿Eres personal de una clínica?</div>
     <div class="divider-line"></div>
   </div>
-  <div id="error-msg" class="error-msg"></div>
-  <div id="loading" class="loading">⏳ Verificando identidad...</div>
-  <div id="google-btn"></div>
-  <div class="terms">Al continuar aceptas los términos de uso de DentalPro.<br>Tus datos están protegidos y encriptados.</div>
+
+  <div style="text-align:center">
+    <button onclick="toggleInvite()" style="background:none;border:1.5px solid #E8EDF2;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;color:#475569;cursor:pointer;font-family:DM Sans,sans-serif;transition:all .2s" onmouseover="this.style.borderColor='#1B4FD8';this.style.color='#1B4FD8'" onmouseout="this.style.borderColor='#E8EDF2';this.style.color='#475569'">
+      🔑 Tengo código de invitación
+    </button>
+  </div>
+
+  <div class="invite-section" id="invite-section">
+    <div class="invite-title">Código de Invitación</div>
+    <div class="invite-input-wrap">
+      <input class="invite-input" id="invite-code" placeholder="ABC123" maxlength="8" oninput="this.value=this.value.toUpperCase()">
+      <button class="invite-btn" onclick="verifyInvite()">Verificar</button>
+    </div>
+    <div class="invite-info" id="invite-info"></div>
+  </div>
+
+  <div class="terms">Al iniciar sesión aceptas los <a href="#" style="color:#1B4FD8">Términos de Servicio</a> y <a href="#" style="color:#1B4FD8">Política de Privacidad</a></div>
 </div>
 
 <script>
-const API = 'https://dentalpro-docker.onrender.com';
+const API = "https://dentalpro-docker.onrender.com";
+const CLIENT_ID = "113537762357-7u7b02i2lf3lnl6fsmaetud3nqelth0o.apps.googleusercontent.com";
 
-// Si ya está logueado redirigir
-const _user = localStorage.getItem('dentalpro_user');
-if (_user) window.location.href = 'index.html';
+function showError(msg){
+  const el=document.getElementById("error-msg");
+  el.textContent=msg;el.style.display="block";
+  setTimeout(()=>el.style.display="none",5000);
+}
+function showLoading(show){
+  document.getElementById("loading").style.display=show?"block":"none";
+  document.getElementById("google-btn").style.opacity=show?"0.3":"1";
+}
 
-async function handleCredentialResponse(response) {
-  const loading = document.getElementById('loading');
-  const errorMsg = document.getElementById('error-msg');
-  const btn = document.getElementById('google-btn');
-  loading.style.display = 'block';
-  btn.style.display = 'none';
-  errorMsg.style.display = 'none';
+function toggleInvite(){
+  const sec=document.getElementById("invite-section");
+  sec.style.display=sec.style.display==="none"?"block":"none";
+}
 
-  try {
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+async function verifyInvite(){
+  const code=document.getElementById("invite-code").value.trim();
+  if(!code){showError("Ingresa el código de invitación");return;}
+  try{
+    const r=await fetch(API+"/invite/"+code);
+    if(!r.ok){showError("Código no válido. Pide uno nuevo a tu clínica.");return;}
+    const data=await r.json();
+    const info=document.getElementById("invite-info");
+    info.innerHTML="✅ Código válido — <strong>"+data.clinic_name+"</strong><br>Rol: <strong>"+data.role+"</strong> · Nombre: "+data.name+"<br><br><em>Ahora inicia sesión con Google para acceder</em>";
+    info.style.display="block";
+    localStorage.setItem("dentalpro_invite",JSON.stringify(data));
+  }catch(e){showError("Error verificando código");}
+}
 
-    // Verificar que el token tenga los campos necesarios
-    if (!payload.email || !payload.name) throw new Error('Token incompleto');
+async function handleGoogleLogin(response){
+  showLoading(true);
+  try{
+    const token=response.credential;
+    // Decodificar token para obtener info básica
+    const parts=token.split(".");
+    const padding=4-parts[1].length%4;
+    const payload=JSON.parse(atob(parts[1]+"=".repeat(padding)));
 
-    localStorage.setItem('dentalpro_user', JSON.stringify({
-      name: payload.name,
-      email: payload.email,
-      picture: payload.picture,
-      token: response.credential
-    }));
-    window.location.href = 'index.html';
-  } catch(e) {
-    loading.style.display = 'none';
-    btn.style.display = 'flex';
-    errorMsg.textContent = '❌ Error de autenticación: ' + e.message + '. Intenta de nuevo.';
-    errorMsg.style.display = 'block';
+    // Verificar con backend
+    const r=await fetch(API+"/auth/verify",{
+      headers:{"Authorization":"Bearer "+token}
+    });
+
+    let userData={
+      token,
+      name:payload.name,
+      email:payload.email,
+      picture:payload.picture,
+    };
+
+    if(r.ok){
+      const backendData=await r.json();
+      userData.role=backendData.role;
+      userData.clinic_id=backendData.clinic_id;
+      userData.clinic_name=backendData.clinic_name;
+      userData.permissions=backendData.permissions||{};
+
+      localStorage.setItem("dentalpro_user",JSON.stringify(userData));
+
+      if(backendData.role==="new"){
+        // Si tiene código de invitación guardado, es staff nuevo
+        const invite=localStorage.getItem("dentalpro_invite");
+        if(invite){
+          const inv=JSON.parse(invite);
+          // El staff ya existe en BD, solo necesita hacer login
+          showLoading(false);
+          showError("Tu cuenta está lista. Accediendo...");
+          setTimeout(()=>location.href="index.html",1500);
+        } else {
+          // Dueño nuevo → setup
+          showLoading(false);
+          location.href="setup.html";
+        }
+      } else if(backendData.role==="owner"||backendData.role==="co_owner"){
+        showLoading(false);
+        location.href="index.html";
+      } else {
+        // Doctor, recepcionista, asistente
+        showLoading(false);
+        location.href="index.html";
+      }
+    } else {
+      // Backend no responde → guardar datos básicos y decidir
+      userData.role="new";
+      localStorage.setItem("dentalpro_user",JSON.stringify(userData));
+      showLoading(false);
+      location.href="setup.html";
+    }
+  }catch(e){
+    showLoading(false);
+    showError("Error al iniciar sesión. Intenta de nuevo.");
+    console.error(e);
   }
 }
 
-window.onload = function() {
+window.onload=function(){
   google.accounts.id.initialize({
-    client_id: '113537762357-7u7b02i2lf3lnl6fsmaetud3nqelth0o.apps.googleusercontent.com',
-    callback: handleCredentialResponse
+    client_id:CLIENT_ID,
+    callback:handleGoogleLogin,
+    auto_select:false,
+    cancel_on_tap_outside:true,
   });
   google.accounts.id.renderButton(
-    document.getElementById('google-btn'),
-    {theme:'filled_blue', size:'large', text:'signin_with', width:320}
+    document.getElementById("google-btn"),
+    {theme:"outline",size:"large",text:"signin_with",shape:"rectangular",width:340,logo_alignment:"left"}
   );
+  // Si ya está logueado, redirigir
+  const u=localStorage.getItem("dentalpro_user");
+  if(u){
+    const user=JSON.parse(u);
+    if(user.token&&user.role&&user.role!=="new"){
+      location.href="index.html";
+    }
+  }
 };
 </script>
 </body>
