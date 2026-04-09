@@ -640,7 +640,7 @@ function selTooth(n){
   document.getElementById('btn-upload').style.display='flex';
   document.getElementById('upload-zone').style.display='block';
   document.getElementById('url-section').style.display='block';
-  renderFaces(n);renderToothHist(n);renderBudgTooth(n);renderMedia(n);renderEraseFaces(n);
+  renderFaces(n);renderToothHist(n);renderBudgTooth(n);renderMedia(n);renderEraseFaces(n);setTimeout(()=>lucide.createIcons(),50);
 }
 
 // FACES GRID
@@ -975,7 +975,7 @@ function eraseFace(n,face){
   // Remover del presupuesto
   const idx=BUDG.findIndex(b=>b.d===n&&b.f===face);
   if(idx>=0)BUDG.splice(idx,1);
-  rf(n);renderFaces(n);renderEraseFaces(n);renderBudgTooth(n);
+  rf(n);renderFaces(n);renderEraseFaces(n);renderBudgTooth(n);setTimeout(()=>lucide.createIcons(),30);
   toast('Cara '+face+' borrada');
 }
 
