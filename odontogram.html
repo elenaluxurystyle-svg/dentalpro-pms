@@ -947,24 +947,20 @@ function verExp(){
 // ── BORRADO SELECTIVO ─────────────────────────────────────────────
 function renderEraseFaces(n){
   const div=document.getElementById('erase-faces');
+  if(!div) return;
   const faces=['V','M','O','D','L'];
   const fn={V:'Vest.',M:'Mesial',O:'Oclusal',D:'Distal',L:'Lingual'};
-  div.innerHTML=`
-    <div style="display:flex;flex-wrap:wrap;gap:3px;width:100%">
-      ${faces.map(f=>{
-        const st=TS[n]?.[f]||'healthy';
-        const c=C[st];
-        return `<button class="ef-btn" onclick="eraseFace(${n},'${f}')"
-          style="${st!=='healthy'?`background:${c.f}22;border-color:${c.s};color:${c.s}`:''}"
-          title="Borrar cara ${fn[f]}">
-          <i data-lucide="eraser" style="width:9px;height:9px"></i> ${fn[f]} ${st!=='healthy'?c.ico:''}
-        </button>`;
-      }).join('')}
-      <button class="ef-btn" onclick="resetTooth(${n})" style="background:var(--red-bg);border-color:var(--red);color:var(--red)">
-        <i data-lucide="rotate-ccw" style="width:9px;height:9px"></i> Resetear todo
-      </button>
-    </div>`;
-  setTimeout(()=>lucide.createIcons(),30);
+  let html='<div style="display:flex;flex-wrap:wrap;gap:3px;width:100%">';
+  faces.forEach(f=>{
+    const st=(TS[n]&&TS[n][f])||'healthy';
+    const cv=C[st]||C.healthy;
+    const hasColor=st!=='healthy';
+    const style=hasColor?'background:'+cv.f+'22;border-color:'+cv.s+';color:'+cv.s:'';
+    html+='<button class="ef-btn" onclick="eraseFace('+n+',''+f+'')" style="'+style+'" title="Borrar '+fn[f]+'">✕ '+fn[f]+(hasColor?' '+cv.ico:'')+'</button>';
+  });
+  html+='<button class="ef-btn" onclick="resetTooth('+n+')" style="background:var(--red-bg);border-color:var(--red);color:var(--red)">↺ Resetear todo</button>';
+  html+='</div>';
+  div.innerHTML=html;
 }
 
 function eraseFace(n,face){
