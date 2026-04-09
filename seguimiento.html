@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seguimiento Post-Operatorio — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;
+  --surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;
+  --whatsapp:#25D366;--whatsapp-dark:#128C7E;--whatsapp-bg:#F0FDF4;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-lg:0 20px 48px rgba(15,23,42,.12);
+  --r:16px;--r-xs:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased}
+.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,23,42,.04)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s;text-decoration:none}
+.back-btn:hover{border-color:var(--brand);color:var(--brand)}
+.header-title{font-size:16px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px}
+.content{padding:24px;max-width:1360px;margin:0 auto}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border-radius:var(--r);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);transition:all .2s}
+.kpi:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.kpi-icon{width:38px;height:38px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.kpi-icon svg{width:18px;height:18px;stroke:currentColor}
+.kpi-val{font-size:26px;font-weight:800;letter-spacing:-0.03em;color:var(--text-primary);margin-bottom:4px}
+.kpi-label{font-size:12px;color:var(--text-muted);font-weight:500}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:1000px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.panel-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light)}
+.panel-title{font-size:13px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:7px}
+.panel-title svg{width:15px;height:15px;color:var(--brand)}
+.btn{padding:8px 16px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--brand-dark);transform:translateY(-1px)}
+.btn-outline{background:var(--surface);border:1.5px solid var(--border);color:var(--text-secondary)}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light);transform:none}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-whatsapp{background:var(--whatsapp);color:white}
+.btn-whatsapp:hover{background:var(--whatsapp-dark)}
+.btn-green{background:var(--green);color:white}
+.btn-green:hover{background:#15803d}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-blue{background:var(--brand-light);color:var(--brand)}
+.badge-gray{background:var(--bg);color:var(--text-muted);border:1px solid var(--border)}
+.badge-whatsapp{background:var(--whatsapp-bg);color:var(--whatsapp);border:1px solid var(--green-border)}
+
+/* TRATAMIENTO CARDS */
+.trat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:18px}
+.trat-card{background:var(--bg);border-radius:var(--r-xs);border:1px solid var(--border);overflow:hidden;transition:all .2s}
+.trat-card:hover{box-shadow:var(--shadow);border-color:var(--brand)}
+.trat-header{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.trat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.trat-name{font-size:13px;font-weight:700;color:var(--text-primary)}
+.trat-cat{font-size:11px;color:var(--text-muted);margin-top:1px}
+.msg-timeline{padding:12px 16px}
+.msg-step{display:flex;gap:10px;margin-bottom:10px;position:relative}
+.msg-step:not(:last-child)::before{content:'';position:absolute;left:14px;top:28px;width:1px;height:calc(100% + 2px);background:var(--border)}
+.msg-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:2px solid var(--border);background:var(--surface)}
+.msg-dot.sent{background:var(--whatsapp-bg);border-color:var(--whatsapp)}
+.msg-content{flex:1}
+.msg-time{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.msg-text{font-size:12px;color:var(--text-secondary);line-height:1.5;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xs);padding:8px 10px;border-top-left-radius:2px}
+
+/* SEGUIMIENTOS ACTIVOS */
+.seg-item{display:flex;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border-light);transition:background .15s}
+.seg-item:hover{background:var(--bg)}
+.seg-item:last-child{border-bottom:none}
+.seg-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+.seg-info{flex:1}
+.seg-name{font-size:13px;font-weight:600;color:var(--text-primary)}
+.seg-detail{font-size:11px;color:var(--text-muted);margin-top:2px}
+.seg-msgs{display:flex;gap:4px;margin-top:6px}
+.msg-chip{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600}
+.msg-chip.enviado{background:var(--whatsapp-bg);color:var(--whatsapp);border:1px solid var(--green-border)}
+.msg-chip.pendiente{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.msg-chip.programado{background:var(--brand-light);color:var(--brand)}
+
+/* CHAT PANEL */
+.chat-panel{height:400px;display:flex;flex-direction:column}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.chat-msg{max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5}
+.chat-msg.bot{background:var(--whatsapp-bg);border:1px solid var(--green-border);color:var(--text-primary);border-top-left-radius:2px;align-self:flex-start}
+.chat-msg.patient{background:var(--brand-light);border:1px solid var(--brand);color:var(--text-primary);border-top-right-radius:2px;align-self:flex-end}
+.chat-msg.doctor{background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:white;border-top-right-radius:2px;align-self:flex-end}
+.chat-time{font-size:10px;color:var(--text-muted);margin-top:4px;text-align:right}
+.chat-input-wrap{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.chat-input{flex:1;padding:9px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text-primary)}
+.chat-input:focus{outline:none;border-color:var(--brand)}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.3);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px;padding:28px;width:100%;max-width:520px;border:1px solid var(--border);box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;animation:modalIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-header h3{font-size:17px;font-weight:700;color:var(--text-primary)}
+.modal-close{width:32px;height:32px;background:var(--bg);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.modal-close:hover{background:var(--red-bg);color:var(--red)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--brand);background:var(--surface)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light)}
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--text-primary);color:white;padding:12px 16px;border-radius:var(--r-xs);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
+.toast.success{background:#15803d}.toast.warning{background:#d97706}.toast.error{background:#dc2626}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.empty-state{padding:32px;text-align:center;color:var(--text-muted);font-size:13px}
+.pulse{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back-btn" href="index.html">
+    <i data-lucide="arrow-left" style="width:14px;height:14px"></i> Volver
+  </a>
+  <div class="header-title">
+    <i data-lucide="heart-pulse" style="width:18px;height:18px;color:var(--brand)"></i>
+    Seguimiento Post-Operatorio
+  </div>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="btn btn-outline btn-sm" onclick="openModal('activar')">
+      <i data-lucide="plus" style="width:13px;height:13px"></i> Activar Seguimiento
+    </button>
+    <button class="btn btn-sm btn-whatsapp" onclick="simularEnvio()">
+      <i data-lucide="send" style="width:13px;height:13px"></i> Simular Envío
+    </button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--whatsapp-bg);color:var(--whatsapp)"><i data-lucide="message-circle"></i></div>
+      <div class="kpi-val" id="kpi-enviados">0</div>
+      <div class="kpi-label">Mensajes enviados hoy</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--brand-light);color:var(--brand)"><i data-lucide="users"></i></div>
+      <div class="kpi-val" id="kpi-activos">0</div>
+      <div class="kpi-label">Seguimientos activos</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--green-bg);color:var(--green)"><i data-lucide="check-circle"></i></div>
+      <div class="kpi-val" id="kpi-completados">0</div>
+      <div class="kpi-label">Completados este mes</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon" style="background:var(--amber-bg);color:var(--amber)"><i data-lucide="alert-triangle"></i></div>
+      <div class="kpi-val" id="kpi-alertas">0</div>
+      <div class="kpi-label">Requieren atención</div>
+    </div>
+  </div>
+
+  <!-- Planes de mensajes por tratamiento -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><i data-lucide="zap"></i> Planes de Mensajes por Tratamiento</div>
+      <button class="btn btn-outline btn-sm" onclick="openModal('nuevo-plan')">
+        <i data-lucide="plus" style="width:12px;height:12px"></i> Nuevo Plan
+      </button>
+    </div>
+    <div class="trat-grid" id="planes-grid"></div>
+  </div>
+
+  <div class="grid2">
+    <!-- Seguimientos activos -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><i data-lucide="activity"></i> Seguimientos Activos</div>
+        <span class="badge badge-whatsapp pulse" id="badge-activos">0 activos</span>
+      </div>
+      <div id="seguimientos-list"><div class="empty-state">Sin seguimientos activos</div></div>
+    </div>
+
+    <!-- Panel de chat -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><i data-lucide="message-circle" style="color:var(--whatsapp)"></i> Chat de Seguimiento</div>
+        <select id="chat-select" style="padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);font-size:12px;font-family:'DM Sans',sans-serif" onchange="loadChat(this.value)">
+          <option value="">Seleccionar paciente...</option>
+        </select>
+      </div>
+      <div class="chat-panel">
+        <div class="chat-messages" id="chat-messages">
+          <div style="text-align:center;color:var(--text-muted);font-size:13px;padding:32px">Selecciona un paciente para ver su historial de mensajes</div>
+        </div>
+        <div class="chat-input-wrap">
+          <input class="chat-input" id="chat-input" placeholder="Escribe un mensaje como doctor..." onkeydown="if(event.key==='Enter')enviarMensajeDoctor()">
+          <button class="btn btn-whatsapp btn-sm" onclick="enviarMensajeDoctor()">
+            <i data-lucide="send" style="width:13px;height:13px"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historial de mensajes enviados hoy -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><i data-lucide="list"></i> Mensajes Enviados Hoy</div>
+      <span id="total-hoy" style="font-size:12px;color:var(--text-muted)"></span>
+    </div>
+    <div id="mensajes-hoy-list"><div class="empty-state">Sin mensajes enviados hoy</div></div>
+  </div>
+
+</div>
+
+<!-- MODAL ACTIVAR SEGUIMIENTO -->
+<div class="modal" id="modal-activar">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>🏥 Activar Seguimiento Post-Op</h3>
+      <button class="modal-close" onclick="closeModal('activar')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <div class="form-group"><label>Paciente *</label><select id="act-paciente"><option value="">Seleccionar...</option></select></div>
+    <div class="form-group"><label>Tratamiento realizado *</label>
+      <select id="act-tratamiento">
+        <option value="">Seleccionar tratamiento...</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Teléfono WhatsApp *</label><input id="act-telefono" placeholder="222-123-4567"></div>
+    <div class="form-group"><label>Notas del procedimiento</label><textarea id="act-notas" placeholder="Observaciones relevantes para los mensajes..." style="height:80px;resize:vertical"></textarea></div>
+    <div style="background:var(--whatsapp-bg);border:1px solid var(--green-border);border-radius:var(--r-xs);padding:12px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:600;color:var(--whatsapp);margin-bottom:6px">📱 Plan de mensajes que se enviará:</div>
+      <div id="preview-plan" style="font-size:12px;color:var(--text-secondary)">Selecciona un tratamiento para ver el plan</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('activar')">Cancelar</button>
+      <button class="btn btn-whatsapp" onclick="activarSeguimiento()">
+        <i data-lucide="heart-pulse" style="width:13px;height:13px"></i> Activar Seguimiento
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO PLAN -->
+<div class="modal" id="modal-nuevo-plan">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📋 Nuevo Plan de Mensajes</h3>
+      <button class="modal-close" onclick="closeModal('nuevo-plan')"><i data-lucide="x" style="width:14px;height:14px"></i></button>
+    </div>
+    <div class="form-group"><label>Nombre del tratamiento *</label><input id="np-nombre" placeholder="Ej: Blanqueamiento dental"></div>
+    <div class="form-group"><label>Categoría</label>
+      <select id="np-categoria">
+        <option value="cirugia">🔴 Cirugía</option>
+        <option value="restauracion">🔵 Restauración</option>
+        <option value="preventivo">🟢 Preventivo</option>
+        <option value="estetico">🟣 Estético</option>
+        <option value="ortodoncia">🟠 Ortodoncia</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Mensaje a las 2 horas</label><textarea id="np-msg2h" style="height:70px;resize:vertical" placeholder="Hola {nombre}, esperamos que te sientas bien..."></textarea></div>
+    <div class="form-group"><label>Mensaje a las 24 horas</label><textarea id="np-msg24h" style="height:70px;resize:vertical" placeholder="¿Cómo amaneciste hoy..."></textarea></div>
+    <div class="form-group"><label>Mensaje a los 7 días</label><textarea id="np-msg7d" style="height:70px;resize:vertical" placeholder="Ya pasó una semana..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('nuevo-plan')">Cancelar</button>
+      <button class="btn" onclick="guardarPlan()">
+        <i data-lucide="save" style="width:13px;height:13px"></i> Guardar Plan
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ── BASE DE DATOS DE PLANES DE MENSAJES ─────────────────────────────
+const PLANES_DEFAULT = [
+  {
+    id: 'extraccion',
+    nombre: 'Extracción Dental',
+    categoria: 'cirugia',
+    icono: '🦷',
+    color: '#DC2626',
+    mensajes: [
+      {
+        tiempo: '2 horas',
+        horas: 2,
+        texto: 'Hola {nombre} 😊, esperamos que te sientas bien después de tu extracción de hoy. Recuerda: no comer alimentos calientes por 24 horas, aplica hielo 15 min cada hora y descansa. Si tienes sangrado excesivo, llámanos de inmediato. ¡Estamos aquí para ti! 💙'
+      },
+      {
+        tiempo: '24 horas',
+        horas: 24,
+        texto: '¡Buenos días {nombre}! ☀️ ¿Cómo amaneciste después de tu extracción? Es normal sentir algo de inflamación y dolor leve. Hoy puedes empezar con alimentos blandos y tibios. ¿Tienes alguna duda o te sientes diferente a lo esperado?'
+      },
+      {
+        tiempo: '7 días',
+        horas: 168,
+        texto: 'Hola {nombre}, ya pasó una semana desde tu extracción 🎉 El área ya debería estar cicatrizando bien. Te recordamos que tienes tu revisión de seguimiento pendiente. ¿Agendamos 15 minutitos esta semana? 📅'
+      }
+    ]
+  },
+  {
+    id: 'implante',
+    nombre: 'Implante Dental',
+    categoria: 'cirugia',
+    icono: '🔩',
+    color: '#7C3AED',
+    mensajes: [
+      {
+        tiempo: '2 horas',
+        horas: 2,
+        texto: 'Hola {nombre}, acabas de dar un gran paso para tu salud bucal con tu implante 💪 Durante las próximas horas: mantén la gasa presionada 30 minutos, no escupas ni te enjuagues con fuerza, y descansa con la cabeza elevada. Ante cualquier duda, escríbenos aquí 🦷'
+      },
+      {
+        tiempo: '24 horas',
+        horas: 24,
+        texto: '{nombre}, ¿cómo vas el día de hoy? 🌟 Con el implante es normal tener inflamación durante 3-5 días. Recuerda tomar los medicamentos que te recetamos y no fumar (si aplica). La clave del éxito del implante es el reposo durante esta primera semana. ¡Tú puedes!'
+      },
+      {
+        tiempo: '7 días',
+        horas: 168,
+        texto: 'Una semana con tu nuevo implante, {nombre} 🎊 ¡Felicidades! Es momento de tu primera revisión de osseointegración. En nuestra clínica tenemos un espacio para ti esta semana. ¿Cuál es el mejor horario para ti? ¡Tu sonrisa nos importa! 😁'
+      }
+    ]
+  },
+  {
+    id: 'limpieza',
+    nombre: 'Limpieza Dental',
+    categoria: 'preventivo',
+    icono: '✨',
+    color: '#16A34A',
+    mensajes: [
+      {
+        tiempo: '2 horas',
+        horas: 2,
+        texto: '¡Hola {nombre}! 😊 Tu limpieza dental de hoy quedó perfecta. Para mantener esos resultados: evita café, té o vino tinto por las próximas 2 horas. ¡Tu sonrisa está brillante! ✨'
+      },
+      {
+        tiempo: '24 horas',
+        horas: 24,
+        texto: '{nombre}, ¿notaste la diferencia en tu sonrisa después de la limpieza? 😄 Te recomendamos seguir con tu rutina de higiene: cepillado 2 veces al día y hilo dental. ¡Tu próxima limpieza ideal es en 6 meses!'
+      },
+      {
+        tiempo: '7 días',
+        horas: 168,
+        texto: 'Una semana después de tu limpieza, {nombre} 🌟 Esperamos que te sientas genial. Recuerda: la clave de una sonrisa saludable es la constancia. ¡Nos vemos en 6 meses para tu siguiente limpieza! Ya puedes agendarla en cualquier momento 📅'
+      }
+    ]
+  },
+  {
+    id: 'endodoncia',
+    nombre: 'Endodoncia',
+    categoria: 'cirugia',
+    icono: '💉',
+    color: '#D97706',
+    mensajes: [
+      {
+        tiempo: '2 horas',
+        horas: 2,
+        texto: 'Hola {nombre} 👋 Tu endodoncia fue un éxito. Es normal sentir sensibilidad al morder durante los próximos días. Toma el analgésico que te recetamos si es necesario y evita masticar del lado tratado por ahora. ¿Alguna pregunta?'
+      },
+      {
+        tiempo: '24 horas',
+        horas: 24,
+        texto: '¿Cómo estás {nombre}? 🌿 El dolor post-endodoncia debe ir disminuyendo gradualmente. Si el dolor aumenta en lugar de disminuir, o si tienes fiebre, comunícate con nosotros de inmediato. ¡Estamos pendientes de tu recuperación!'
+      },
+      {
+        tiempo: '7 días',
+        horas: 168,
+        texto: '{nombre}, ya pasó una semana. Tu diente está en proceso de recuperación total 💪 Recuerda que después de la endodoncia es importante colocar una corona dental para protegerlo. ¿Hablamos sobre las opciones? ¡Tenemos algo para cada presupuesto! 😊'
+      }
+    ]
+  },
+  {
+    id: 'ortodoncia',
+    nombre: 'Brackets / Ortodoncia',
+    categoria: 'ortodoncia',
+    icono: '😁',
+    color: '#0891B2',
+    mensajes: [
+      {
+        tiempo: '2 horas',
+        horas: 2,
+        texto: '¡Bienvenido al club de la sonrisa perfecta, {nombre}! 🎉 Tus brackets están puestos y el viaje comenzó. Los primeros días sentirás presión y algo de molestia, ¡es completamente normal! Toma analgésico si necesitas y come suave hoy.'
+      },
+      {
+        tiempo: '24 horas',
+        horas: 24,
+        texto: '{nombre}, ¿cómo amaneciste con tus nuevos brackets? 😊 El día 2 suele ser el más incómodo. Tip: Cera dental en los brackets que te molesten más. Recuerda evitar: palomitas, caramelos duros y chicle. ¡Tu sonrisa del futuro vale cada momento!'
+      },
+      {
+        tiempo: '7 días',
+        horas: 168,
+        texto: '¡Una semana con brackets, {nombre}! 🌟 Ya lo más difícil pasó. Tu próxima cita de ajuste es importante para que el tratamiento avance correctamente. ¿Te agendamos? Recuerda traer tu elástico o cualquier accesorio que te hayamos dado 📋'
+      }
+    ]
+  },
+  {
+    id: 'blanqueamiento',
+    nombre: 'Blanqueamiento',
+    categoria: 'estetico',
+    icono: '💎',
+    color: '#1B4FD8',
+    mensajes: [
+      {
+        tiempo: '2 horas',
+        horas: 2,
+        texto: '¡{nombre}, tu sonrisa ya está radiante! ✨💎 Para que el resultado dure más tiempo: evita alimentos oscuros (café, vino, salsas) las próximas 48 horas. Puede haber sensibilidad temporal, es normal. ¡Cuéntanos cómo te ves en el espejo! 😄'
+      },
+      {
+        tiempo: '24 horas',
+        horas: 24,
+        texto: '{nombre} ¿ya te tomaste foto con tu nueva sonrisa? 📸✨ La sensibilidad debe ir disminuyendo hoy. Puedes usar pasta dental para dientes sensibles si lo necesitas. ¡Recuerda que con cuidado el efecto puede durar 1-2 años!'
+      },
+      {
+        tiempo: '7 días',
+        horas: 168,
+        texto: 'Una semana con tu blanqueamiento, {nombre} 💎 ¿Cómo te ha ido? El color ya se habrá estabilizado. Para mantener los resultados: reducir café y tabaco, y usar enjuague blanqueador. ¿Te interesa saber sobre el mantenimiento semestral? ¡Es muy accesible!'
+      }
+    ]
+  }
+];
+
+// ── ESTADO DE LA APP ────────────────────────────────────────────────
+let planes = JSON.parse(localStorage.getItem('dp_planes') || JSON.stringify(PLANES_DEFAULT));
+let seguimientos = JSON.parse(localStorage.getItem('dp_seguimientos') || '[]');
+let mensajesEnviados = JSON.parse(localStorage.getItem('dp_mensajes_enviados') || '[]');
+let pacientes = [];
+let chatActual = null;
+
+// ── HELPERS ─────────────────────────────────────────────────────────
+const COLORS = ['#1B4FD8','#7C3AED','#059669','#D97706','#DC2626','#0891B2'];
+function getColor(name){let h=0;for(let c of name)h+=c.charCodeAt(0);return COLORS[h%COLORS.length];}
+function getInitials(name){return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+
+function toast(msg, type='success'){
+  const w = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = {success:'✅',error:'❌',warning:'⚠️'};
+  t.innerHTML = icons[type] + ' ' + msg;
+  w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)}, 3500);
+}
+
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  if(id==='activar') cargarSelectores();
+  setTimeout(()=>lucide.createIcons(), 50);
+}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+
+// ── RENDER PLANES ────────────────────────────────────────────────────
+function renderPlanes(){
+  const catColors = {cirugia:'#DC2626',restauracion:'#1B4FD8',preventivo:'#16A34A',estetico:'#7C3AED',ortodoncia:'#D97706'};
+  const catNames = {cirugia:'Cirugía',restauracion:'Restauración',preventivo:'Preventivo',estetico:'Estético',ortodoncia:'Ortodoncia'};
+
+  document.getElementById('planes-grid').innerHTML = planes.map(p=>`
+    <div class="trat-card">
+      <div class="trat-header">
+        <div class="trat-icon" style="background:${p.color}22">${p.icono}</div>
+        <div>
+          <div class="trat-name">${p.nombre}</div>
+          <div class="trat-cat">${catNames[p.categoria]||p.categoria} · ${p.mensajes.length} mensajes</div>
+        </div>
+        <span class="badge" style="margin-left:auto;background:${p.color}22;color:${p.color}">${p.mensajes.length} msgs</span>
+      </div>
+      <div class="msg-timeline">
+        ${p.mensajes.map((m,i)=>`
+          <div class="msg-step">
+            <div class="msg-dot">⏰</div>
+            <div class="msg-content">
+              <div class="msg-time">${m.tiempo}</div>
+              <div class="msg-text">${m.texto.substring(0,100)}${m.texto.length>100?'...':''}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ── SEGUIMIENTOS ─────────────────────────────────────────────────────
+function renderSeguimientos(){
+  const list = document.getElementById('seguimientos-list');
+  const activos = seguimientos.filter(s=>s.estado==='activo');
+  document.getElementById('badge-activos').textContent = activos.length + ' activos';
+
+  // KPIs
+  const today = new Date().toDateString();
+  const enviadosHoy = mensajesEnviados.filter(m=>new Date(m.fecha).toDateString()===today);
+  const monthAgo = new Date(Date.now()-30*24*60*60*1000);
+  const completados = seguimientos.filter(s=>s.estado==='completado'&&new Date(s.fechaInicio)>monthAgo);
+  const alertas = seguimientos.filter(s=>s.estado==='activo'&&s.mensajes?.some(m=>m.tipo==='patient'));
+
+  document.getElementById('kpi-enviados').textContent = enviadosHoy.length;
+  document.getElementById('kpi-activos').textContent = activos.length;
+  document.getElementById('kpi-completados').textContent = completados.length;
+  document.getElementById('kpi-alertas').textContent = alertas.length;
+
+  if(!activos.length){
+    list.innerHTML = '<div class="empty-state">Sin seguimientos activos. Activa uno cuando completes un tratamiento.</div>';
+    return;
+  }
+
+  list.innerHTML = activos.map(s=>{
+    const plan = planes.find(p=>p.id===s.planId)||{mensajes:[]};
+    const enviados = s.mensajesEnviados||[];
+    const chips = plan.mensajes.map((m,i)=>`
+      <span class="msg-chip ${i<enviados.length?'enviado':i===enviados.length?'pendiente':'programado'}">
+        ${m.tiempo} ${i<enviados.length?'✓':''}
+      </span>`).join('');
+    const tieneRespuesta = s.mensajes?.some(m=>m.tipo==='patient');
+
+    return `<div class="seg-item" onclick="selectChat('${s.id}')">
+      <div class="seg-avatar" style="background:${getColor(s.paciente)}">${getInitials(s.paciente)}</div>
+      <div class="seg-info">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="seg-name">${s.paciente}</span>
+          ${tieneRespuesta?'<span class="badge badge-amber pulse">💬 Respondió</span>':''}
+        </div>
+        <div class="seg-detail">${s.tratamiento} · ${new Date(s.fechaInicio).toLocaleDateString('es-MX')}</div>
+        <div class="seg-msgs">${chips}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        ${s.telefono?`<a href="https://wa.me/52${s.telefono.replace(/\D/g,'')}" target="_blank" class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation()">
+          <i data-lucide="message-circle" style="width:11px;height:11px"></i>
+        </a>`:''}
+        <button onclick="event.stopPropagation();completarSeguimiento('${s.id}')" class="btn btn-outline btn-sm" style="font-size:10px">✓ Completar</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Actualizar chat select
+  const sel = document.getElementById('chat-select');
+  sel.innerHTML = '<option value="">Seleccionar paciente...</option>';
+  activos.forEach(s=>sel.innerHTML+=`<option value="${s.id}">${s.paciente} — ${s.tratamiento}</option>`);
+
+  lucide.createIcons();
+}
+
+// ── MENSAJES HOY ──────────────────────────────────────────────────────
+function renderMensajesHoy(){
+  const today = new Date().toDateString();
+  const hoy = mensajesEnviados.filter(m=>new Date(m.fecha).toDateString()===today);
+  document.getElementById('total-hoy').textContent = hoy.length + ' mensajes enviados';
+  const div = document.getElementById('mensajes-hoy-list');
+  if(!hoy.length){div.innerHTML='<div class="empty-state">Sin mensajes enviados hoy</div>';return;}
+  div.innerHTML = hoy.map(m=>`
+    <div style="display:flex;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border-light);align-items:flex-start">
+      <span style="font-size:18px">💬</span>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary)">${m.paciente}</span>
+          <span class="badge badge-whatsapp">${m.tiempo}</span>
+          <span class="badge badge-gray">${m.tratamiento}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;background:var(--whatsapp-bg);border:1px solid var(--green-border);padding:8px 10px;border-radius:var(--r-xs)">${m.texto}</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px">${new Date(m.fecha).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── CHAT ──────────────────────────────────────────────────────────────
+function selectChat(id){
+  document.getElementById('chat-select').value = id;
+  loadChat(id);
+}
+
+function loadChat(id){
+  if(!id){
+    document.getElementById('chat-messages').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:32px">Selecciona un paciente</div>';
+    chatActual = null;
+    return;
+  }
+  chatActual = id;
+  const seg = seguimientos.find(s=>s.id===id);
+  if(!seg) return;
+
+  const msgs = seg.mensajes||[];
+  const div = document.getElementById('chat-messages');
+  if(!msgs.length){
+    div.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:32px">Sin mensajes aún. Los automáticos aparecerán aquí.</div>';
+    return;
+  }
+
+  div.innerHTML = msgs.map(m=>`
+    <div>
+      <div class="chat-msg ${m.tipo}">${m.texto}</div>
+      <div class="chat-time" style="${m.tipo!=='patient'?'':'text-align:left'}">${new Date(m.fecha).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})} ${m.tipo==='bot'?'🤖 Auto':m.tipo==='doctor'?'👨‍⚕️ Dr.':'👤 '+seg.paciente}</div>
+    </div>`).join('');
+  div.scrollTop = div.scrollHeight;
+}
+
+function enviarMensajeDoctor(){
+  if(!chatActual){toast('Selecciona un paciente primero','warning');return;}
+  const input = document.getElementById('chat-input');
+  const texto = input.value.trim();
+  if(!texto) return;
+
+  const seg = seguimientos.find(s=>s.id===chatActual);
+  if(!seg.mensajes) seg.mensajes = [];
+  seg.mensajes.push({tipo:'doctor',texto,fecha:new Date().toISOString()});
+  localStorage.setItem('dp_seguimientos', JSON.stringify(seguimientos));
+  input.value = '';
+  loadChat(chatActual);
+  toast('Mensaje enviado al paciente');
+}
+
+// ── ACTIVAR SEGUIMIENTO ───────────────────────────────────────────────
+function cargarSelectores(){
+  const sel = document.getElementById('act-paciente');
+  sel.innerHTML = '<option value="">Seleccionar...</option>';
+  pacientes.forEach(p=>sel.innerHTML+=`<option value="${p.id}" data-nombre="${p.name}" data-tel="${p.phone||''}">${p.name}</option>`);
+
+  const selT = document.getElementById('act-tratamiento');
+  selT.innerHTML = '<option value="">Seleccionar tratamiento...</option>';
+  planes.forEach(p=>selT.innerHTML+=`<option value="${p.id}">${p.icono} ${p.nombre}</option>`);
+
+  selT.onchange = function(){
+    const plan = planes.find(p=>p.id===this.value);
+    if(!plan){document.getElementById('preview-plan').innerHTML='Selecciona un tratamiento';return;}
+    document.getElementById('preview-plan').innerHTML = plan.mensajes.map(m=>`
+      <div style="margin-bottom:6px">⏰ <strong>${m.tiempo}:</strong> ${m.texto.substring(0,60)}...</div>`).join('');
+  };
+
+  sel.onchange = function(){
+    const opt = this.selectedOptions[0];
+    if(opt && opt.dataset.tel) document.getElementById('act-telefono').value = opt.dataset.tel;
+  };
+}
+
+function activarSeguimiento(){
+  const pac = document.getElementById('act-paciente');
+  const trat = document.getElementById('act-tratamiento').value;
+  const tel = document.getElementById('act-telefono').value.trim();
+
+  if(!pac.value||!trat||!tel){toast('Todos los campos son obligatorios','error');return;}
+
+  const pacNombre = pac.selectedOptions[0].dataset.nombre;
+  const plan = planes.find(p=>p.id===trat);
+
+  const seg = {
+    id: Date.now().toString(),
+    paciente: pacNombre,
+    pacienteId: pac.value,
+    planId: trat,
+    tratamiento: plan.nombre,
+    telefono: tel,
+    notas: document.getElementById('act-notas').value,
+    fechaInicio: new Date().toISOString(),
+    estado: 'activo',
+    mensajesEnviados: [],
+    mensajes: []
+  };
+
+  seguimientos.unshift(seg);
+  localStorage.setItem('dp_seguimientos', JSON.stringify(seguimientos));
+
+  // Simular envío del primer mensaje (2h) inmediatamente para demo
+  setTimeout(()=>enviarMensajeAutomatico(seg.id, 0), 1000);
+
+  closeModal('activar');
+  toast(`Seguimiento activado para ${pacNombre} · ${plan.mensajes.length} mensajes programados`);
+  renderAll();
+}
+
+// ── ENVÍO AUTOMÁTICO ──────────────────────────────────────────────────
+function enviarMensajeAutomatico(segId, msgIndex){
+  const seg = seguimientos.find(s=>s.id===segId);
+  if(!seg||seg.estado!=='activo') return;
+
+  const plan = planes.find(p=>p.id===seg.planId);
+  if(!plan||msgIndex>=plan.mensajes.length) return;
+
+  const msg = plan.mensajes[msgIndex];
+  const texto = msg.texto.replace(/\{nombre\}/g, seg.paciente.split(' ')[0]);
+
+  // Agregar al historial del chat
+  if(!seg.mensajes) seg.mensajes = [];
+  seg.mensajes.push({tipo:'bot',texto,fecha:new Date().toISOString()});
+
+  // Registrar como enviado
+  if(!seg.mensajesEnviados) seg.mensajesEnviados = [];
+  seg.mensajesEnviados.push(msgIndex);
+
+  mensajesEnviados.unshift({
+    paciente: seg.paciente,
+    tratamiento: seg.tratamiento,
+    tiempo: msg.tiempo,
+    texto,
+    fecha: new Date().toISOString(),
+    segId
+  });
+
+  localStorage.setItem('dp_seguimientos', JSON.stringify(seguimientos));
+  localStorage.setItem('dp_mensajes_enviados', JSON.stringify(mensajesEnviados));
+
+  toast(`📱 Mensaje automático enviado a ${seg.paciente} (${msg.tiempo})`,'success');
+  renderAll();
+
+  if(chatActual===segId) loadChat(segId);
+}
+
+function simularEnvio(){
+  const activos = seguimientos.filter(s=>s.estado==='activo');
+  if(!activos.length){toast('No hay seguimientos activos para simular','warning');return;}
+  const seg = activos[0];
+  const plan = planes.find(p=>p.id===seg.planId);
+  const nextIdx = seg.mensajesEnviados?.length||0;
+  if(nextIdx>=plan.mensajes.length){toast('Este seguimiento ya tiene todos los mensajes enviados','warning');return;}
+  enviarMensajeAutomatico(seg.id, nextIdx);
+}
+
+function completarSeguimiento(id){
+  const seg = seguimientos.find(s=>s.id===id);
+  if(seg){seg.estado='completado';localStorage.setItem('dp_seguimientos',JSON.stringify(seguimientos));toast(`Seguimiento de ${seg.paciente} completado ✅`);renderAll();}
+}
+
+// ── GUARDAR PLAN ──────────────────────────────────────────────────────
+function guardarPlan(){
+  const nombre = document.getElementById('np-nombre').value.trim();
+  if(!nombre){toast('El nombre es obligatorio','error');return;}
+  const nuevo = {
+    id: 'custom_'+Date.now(),
+    nombre,
+    categoria: document.getElementById('np-categoria').value,
+    icono: '📋',
+    color: '#1B4FD8',
+    mensajes: [
+      {tiempo:'2 horas',horas:2,texto:document.getElementById('np-msg2h').value||'Hola {nombre}, esperamos que te sientas bien después de tu tratamiento 😊'},
+      {tiempo:'24 horas',horas:24,texto:document.getElementById('np-msg24h').value||'¿Cómo amaneciste, {nombre}? ¡Estamos pendientes de tu recuperación!'},
+      {tiempo:'7 días',horas:168,texto:document.getElementById('np-msg7d').value||'Una semana después de tu tratamiento, {nombre}. ¿Todo bien? 🌟'}
+    ]
+  };
+  planes.push(nuevo);
+  localStorage.setItem('dp_planes', JSON.stringify(planes));
+  closeModal('nuevo-plan');
+  toast('Plan de mensajes creado: '+nombre);
+  renderPlanes();
+}
+
+// ── RENDER ALL ────────────────────────────────────────────────────────
+function renderAll(){
+  renderPlanes();
+  renderSeguimientos();
+  renderMensajesHoy();
+  lucide.createIcons();
+}
+
+// ── LOAD PACIENTES ────────────────────────────────────────────────────
+async function loadPacientes(){
+  try{
+    const data = await fetch('https://dentalpro-docker.onrender.com/patients').then(r=>r.json());
+    pacientes = data;
+  }catch(e){
+    pacientes = [{id:'demo1',name:'Ana García',phone:'2221234567'},{id:'demo2',name:'Carlos López',phone:'2229876543'}];
+  }
+}
+
+// ── VERIFICAR MENSAJES PENDIENTES (simula el motor de envío) ──────────
+function verificarMensajesPendientes(){
+  const ahora = new Date();
+  seguimientos.filter(s=>s.estado==='activo').forEach(seg=>{
+    const plan = planes.find(p=>p.id===seg.planId);
+    if(!plan) return;
+    const enviados = seg.mensajesEnviados?.length||0;
+    if(enviados>=plan.mensajes.length) return;
+
+    const siguiente = plan.mensajes[enviados];
+    const fechaInicio = new Date(seg.fechaInicio);
+    const horasTranscurridas = (ahora-fechaInicio)/(1000*60*60);
+
+    if(horasTranscurridas>=siguiente.horas){
+      enviarMensajeAutomatico(seg.id, enviados);
+    }
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async ()=>{
+  lucide.createIcons();
+  await loadPacientes();
+  renderAll();
+  // Verificar mensajes pendientes cada minuto
+  setInterval(verificarMensajesPendientes, 60000);
+  verificarMensajesPendientes();
+});
+</script>
+</body>
+</html>
