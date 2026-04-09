@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Personal — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{--brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;--surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;--text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;--green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;--amber:#D97706;--amber-bg:#FFFBEB;--red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;--purple:#7C3AED;--purple-bg:#F5F3FF;--shadow-sm:0 2px 8px rgba(15,23,42,.06);--shadow:0 8px 24px rgba(15,23,42,.08);--shadow-lg:0 20px 48px rgba(15,23,42,.12);--r:16px;--r-xs:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased}
+.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s;text-decoration:none}
+.back-btn:hover{border-color:var(--brand);color:var(--brand)}
+.content{padding:24px;max-width:1100px;margin:0 auto}
+.btn{padding:8px 16px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--brand-dark)}
+.btn-outline{background:var(--surface);border:1.5px solid var(--border);color:var(--text-secondary)}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.btn-danger:hover{background:var(--red);color:white}
+.panel{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.panel-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light)}
+.panel-title{font-size:14px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-owner{background:#fef9c3;color:#ca8a04;border:1px solid #fde68a}
+.badge-co_owner{background:var(--purple-bg);color:var(--purple)}
+.badge-doctor{background:var(--brand-light);color:var(--brand)}
+.badge-receptionist{background:var(--green-bg);color:var(--green)}
+.badge-assistant{background:var(--amber-bg);color:var(--amber)}
+.badge-active{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-inactive{background:var(--red-bg);color:var(--red)}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 16px;text-align:left;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;border-bottom:1px solid var(--border)}
+td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border-light);color:var(--text-secondary)}
+tbody tr:hover td{background:var(--bg)}
+tbody tr:last-child td{border-bottom:none}
+.staff-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.3);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px;padding:28px;width:100%;max-width:540px;border:1px solid var(--border);box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto;animation:mIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.mhdr h3{font-size:17px;font-weight:700;color:var(--text-primary)}
+.mclose{width:30px;height:30px;background:var(--bg);border:1px solid var(--border);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.mclose:hover{background:var(--red-bg);color:var(--red)}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+.fg input,.fg select{width:100%;padding:10px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px rgba(27,79,216,.08)}
+.mfooter{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light)}
+/* PERMISOS */
+.perms-section{margin-top:14px;padding-top:14px;border-top:1px solid var(--border-light)}
+.perms-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px}
+.perms-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.perm-toggle{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r-xs);border:1.5px solid var(--border);background:var(--bg);cursor:pointer;transition:all .15s;font-size:12px;font-weight:500}
+.perm-toggle:hover{border-color:var(--brand)}
+.perm-toggle.on{border-color:var(--brand);background:var(--brand-light);color:var(--brand);font-weight:600}
+.perm-icon{font-size:14px}
+/* INVITE CODE */
+.invite-box{background:linear-gradient(135deg,var(--brand),var(--brand-dark));border-radius:var(--r-xs);padding:16px;color:white;text-align:center;margin:16px 0}
+.invite-code{font-family:'DM Mono',monospace;font-size:28px;font-weight:800;letter-spacing:.12em;margin:8px 0}
+.invite-sub{font-size:12px;opacity:.8}
+/* ROLES INFO */
+.roles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:18px}
+.role-card{border:1.5px solid var(--border);border-radius:var(--r-xs);padding:14px;background:var(--bg)}
+.role-name{font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.role-perm{font-size:11px;color:var(--text-muted);line-height:1.6}
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--text-primary);color:white;padding:12px 16px;border-radius:var(--r-xs);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:tIn .3s cubic-bezier(.4,0,.2,1)}
+.toast.ok{background:#15803d}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.empty-state{padding:32px;text-align:center;color:var(--text-muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back-btn" href="index.html"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> Volver</a>
+  <a href="index.html"><img src="logo.svg" alt="DentalPro" style="height:44px;width:auto"></a>
+  <div style="font-size:15px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px">
+    <i data-lucide="users" style="width:18px;height:18px;color:var(--brand)"></i> Gestión de Personal
+  </div>
+  <div style="margin-left:auto;display:flex;gap:8px">
+    <button class="btn btn-outline btn-sm" onclick="openModal('roles')"><i data-lucide="info" style="width:13px;height:13px"></i> Ver roles</button>
+    <button class="btn btn-sm" onclick="openModal('add-staff')"><i data-lucide="user-plus" style="width:13px;height:13px"></i> Agregar personal</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- STATS -->
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px" id="stats-grid"></div>
+
+  <!-- STAFF TABLE -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><i data-lucide="users" style="width:16px;height:16px;color:var(--brand)"></i> Personal de la Clínica</div>
+      <span id="staff-count" style="font-size:12px;color:var(--text-muted)"></span>
+    </div>
+    <table>
+      <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Permisos</th><th>Código invitación</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody id="staff-table"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL AGREGAR STAFF -->
+<div class="modal" id="modal-add-staff">
+  <div class="modal-box">
+    <div class="mhdr"><h3>👤 Agregar Personal</h3><button class="mclose" onclick="closeModal('add-staff')"><i data-lucide="x" style="width:13px;height:13px"></i></button></div>
+    <div class="fg"><label>Nombre completo *</label><input id="s-name" placeholder="Dr. María López"></div>
+    <div class="fg"><label>Email *</label><input id="s-email" type="email" placeholder="maria@clinica.com"></div>
+    <div class="fg">
+      <label>Rol *</label>
+      <select id="s-role" onchange="updateDefaultPerms(this.value)">
+        <option value="">Seleccionar rol...</option>
+        <option value="co_owner">Co-dueño</option>
+        <option value="doctor">Doctor</option>
+        <option value="receptionist">Recepcionista</option>
+        <option value="assistant">Asistente</option>
+      </select>
+    </div>
+    <div class="perms-section">
+      <div class="perms-title">Permisos (puedes personalizar)</div>
+      <div class="perms-grid" id="perms-grid"></div>
+    </div>
+    <div class="mfooter">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('add-staff')">Cancelar</button>
+      <button class="btn btn-sm" onclick="addStaff()"><i data-lucide="save" style="width:13px;height:13px"></i> Crear y generar código</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR PERMISOS -->
+<div class="modal" id="modal-edit-perms">
+  <div class="modal-box">
+    <div class="mhdr"><h3 id="edit-perms-title">✏️ Editar Permisos</h3><button class="mclose" onclick="closeModal('edit-perms')"><i data-lucide="x" style="width:13px;height:13px"></i></button></div>
+    <div class="perms-grid" id="edit-perms-grid"></div>
+    <div class="mfooter">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('edit-perms')">Cancelar</button>
+      <button class="btn btn-sm" onclick="savePerms()"><i data-lucide="save" style="width:13px;height:13px"></i> Guardar permisos</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CÓDIGO INVITACIÓN -->
+<div class="modal" id="modal-invite">
+  <div class="modal-box" style="max-width:420px">
+    <div class="mhdr"><h3>🎉 Personal Agregado</h3><button class="mclose" onclick="closeModal('invite')"><i data-lucide="x" style="width:13px;height:13px"></i></button></div>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Comparte este código con <strong id="invite-name"></strong> para que pueda acceder al sistema:</p>
+    <div class="invite-box">
+      <div class="invite-sub">Código de invitación</div>
+      <div class="invite-code" id="invite-code">------</div>
+      <div class="invite-sub">Ingresa en login.dentalpro.mx</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline btn-sm" style="flex:1" onclick="copiarCodigo()"><i data-lucide="copy" style="width:12px;height:12px"></i> Copiar código</button>
+      <button class="btn btn-sm" style="flex:1" onclick="compartirWhatsApp()"><i data-lucide="message-circle" style="width:12px;height:12px"></i> Enviar WhatsApp</button>
+    </div>
+    <div class="mfooter"><button class="btn btn-sm" onclick="closeModal('invite');loadStaff()">Aceptar</button></div>
+  </div>
+</div>
+
+<!-- MODAL ROLES INFO -->
+<div class="modal" id="modal-roles">
+  <div class="modal-box" style="max-width:620px">
+    <div class="mhdr"><h3>📋 Roles y Permisos</h3><button class="mclose" onclick="closeModal('roles')"><i data-lucide="x" style="width:13px;height:13px"></i></button></div>
+    <div class="roles-grid">
+      <div class="role-card"><div class="role-name">👑 Dueño</div><div class="role-perm">✅ Acceso total a todo el sistema<br>✅ Gestionar staff<br>✅ Configuración de clínica<br>✅ Analytics y reportes</div></div>
+      <div class="role-card"><div class="role-name" style="color:var(--purple)">🤝 Co-dueño</div><div class="role-perm">✅ Igual que dueño<br>✅ Puede gestionar staff<br>✅ Ver todo</div></div>
+      <div class="role-card"><div class="role-name" style="color:var(--brand)">🦷 Doctor</div><div class="role-perm">✅ Pacientes y citas<br>✅ Odontograma y expedientes<br>❌ Inventario y finanzas<br>❌ Staff y config</div></div>
+      <div class="role-card"><div class="role-name" style="color:var(--green)">📋 Recepcionista</div><div class="role-perm">✅ Pacientes y citas<br>✅ Pagos y cobros<br>❌ Odontograma<br>❌ Staff y config</div></div>
+      <div class="role-card"><div class="role-name" style="color:var(--amber)">🔧 Asistente</div><div class="role-perm">✅ Citas<br>✅ Inventario<br>❌ Pacientes completos<br>❌ Finanzas</div></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-sm" onclick="closeModal('roles')">Entendido</button></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
+
+const PERMS_DEF = {
+  owner:       {patients:true,appointments:true,inventory:true,analytics:true,staff:true,config:true,payments:true,marketing:true},
+  co_owner:    {patients:true,appointments:true,inventory:true,analytics:true,staff:true,config:true,payments:true,marketing:true},
+  doctor:      {patients:true,appointments:true,inventory:false,analytics:false,staff:false,config:false,payments:false,marketing:false},
+  receptionist:{patients:true,appointments:true,inventory:false,analytics:false,staff:false,config:false,payments:true,marketing:false},
+  assistant:   {patients:false,appointments:true,inventory:true,analytics:false,staff:false,config:false,payments:false,marketing:false},
+};
+
+const PERM_LABELS = {
+  patients:     {icon:'👥',label:'Pacientes'},
+  appointments: {icon:'📅',label:'Citas'},
+  inventory:    {icon:'📦',label:'Inventario'},
+  analytics:    {icon:'📊',label:'Analytics'},
+  staff:        {icon:'👤',label:'Personal'},
+  config:       {icon:'⚙️',label:'Configuración'},
+  payments:     {icon:'💳',label:'Pagos'},
+  marketing:    {icon:'📣',label:'Marketing'},
+};
+
+const ROLE_NAMES = {owner:'Dueño',co_owner:'Co-dueño',doctor:'Doctor',receptionist:'Recepcionista',assistant:'Asistente'};
+const ROLE_COLORS = {owner:'badge-owner',co_owner:'badge-co_owner',doctor:'badge-doctor',receptionist:'badge-receptionist',assistant:'badge-assistant'};
+const COLORS = ['#1B4FD8','#7C3AED','#059669','#D97706','#DC2626','#0891B2'];
+
+let staffList = [];
+let currentEditId = null;
+let currentPerms = {};
+let lastInviteCode = '';
+let lastInviteName = '';
+
+function getToken(){const u=localStorage.getItem('dentalpro_user');return u?JSON.parse(u).token:null;}
+function gc(n){let h=0;for(const c of n)h+=c.charCodeAt(0);return COLORS[h%COLORS.length];}
+function gi(n){return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+
+function toast(m,t='ok'){
+  const w=document.getElementById('toast-wrap'),el=document.createElement('div');
+  el.className='toast '+(t==='ok'?'ok':'');el.innerHTML=(t==='ok'?'✅':'❌')+' '+m;
+  w.appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300)},3000);
+}
+
+function openModal(id){document.getElementById('modal-'+id).classList.add('open');setTimeout(()=>lucide.createIcons(),50);}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+
+async function loadStaff(){
+  const token = getToken();
+  if(!token){location.href='login.html';return;}
+  try{
+    const r = await fetch(API+'/staff',{headers:{'Authorization':'Bearer '+token}});
+    if(!r.ok) throw new Error('Error');
+    staffList = await r.json();
+    renderStats();
+    renderStaff();
+  }catch(e){
+    document.getElementById('staff-table').innerHTML='<tr><td colspan="7" class="empty-state">Error cargando personal. Verifica tu conexión.</td></tr>';
+  }
+}
+
+function renderStats(){
+  const roles=['owner','co_owner','doctor','receptionist','assistant'];
+  const icons={owner:'👑',co_owner:'🤝',doctor:'🦷',receptionist:'📋',assistant:'🔧'};
+  const grid=document.getElementById('stats-grid');
+  grid.innerHTML=roles.map(r=>{
+    const count=staffList.filter(s=>s.role===r&&s.active).length;
+    return `<div style="background:var(--surface);border-radius:var(--r-xs);padding:14px;border:1px solid var(--border);box-shadow:var(--shadow-sm);text-align:center">
+      <div style="font-size:20px;margin-bottom:4px">${icons[r]}</div>
+      <div style="font-size:22px;font-weight:800;color:var(--text-primary)">${count}</div>
+      <div style="font-size:11px;color:var(--text-muted)">${ROLE_NAMES[r]}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderStaff(){
+  const tb=document.getElementById('staff-table');
+  document.getElementById('staff-count').textContent=staffList.length+' miembros';
+  if(!staffList.length){tb.innerHTML='<tr><td colspan="7" class="empty-state">Sin personal. Agrega a tu equipo.</td></tr>';return;}
+  tb.innerHTML=staffList.map(s=>{
+    const perms=s.permissions||{};
+    const permCount=Object.values(perms).filter(Boolean).length;
+    const permTotal=Object.keys(PERM_LABELS).length;
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="staff-avatar" style="background:${gc(s.name)}">${gi(s.name)}</div>
+          <div>
+            <div style="font-weight:600;color:var(--text-primary)">${s.name}</div>
+            <div style="font-size:11px;color:var(--text-muted)">${s.role==='owner'?'Propietario':'Invitado'}</div>
+          </div>
+        </div>
+      </td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${s.email}</td>
+      <td><span class="badge ${ROLE_COLORS[s.role]||'badge-doctor'}">${ROLE_NAMES[s.role]||s.role}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;min-width:60px">
+            <div style="height:100%;width:${Math.round(permCount/permTotal*100)}%;background:var(--brand);border-radius:3px"></div>
+          </div>
+          <span style="font-size:11px;color:var(--text-muted)">${permCount}/${permTotal}</span>
+        </div>
+      </td>
+      <td>
+        <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--brand);background:var(--brand-light);padding:3px 8px;border-radius:4px;font-size:13px;letter-spacing:.08em">${s.invite_code||'—'}</span>
+      </td>
+      <td><span class="badge ${s.active?'badge-active':'badge-inactive'}">${s.active?'Activo':'Inactivo'}</span></td>
+      <td>
+        <div style="display:flex;gap:5px">
+          ${s.role!=='owner'?`
+          <button class="btn btn-outline btn-sm" onclick="editPerms(${s.id},'${s.name}')" title="Editar permisos">
+            <i data-lucide="settings" style="width:11px;height:11px"></i>
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="removeStaff(${s.id},'${s.name}')" title="Desactivar">
+            <i data-lucide="user-x" style="width:11px;height:11px"></i>
+          </button>`:'<span style="font-size:11px;color:var(--text-muted)">Propietario</span>'}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+function updateDefaultPerms(role){
+  currentPerms = {...(PERMS_DEF[role]||{})};
+  renderPermsGrid('perms-grid', currentPerms);
+}
+
+function renderPermsGrid(gridId, perms){
+  const div=document.getElementById(gridId);
+  div.innerHTML=Object.entries(PERM_LABELS).map(([key,{icon,label}])=>`
+    <div class="perm-toggle ${perms[key]?'on':''}" onclick="togglePerm('${gridId}','${key}',this)">
+      <span class="perm-icon">${icon}</span>
+      <span style="flex:1">${label}</span>
+      <span style="font-size:11px">${perms[key]?'✅':'❌'}</span>
+    </div>`).join('');
+}
+
+function togglePerm(gridId, key, el){
+  currentPerms[key] = !currentPerms[key];
+  el.classList.toggle('on', currentPerms[key]);
+  el.querySelector('span:last-child').textContent = currentPerms[key]?'✅':'❌';
+}
+
+async function addStaff(){
+  const name=document.getElementById('s-name').value.trim();
+  const email=document.getElementById('s-email').value.trim();
+  const role=document.getElementById('s-role').value;
+  if(!name||!email||!role){toast('Nombre, email y rol son obligatorios','error');return;}
+  const token=getToken();
+  try{
+    const r=await fetch(API+'/staff',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({name,email,role,permissions:currentPerms})
+    });
+    if(!r.ok){const e=await r.json();toast(e.detail||'Error','error');return;}
+    const staff=await r.json();
+    lastInviteCode=staff.invite_code;
+    lastInviteName=name;
+    closeModal('add-staff');
+    document.getElementById('invite-name').textContent=name;
+    document.getElementById('invite-code').textContent=staff.invite_code;
+    openModal('invite');
+    // Limpiar form
+    ['s-name','s-email'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('s-role').value='';
+    document.getElementById('perms-grid').innerHTML='';
+    currentPerms={};
+  }catch(e){toast('Error de conexión','error');}
+}
+
+function editPerms(id, name){
+  currentEditId=id;
+  document.getElementById('edit-perms-title').textContent='✏️ Permisos de '+name;
+  const staff=staffList.find(s=>s.id===id);
+  currentPerms={...PERM_LABELS};
+  Object.keys(PERM_LABELS).forEach(k=>currentPerms[k]=(staff?.permissions||{})[k]||false);
+  renderPermsGrid('edit-perms-grid',currentPerms);
+  openModal('edit-perms');
+}
+
+async function savePerms(){
+  if(!currentEditId)return;
+  const token=getToken();
+  try{
+    const r=await fetch(API+'/staff/'+currentEditId+'/permissions',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify(currentPerms)
+    });
+    if(!r.ok){toast('Error guardando','error');return;}
+    toast('Permisos actualizados');
+    closeModal('edit-perms');
+    loadStaff();
+  }catch(e){toast('Error','error');}
+}
+
+async function removeStaff(id,name){
+  if(!confirm('¿Desactivar a '+name+'? Perderá acceso al sistema.'))return;
+  const token=getToken();
+  try{
+    await fetch(API+'/staff/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
+    toast(name+' desactivado');
+    loadStaff();
+  }catch(e){toast('Error','error');}
+}
+
+function copiarCodigo(){
+  navigator.clipboard.writeText(lastInviteCode).then(()=>toast('Código copiado: '+lastInviteCode));
+}
+
+function compartirWhatsApp(){
+  const msg=encodeURIComponent('¡Hola '+lastInviteName+'! 👋 Tu acceso a DentalPro está listo.\n\n🔑 Código de invitación: '+lastInviteCode+'\n\n📱 Ingresa en: https://elenaluxurystyle-svg.github.io/dentalpro-pms/login.html\n\n¡Bienvenido al equipo! 🦷');
+  window.open('https://wa.me/?text='+msg,'_blank');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+  const u=localStorage.getItem('dentalpro_user');
+  if(u){
+    const user=JSON.parse(u);
+    if(user.role!=='owner'&&user.role!=='co_owner'){
+      alert('No tienes permisos para gestionar el personal.');
+      location.href='index.html';
+      return;
+    }
+  }
+  loadStaff();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurar Clínica — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{--brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;--surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;--green:#16A34A;--green-bg:#F0FDF4;--shadow-lg:0 20px 48px rgba(15,23,42,.12);--r:16px;--r-xs:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0a2463 0%,#1B4FD8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:var(--surface);border-radius:24px;padding:40px;width:100%;max-width:520px;box-shadow:var(--shadow-lg)}
+.logo{display:flex;align-items:center;justify-content:center;margin-bottom:28px}
+.step-indicator{display:flex;align-items:center;gap:8px;margin-bottom:28px;justify-content:center}
+.step{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--border);color:var(--text-muted);background:var(--bg);transition:all .3s}
+.step.active{background:var(--brand);border-color:var(--brand);color:white}
+.step.done{background:var(--green);border-color:var(--green);color:white}
+.step-line{flex:1;height:2px;background:var(--border);border-radius:1px;max-width:60px;transition:background .3s}
+.step-line.done{background:var(--green)}
+.step-content{display:none}
+.step-content.active{display:block}
+h2{font-size:22px;font-weight:800;color:var(--text-primary);margin-bottom:6px;letter-spacing:-0.02em}
+.subtitle{font-size:14px;color:var(--text-muted);margin-bottom:24px}
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);color:var(--text-primary);font-size:14px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px rgba(27,79,216,.08)}
+.btn{width:100%;padding:13px;border-radius:var(--r-xs);border:none;cursor:pointer;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;background:var(--brand);color:white;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{background:var(--brand-dark)}
+.btn-outline{background:var(--surface);border:1.5px solid var(--border);color:var(--text-secondary)}
+.welcome-icon{width:64px;height:64px;background:var(--brand-light);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px}
+.success-check{width:72px;height:72px;background:var(--green-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;border:3px solid var(--green)}
+.perms-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.perm-item{display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg);border-radius:var(--r-xs);border:1px solid var(--border);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.perm-item:hover{border-color:var(--brand)}
+.perm-item input{width:16px;height:16px;cursor:pointer;accent-color:var(--brand)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo"><img src="logo.svg" alt="DentalPro" style="height:52px"></div>
+
+  <div class="step-indicator">
+    <div class="step active" id="s1">1</div>
+    <div class="step-line" id="l1"></div>
+    <div class="step" id="s2">2</div>
+    <div class="step-line" id="l2"></div>
+    <div class="step" id="s3">3</div>
+  </div>
+
+  <!-- STEP 1: Bienvenida -->
+  <div class="step-content active" id="step1">
+    <div class="welcome-icon">🏥</div>
+    <h2 style="text-align:center">Bienvenido a DentalPro</h2>
+    <p class="subtitle" style="text-align:center">Configura tu clínica en menos de 2 minutos. Eres el <strong>propietario</strong> — tendrás acceso total.</p>
+    <button class="btn" onclick="goStep(2)">
+      <i data-lucide="arrow-right" style="width:16px;height:16px"></i> Comenzar configuración
+    </button>
+  </div>
+
+  <!-- STEP 2: Datos de la clínica -->
+  <div class="step-content" id="step2">
+    <h2>Tu Clínica</h2>
+    <p class="subtitle">Esta información aparecerá en recetas y documentos oficiales.</p>
+    <div class="fg"><label>Nombre de la clínica *</label><input id="clinic-name" placeholder="Ej: Clínica Dental Sonrisa"></div>
+    <div class="fg"><label>Tu nombre completo *</label><input id="owner-name" placeholder="Dr. Juan García"></div>
+    <div class="fg"><label>Teléfono</label><input id="clinic-phone" placeholder="222-123-4567"></div>
+    <div class="fg"><label>Dirección</label><input id="clinic-address" placeholder="Av. Principal 123, Puebla"></div>
+    <button class="btn" onclick="registrarClinica()">
+      <i data-lucide="building-2" style="width:16px;height:16px"></i> Registrar clínica
+    </button>
+    <div id="error-msg" style="color:#DC2626;font-size:13px;text-align:center;margin-top:12px;display:none"></div>
+  </div>
+
+  <!-- STEP 3: Listo -->
+  <div class="step-content" id="step3">
+    <div class="success-check">
+      <i data-lucide="check" style="width:32px;height:32px;color:#16A34A"></i>
+    </div>
+    <h2 style="text-align:center">¡Clínica registrada!</h2>
+    <p class="subtitle" style="text-align:center">Tu clínica <strong id="clinic-name-show"></strong> está lista. Ahora puedes agregar a tu equipo.</p>
+    <div style="background:var(--bg);border-radius:var(--r-xs);padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Tus permisos como dueño:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span style="background:var(--brand-light);color:var(--brand);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">✅ Todo acceso</span>
+        <span style="background:var(--brand-light);color:var(--brand);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">👥 Gestionar staff</span>
+        <span style="background:var(--brand-light);color:var(--brand);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">⚙️ Configuración</span>
+        <span style="background:var(--brand-light);color:var(--brand);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">📊 Analytics</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn" onclick="location.href='staff.html'">
+        <i data-lucide="user-plus" style="width:16px;height:16px"></i> Agregar mi equipo
+      </button>
+      <button class="btn btn-outline" onclick="location.href='index.html'">
+        Ir al Dashboard →
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://dentalpro-docker.onrender.com';
+let token = null;
+
+function getToken(){
+  const u = localStorage.getItem('dentalpro_user');
+  if(u) return JSON.parse(u).token;
+  return null;
+}
+
+function goStep(n){
+  document.querySelectorAll('.step-content').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  for(let i=1;i<=3;i++){
+    const s=document.getElementById('s'+i);
+    if(i<n){s.classList.add('done');s.classList.remove('active');s.innerHTML='✓';}
+    else if(i===n){s.classList.add('active');s.classList.remove('done');}
+    else{s.classList.remove('active','done');}
+    if(i<3){
+      const l=document.getElementById('l'+i);
+      l.classList.toggle('done',i<n);
+    }
+  }
+  lucide.createIcons();
+}
+
+async function registrarClinica(){
+  const name = document.getElementById('clinic-name').value.trim();
+  const ownerName = document.getElementById('owner-name').value.trim();
+  const phone = document.getElementById('clinic-phone').value;
+  const address = document.getElementById('clinic-address').value;
+  const errEl = document.getElementById('error-msg');
+
+  if(!name||!ownerName){errEl.textContent='Nombre de clínica y tu nombre son obligatorios';errEl.style.display='block';return;}
+  errEl.style.display='none';
+
+  token = getToken();
+  if(!token){alert('Sesión expirada. Por favor vuelve a iniciar sesión.');location.href='login.html';return;}
+
+  try{
+    const r = await fetch(API+'/clinics', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({name, owner_name:ownerName, phone, address})
+    });
+    if(!r.ok){
+      const err = await r.json();
+      errEl.textContent = err.detail || 'Error al registrar';
+      errEl.style.display='block';
+      return;
+    }
+    const clinic = await r.json();
+    // Guardar en localStorage
+    const user = JSON.parse(localStorage.getItem('dentalpro_user')||'{}');
+    user.clinic_id = clinic.id;
+    user.clinic_name = clinic.name;
+    user.role = 'owner';
+    localStorage.setItem('dentalpro_user', JSON.stringify(user));
+    document.getElementById('clinic-name-show').textContent = name;
+    goStep(3);
+  }catch(e){
+    errEl.textContent = 'Error de conexión. Intenta de nuevo.';
+    errEl.style.display='block';
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+  // Pre-llenar nombre si viene de Google
+  const u = localStorage.getItem('dentalpro_user');
+  if(u){
+    const user = JSON.parse(u);
+    if(user.name) document.getElementById('owner-name').value = user.name;
+  }
+});
+</script>
+</body>
+</html>
