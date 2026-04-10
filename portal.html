@@ -7,12 +7,14 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;--brand-xlight:#F5F8FF;
   --surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;
   --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
   --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
   --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
   --red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;--purple-border:#DDD6FE;
+  --teal:#0D9488;--teal-bg:#F0FDFA;--teal-border:#99F6E4;
   --shadow-sm:0 2px 8px rgba(15,23,42,.06);
   --shadow:0 8px 24px rgba(15,23,42,.08);
   --shadow-lg:0 20px 48px rgba(15,23,42,.12);
@@ -21,12 +23,15 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;-webkit-font-smoothing:antialiased}
 
-/* HEADER */
+/* ── HEADER ─────────────────────────────────────────────────── */
 .header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:100}
 .header-brand{display:flex;align-items:center;gap:10px}
+.header-right{display:flex;align-items:center;gap:8px}
 .header-badge{font-size:11px;font-weight:600;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 10px;border-radius:20px}
+.btn-qr{display:flex;align-items:center;gap:6px;padding:6px 14px;background:var(--brand-light);color:var(--brand);border:1.5px solid rgba(27,79,216,.25);border-radius:var(--r-xs);font-size:12px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s}
+.btn-qr:hover{background:var(--brand);color:white;border-color:var(--brand)}
 
-/* LOGIN */
+/* ── LOGIN ───────────────────────────────────────────────────── */
 .login-wrap{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#F0F4FF 0%,var(--bg) 100%)}
 .login-card{background:var(--surface);border-radius:24px;padding:40px;width:100%;max-width:420px;box-shadow:var(--shadow-lg);border:1px solid var(--border-light)}
 .login-logo{display:flex;justify-content:center;margin-bottom:28px}
@@ -38,73 +43,137 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-prim
 .input-wrap input::placeholder{letter-spacing:.04em;text-transform:none;color:var(--text-muted)}
 .btn-primary{width:100%;padding:13px;background:var(--brand);color:white;border:none;border-radius:var(--r-xs);font-size:15px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-primary:hover{background:var(--brand-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(27,79,216,.3)}
-.btn-primary:active{transform:translateY(0)}
 .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
 .error-box{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);padding:11px 14px;border-radius:var(--r-xs);font-size:13px;font-weight:500;text-align:center;margin-bottom:12px;display:none}
-.help-tip{background:var(--brand-light);border:1px solid var(--brand);border-radius:var(--r-xs);padding:11px 14px;margin-top:14px;font-size:12px;color:var(--brand);line-height:1.5;text-align:center}
+.help-tip{background:var(--brand-light);border:1px solid rgba(27,79,216,.2);border-radius:var(--r-xs);padding:11px 14px;margin-top:14px;font-size:12px;color:var(--brand);line-height:1.5;text-align:center}
 .loading-spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* PORTAL */
-.portal-wrap{max-width:680px;margin:0 auto;padding:28px 20px}
-.patient-hero{background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand) 100%);border-radius:var(--r);padding:24px;margin-bottom:20px;color:white;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(27,79,216,.3)}
-.patient-avatar{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;border:2.5px solid rgba(255,255,255,.4)}
+/* ── PORTAL WRAP ─────────────────────────────────────────────── */
+.portal-wrap{max-width:700px;margin:0 auto;padding:28px 20px 48px}
+
+/* ── PATIENT HERO ────────────────────────────────────────────── */
+.patient-hero{background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand) 100%);border-radius:var(--r);padding:24px;margin-bottom:20px;color:white;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(27,79,216,.3);position:relative;overflow:hidden}
+.patient-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.07);border-radius:50%;pointer-events:none}
+.patient-avatar{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;border:2.5px solid rgba(255,255,255,.35)}
 .patient-name{font-size:20px;font-weight:700;margin-bottom:4px}
-.patient-meta{font-size:13px;opacity:.8;margin-bottom:8px}
+.patient-meta{font-size:13px;opacity:.75;margin-bottom:8px}
 .portal-code-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.06em}
 
-/* CARDS */
+/* ── CARDS ───────────────────────────────────────────────────── */
 .card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
-.card-hdr{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:8px}
-.card-hdr-icon{width:32px;height:32px;border-radius:var(--r-xs);background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.card-hdr{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:10px}
+.card-hdr-icon{width:34px;height:34px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.icon-blue{background:var(--brand-light)}
+.icon-green{background:var(--green-bg)}
+.icon-amber{background:var(--amber-bg)}
+.icon-purple{background:var(--purple-bg)}
+.icon-teal{background:var(--teal-bg)}
+.icon-red{background:var(--red-bg)}
 .card-hdr-title{font-size:14px;font-weight:700;color:var(--text-primary)}
+.card-hdr-sub{font-size:11px;color:var(--text-muted);margin-left:2px}
 .card-hdr-count{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:20px}
-.card-body{padding:4px 0}
+.readonly-notice{display:flex;align-items:center;gap:5px;margin-left:auto;font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:.03em}
 
-/* INFO ROWS */
+/* ── INFO ROWS ───────────────────────────────────────────────── */
 .info-row{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-bottom:1px solid var(--border-light);font-size:13px}
 .info-row:last-child{border-bottom:none}
 .info-label{color:var(--text-muted);font-weight:500}
-.info-value{color:var(--text-primary);font-weight:600}
+.info-value{color:var(--text-primary);font-weight:600;text-align:right;max-width:60%}
 
-/* BADGES */
+/* ── BADGES ──────────────────────────────────────────────────── */
 .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
 .badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
 .badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
 .badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
 .badge-blue{background:var(--brand-light);color:var(--brand);border:1px solid rgba(27,79,216,.2)}
+.badge-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
 .badge-gray{background:var(--bg);color:var(--text-secondary);border:1px solid var(--border)}
+.badge-teal{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
+.badge-new{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);animation:badge-pulse 2s ease-in-out infinite}
+@keyframes badge-pulse{0%,100%{opacity:1}50%{opacity:.6}}
 
-/* APPOINTMENT ITEMS */
+/* ── APPOINTMENT ITEMS ───────────────────────────────────────── */
 .apt-item{padding:14px 18px;border-bottom:1px solid var(--border-light);transition:background .15s}
 .apt-item:last-child{border-bottom:none}
-.apt-item:hover{background:var(--bg)}
 .apt-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px}
 .apt-reason{font-size:13px;font-weight:600;color:var(--text-primary)}
-.apt-date{font-size:12px;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.apt-date{font-size:12px;color:var(--text-muted);margin-bottom:8px}
 .apt-badges{display:flex;gap:5px;flex-wrap:wrap}
 
-/* RECETA ITEMS */
-.rx-item{padding:14px 18px;border-bottom:1px solid var(--border-light)}
+/* ── PRESCRIPTION ITEMS ──────────────────────────────────────── */
+.rx-item{padding:16px 18px;border-bottom:1px solid var(--border-light)}
 .rx-item:last-child{border-bottom:none}
-.rx-name{font-size:13px;font-weight:600;margin-bottom:3px}
-.rx-dose{font-size:12px;color:var(--text-muted)}
-.rx-notes{font-size:12px;color:var(--text-secondary);margin-top:4px;background:var(--bg);padding:6px 9px;border-radius:6px;border-left:3px solid var(--border)}
+.rx-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.rx-name{font-size:14px;font-weight:700;color:var(--text-primary)}
+.rx-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.rx-field{background:var(--bg);border-radius:6px;padding:7px 10px;border:1px solid var(--border-light)}
+.rx-field-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:2px}
+.rx-field-value{font-size:12px;font-weight:600;color:var(--text-secondary)}
+.rx-instructions{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--amber);line-height:1.5;border-left:3px solid var(--amber)}
+.rx-doctor{font-size:11px;color:var(--text-muted);margin-top:8px;display:flex;align-items:center;gap:5px}
 
-/* EMPTY */
-.empty{text-align:center;padding:32px 20px;color:var(--text-muted)}
-.empty-icon{font-size:32px;margin-bottom:8px}
+/* ── POSTOP ITEMS ────────────────────────────────────────────── */
+.postop-item{padding:16px 18px;border-bottom:1px solid var(--border-light)}
+.postop-item:last-child{border-bottom:none}
+.postop-procedure{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.postop-section{margin-bottom:10px}
+.postop-section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.postop-text{font-size:13px;color:var(--text-secondary);line-height:1.7;background:var(--bg);padding:10px 12px;border-radius:8px;border-left:3px solid var(--border)}
+.postop-text.alert{background:var(--red-bg);border-color:var(--red);color:var(--text-primary)}
+.postop-followup{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:8px;font-size:12px;font-weight:600;color:var(--green);margin-top:10px}
+.postop-emergency{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:8px;font-size:12px;font-weight:600;color:var(--red);margin-top:8px}
+
+/* ── MESSAGES ────────────────────────────────────────────────── */
+.msg-item{padding:16px 18px;border-bottom:1px solid var(--border-light);transition:background .15s}
+.msg-item:last-child{border-bottom:none}
+.msg-item.unread{background:var(--brand-xlight)}
+.msg-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.msg-subject{font-size:13px;font-weight:700;color:var(--text-primary)}
+.msg-date{font-size:11px;color:var(--text-muted);white-space:nowrap}
+.msg-from{font-size:11px;color:var(--brand);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.msg-body{font-size:13px;color:var(--text-secondary);line-height:1.65;background:var(--bg);padding:10px 12px;border-radius:8px;border-left:3px solid var(--brand-light)}
+.msg-item.unread .msg-body{border-left-color:var(--brand)}
+
+/* ── EMPTY ───────────────────────────────────────────────────── */
+.empty{text-align:center;padding:28px 20px;color:var(--text-muted)}
+.empty-icon{font-size:28px;margin-bottom:6px}
 .empty-text{font-size:13px}
 
-/* FOOTER */
-.portal-footer{text-align:center;padding:16px;margin-top:8px}
-.btn-logout{background:none;border:1.5px solid var(--border);padding:8px 20px;border-radius:var(--r-xs);font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s}
+/* ── FOOTER ──────────────────────────────────────────────────── */
+.portal-footer{text-align:center;padding:20px;margin-top:8px}
+.btn-logout{background:none;border:1.5px solid var(--border);padding:8px 22px;border-radius:var(--r-xs);font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s}
 .btn-logout:hover{border-color:var(--red);color:var(--red);background:var(--red-bg)}
 
+/* ── QR MODAL ────────────────────────────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px;padding:28px;width:100%;max-width:380px;box-shadow:var(--shadow-lg);border:1px solid var(--border);animation:mIn .2s cubic-bezier(.4,0,.2,1)}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-title{font-size:16px;font-weight:700}
+.modal-close{width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:16px;line-height:1}
+.modal-close:hover{background:var(--red-bg);color:var(--red)}
+.qr-card{background:white;border:1px solid var(--border);border-radius:var(--r);padding:20px;text-align:center;margin-bottom:16px}
+.qr-img{width:180px;height:180px;margin:0 auto 12px;display:block;image-rendering:pixelated}
+.qr-code-text{font-family:"DM Mono",monospace;font-size:15px;font-weight:700;color:var(--brand);letter-spacing:.12em;margin-bottom:4px}
+.qr-patient-name{font-size:13px;color:var(--text-muted)}
+.btn-print{width:100%;padding:12px;background:var(--brand);color:white;border:none;border-radius:var(--r-xs);font-size:14px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.btn-print:hover{background:var(--brand-dark)}
+
+/* ── PRINT STYLES ────────────────────────────────────────────── */
+@media print{
+  body *{visibility:hidden}
+  .print-area,.print-area *{visibility:visible}
+  .print-area{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:white}
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media(max-width:520px){
   .login-card{padding:28px 20px}
   .patient-hero{flex-direction:column;text-align:center}
-  .portal-wrap{padding:16px 12px}
+  .portal-wrap{padding:16px 12px 40px}
+  .rx-meta{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -115,22 +184,27 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-prim
   <div class="header-brand">
     <img src="logo.svg" alt="DentalPro" style="height:36px;width:auto">
   </div>
-  <div class="header-badge">Portal del Paciente</div>
+  <div class="header-right">
+    <div class="header-badge" id="header-badge">Portal del Paciente</div>
+    <button class="btn-qr" id="btn-qr" style="display:none" onclick="openQR()">
+      📲 Generar QR
+    </button>
+  </div>
 </div>
 
-<!-- LOGIN SECTION -->
+<!-- ── LOGIN SECTION ──────────────────────────────────────────── -->
 <div id="login-section" class="login-wrap">
   <div class="login-card">
     <div class="login-logo">
       <img src="logo.svg" alt="DentalPro" style="height:52px;width:auto">
     </div>
     <div class="login-title">Consulta tu expediente</div>
-    <div class="login-sub">Ingresa el código único que te proporcionó tu clínica dental para ver tus citas y recetas.</div>
+    <div class="login-sub">Ingresa el código que te proporcionó tu clínica para ver tus citas, recetas y mensajes de tu doctor.</div>
 
-    <div id="error-box" class="error-box">Código no encontrado. Verifica con tu clínica.</div>
+    <div id="error-box" class="error-box"></div>
 
     <div class="input-wrap">
-      <input id="code-input" type="text" placeholder="Ej: PAC-A1B2-C3D4" maxlength="20"
+      <input id="code-input" type="text" placeholder="Ej: PAC-A1B2-0001" maxlength="20"
         oninput="this.value=this.value.toUpperCase()"
         onkeydown="if(event.key==='Enter')loadPortal()">
     </div>
@@ -140,24 +214,38 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-prim
     </button>
 
     <div class="help-tip">
-      🔒 Tu información es privada y solo tú tienes acceso con este código.<br>
-      Si no tienes tu código, solicítalo en recepción.
+      🔒 Tu información es privada. Solo tú tienes acceso con este código.<br>
+      Si no lo tienes, solicítalo en recepción o a tu doctor.
     </div>
   </div>
 </div>
 
-<!-- PORTAL SECTION -->
+<!-- ── PORTAL SECTION ─────────────────────────────────────────── -->
 <div id="portal-section" style="display:none">
   <div class="portal-wrap">
 
-    <!-- HERO PACIENTE -->
+    <!-- HERO -->
     <div class="patient-hero" id="patient-hero"></div>
+
+    <!-- MENSAJES DEL DOCTOR -->
+    <div class="card" id="msgs-card" style="display:none">
+      <div class="card-hdr">
+        <div class="card-hdr-icon icon-blue">✉️</div>
+        <div>
+          <div class="card-hdr-title">Mensajes de tu Doctor</div>
+          <div class="card-hdr-sub">Solo lectura</div>
+        </div>
+        <div class="card-hdr-count" id="msgs-count">0</div>
+      </div>
+      <div id="msgs-info"></div>
+    </div>
 
     <!-- INFORMACIÓN PERSONAL -->
     <div class="card">
       <div class="card-hdr">
-        <div class="card-hdr-icon">👤</div>
+        <div class="card-hdr-icon icon-blue">👤</div>
         <div class="card-hdr-title">Mi Información</div>
+        <div class="readonly-notice">🔒 Solo lectura</div>
       </div>
       <div class="card-body" id="patient-info"></div>
     </div>
@@ -165,7 +253,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-prim
     <!-- PRÓXIMAS CITAS -->
     <div class="card">
       <div class="card-hdr">
-        <div class="card-hdr-icon">📅</div>
+        <div class="card-hdr-icon icon-green">📅</div>
         <div class="card-hdr-title">Mis Citas</div>
         <div class="card-hdr-count" id="apt-count">0</div>
       </div>
@@ -175,69 +263,117 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-prim
     <!-- RECETAS -->
     <div class="card" id="rx-card" style="display:none">
       <div class="card-hdr">
-        <div class="card-hdr-icon">💊</div>
-        <div class="card-hdr-title">Mis Recetas</div>
+        <div class="card-hdr-icon icon-amber">💊</div>
+        <div>
+          <div class="card-hdr-title">Mis Recetas</div>
+          <div class="card-hdr-sub">Medicamentos prescritos</div>
+        </div>
         <div class="card-hdr-count" id="rx-count">0</div>
       </div>
       <div id="rx-info"></div>
     </div>
 
+    <!-- INDICACIONES POST-OPERATORIAS -->
+    <div class="card" id="postop-card" style="display:none">
+      <div class="card-hdr">
+        <div class="card-hdr-icon icon-teal">🩺</div>
+        <div>
+          <div class="card-hdr-title">Indicaciones Post-Operatorias</div>
+          <div class="card-hdr-sub">Instrucciones de tu doctor</div>
+        </div>
+        <div class="card-hdr-count" id="postop-count">0</div>
+      </div>
+      <div id="postop-info"></div>
+    </div>
+
     <div class="portal-footer">
       <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
       <div style="margin-top:12px;font-size:11px;color:var(--text-muted)">
-        DentalPro · Sistema de Gestión Dental
+        DentalPro · Sistema de Gestión Dental · Información de solo lectura
       </div>
     </div>
   </div>
 </div>
 
-<script>
-const API = 'https://dentalpro-docker.onrender.com';
+<!-- ── QR MODAL ───────────────────────────────────────────────── -->
+<div class="modal-overlay" id="qr-modal" onclick="if(event.target===this)closeQR()">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">📲 Código QR del Paciente</div>
+      <button class="modal-close" onclick="closeQR()">✕</button>
+    </div>
+    <div class="qr-card" id="print-area">
+      <img id="qr-img" class="qr-img" src="" alt="QR Code">
+      <div class="qr-code-text" id="qr-code-text"></div>
+      <div class="qr-patient-name" id="qr-patient-name"></div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:6px">DentalPro · Portal del Paciente</div>
+    </div>
+    <button class="btn-print" onclick="printQR()">🖨️ Imprimir / Guardar</button>
+    <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px">Entrega este código al paciente para que acceda a su portal</div>
+  </div>
+</div>
 
-// Auto-fill code from URL param
-const params = new URLSearchParams(window.location.search);
-const codeFromUrl = params.get('code');
-if (codeFromUrl) {
-  document.getElementById('code-input').value = codeFromUrl.toUpperCase();
+<script>
+const API        = 'https://dentalpro-docker.onrender.com';
+const PORTAL_URL = 'https://elenaluxurystyle-svg.github.io/dentalpro-pms/portal.html';
+
+let currentCode     = '';
+let currentPatient  = null;
+
+/* ── URL PARAM ───────────────────────────────────────────────── */
+const urlCode = new URLSearchParams(window.location.search).get('code');
+if (urlCode) {
+  document.getElementById('code-input').value = urlCode.toUpperCase();
   loadPortal();
 }
 
+/* ── HELPERS ─────────────────────────────────────────────────── */
 function setLoading(on) {
   document.getElementById('btn-acceder').disabled = on;
-  document.getElementById('btn-text').textContent = on ? 'Verificando...' : 'Ver mi expediente';
+  document.getElementById('btn-text').textContent  = on ? 'Verificando...' : 'Ver mi expediente';
   document.getElementById('btn-spin').style.display = on ? 'block' : 'none';
 }
 
 function showError(msg) {
   const el = document.getElementById('error-box');
-  el.textContent = msg;
-  el.style.display = 'block';
-  setTimeout(() => el.style.display = 'none', 5000);
+  el.textContent    = msg;
+  el.style.display  = 'block';
+  setTimeout(() => el.style.display = 'none', 6000);
 }
 
-const URGENCY_LABEL = { green: 'Normal', amber: 'Urgente', red: 'Emergencia' };
-const URGENCY_CLASS = { green: 'badge-green', amber: 'badge-amber', red: 'badge-red' };
-
-const STATUS_LABEL = {
-  scheduled: 'Agendada', confirmed: 'Confirmada', completed: 'Completada',
-  cancelled: 'Cancelada', no_show: 'No asistió'
-};
-const STATUS_CLASS = {
-  scheduled: 'badge-blue', confirmed: 'badge-green', completed: 'badge-gray',
-  cancelled: 'badge-red', no_show: 'badge-amber'
-};
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
 function initials(name) {
   return (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 }
 
-function formatDate(iso) {
+function fmtDate(iso) {
   if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('es-MX', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) +
-    ' · ' + d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+  return new Date(iso).toLocaleDateString('es-MX', { weekday:'short', year:'numeric', month:'short', day:'numeric' })
+    + ' · ' + new Date(iso).toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
 }
 
+function fmtDateShort(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' });
+}
+
+function calcAge(d) {
+  const b = new Date(d), n = new Date();
+  let a = n.getFullYear() - b.getFullYear();
+  if (n.getMonth() - b.getMonth() < 0 || (n.getMonth() === b.getMonth() && n.getDate() < b.getDate())) a--;
+  return a;
+}
+
+const URGENCY_LABEL = { green:'Normal', amber:'Urgente', red:'Emergencia' };
+const URGENCY_CLASS = { green:'badge-green', amber:'badge-amber', red:'badge-red' };
+const STATUS_LABEL  = { scheduled:'Agendada', confirmed:'Confirmada', completed:'Completada', cancelled:'Cancelada', no_show:'No asistió' };
+const STATUS_CLASS  = { scheduled:'badge-blue', confirmed:'badge-green', completed:'badge-gray', cancelled:'badge-red', no_show:'badge-amber' };
+
+/* ── LOAD PORTAL ─────────────────────────────────────────────── */
 async function loadPortal() {
   const code = document.getElementById('code-input').value.trim().toUpperCase();
   if (!code) { showError('Ingresa tu código de portal'); return; }
@@ -248,105 +384,236 @@ async function loadPortal() {
   try {
     const r = await fetch(API + '/portal/' + encodeURIComponent(code));
     if (!r.ok) {
-      showError('Código no encontrado. Verifica con tu clínica.');
+      showError('No encontramos ese código. Verifica con recepción o tu doctor.');
       setLoading(false);
       return;
     }
     const data = await r.json();
-    renderPortal(data.patient, data.appointments || []);
+    currentCode    = code;
+    currentPatient = data.patient;
+    renderPortal(data);
   } catch (e) {
-    showError('Error de conexión. Intenta de nuevo.');
+    showError('Error de conexión. Intenta de nuevo en unos momentos.');
     console.error(e);
   } finally {
     setLoading(false);
   }
 }
 
-function renderPortal(p, apts) {
-  // Hero
+/* ── RENDER PORTAL ───────────────────────────────────────────── */
+function renderPortal(data) {
+  const p    = data.patient;
+  const apts = data.appointments  || [];
+  const rxs  = data.prescriptions || [];
+  const pops = data.postop        || [];
+  const msgs = data.messages      || [];
+
+  /* Hero */
   document.getElementById('patient-hero').innerHTML = `
     <div class="patient-avatar">${initials(p.name)}</div>
-    <div>
-      <div class="patient-name">${p.name}</div>
-      <div class="patient-meta">${p.email || ''} ${p.phone ? '· ' + p.phone : ''}</div>
-      <div class="portal-code-chip">🔑 ${p.portal_code}</div>
-    </div>
-  `;
+    <div style="flex:1;min-width:0">
+      <div class="patient-name">${esc(p.name)}</div>
+      <div class="patient-meta">${esc(p.email || '')}${p.phone ? ' · ' + esc(p.phone) : ''}</div>
+      <div class="portal-code-chip">🔑 ${esc(p.portal_code)}</div>
+    </div>`;
 
-  // Info personal
+  /* Info personal */
   const age = p.birth_date ? calcAge(p.birth_date) : null;
   document.getElementById('patient-info').innerHTML = `
-    ${p.email    ? `<div class="info-row"><span class="info-label">Correo</span><span class="info-value">${p.email}</span></div>` : ''}
-    ${p.phone    ? `<div class="info-row"><span class="info-label">Teléfono</span><span class="info-value">${p.phone}</span></div>` : ''}
-    ${age != null? `<div class="info-row"><span class="info-label">Edad</span><span class="info-value">${age} años</span></div>` : ''}
-    ${p.blood_type ? `<div class="info-row"><span class="info-label">Tipo de sangre</span><span class="info-value"><span class="badge badge-red">${p.blood_type}</span></span></div>` : ''}
-    ${p.allergies ? `<div class="info-row"><span class="info-label">Alergias</span><span class="info-value" style="color:var(--amber)">${p.allergies}</span></div>` : ''}
-    <div class="info-row"><span class="info-label">Clínica</span><span class="info-value">${p.clinic_name || 'DentalPro'}</span></div>
-  `;
+    ${p.email      ? `<div class="info-row"><span class="info-label">Correo</span><span class="info-value">${esc(p.email)}</span></div>` : ''}
+    ${p.phone      ? `<div class="info-row"><span class="info-label">Teléfono</span><span class="info-value">${esc(p.phone)}</span></div>` : ''}
+    ${age != null  ? `<div class="info-row"><span class="info-label">Edad</span><span class="info-value">${age} años</span></div>` : ''}
+    ${p.blood_type ? `<div class="info-row"><span class="info-label">Tipo de sangre</span><span class="info-value"><span class="badge badge-red">${esc(p.blood_type)}</span></span></div>` : ''}
+    ${p.allergies  ? `<div class="info-row"><span class="info-label">Alergias</span><span class="info-value" style="color:var(--amber)">${esc(p.allergies)}</span></div>` : ''}
+    <div class="info-row"><span class="info-label">Clínica</span><span class="info-value">${esc(p.clinic_name || 'DentalPro')}</span></div>`;
 
-  // Citas
+  /* Citas */
   document.getElementById('apt-count').textContent = apts.length;
   if (!apts.length) {
-    document.getElementById('appointments-info').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">📅</div>
-        <div class="empty-text">No tienes citas registradas</div>
-      </div>`;
+    document.getElementById('appointments-info').innerHTML = `<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Sin citas registradas</div></div>`;
   } else {
-    const upcoming = apts.filter(a => a.status !== 'cancelled' && a.status !== 'no_show');
-    const past = apts.filter(a => a.status === 'completed' || a.status === 'cancelled' || a.status === 'no_show');
-    let html = '';
-    if (upcoming.length) {
-      html += upcoming.map(a => aptHTML(a)).join('');
-    }
+    const upcoming = apts.filter(a => !['cancelled','no_show','completed'].includes(a.status));
+    const past     = apts.filter(a =>  ['completed','cancelled','no_show'].includes(a.status));
+    let html = upcoming.map(a => aptHTML(a)).join('');
     if (past.length) {
-      html += `<div style="padding:8px 18px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);background:var(--bg);border-top:1px solid var(--border-light)">Historial</div>`;
+      html += `<div style="padding:7px 18px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);background:var(--bg);border-top:1px solid var(--border-light)">Historial</div>`;
       html += past.map(a => aptHTML(a)).join('');
     }
     document.getElementById('appointments-info').innerHTML = html;
   }
 
-  // Mostrar portal
+  /* Recetas */
+  if (rxs.length) {
+    document.getElementById('rx-count').textContent = rxs.length;
+    document.getElementById('rx-info').innerHTML = rxs.map(rxHTML).join('');
+    document.getElementById('rx-card').style.display = 'block';
+  }
+
+  /* Post-op */
+  if (pops.length) {
+    document.getElementById('postop-count').textContent = pops.length;
+    document.getElementById('postop-info').innerHTML = pops.map(postopHTML).join('');
+    document.getElementById('postop-card').style.display = 'block';
+  }
+
+  /* Mensajes */
+  if (msgs.length) {
+    const unread = msgs.filter(m => !m.read_at).length;
+    document.getElementById('msgs-count').innerHTML = unread
+      ? `<span class="badge badge-new">${unread} nuevo${unread > 1 ? 's' : ''}</span>`
+      : msgs.length;
+    document.getElementById('msgs-info').innerHTML = msgs.map(msgHTML).join('');
+    document.getElementById('msgs-card').style.display = 'block';
+  }
+
+  /* Mostrar portal */
+  document.getElementById('btn-qr').style.display     = 'flex';
   document.getElementById('login-section').style.display = 'none';
   document.getElementById('portal-section').style.display = 'block';
   window.scrollTo(0, 0);
 }
 
+/* ── APPOINTMENT HTML ────────────────────────────────────────── */
 function aptHTML(a) {
-  const urgClass = URGENCY_CLASS[a.urgency_level] || 'badge-green';
-  const urgLabel = URGENCY_LABEL[a.urgency_level] || 'Normal';
-  const stClass = STATUS_CLASS[a.status] || 'badge-gray';
-  const stLabel = STATUS_LABEL[a.status] || a.status;
   return `
     <div class="apt-item">
       <div class="apt-top">
-        <div class="apt-reason">${a.reason || 'Consulta general'}</div>
-        <span class="badge ${stClass}">${stLabel}</span>
+        <div class="apt-reason">${esc(a.reason || 'Consulta general')}</div>
+        <span class="badge ${STATUS_CLASS[a.status] || 'badge-gray'}">${STATUS_LABEL[a.status] || a.status}</span>
       </div>
-      <div class="apt-date">🗓 ${formatDate(a.scheduled_at)}</div>
+      <div class="apt-date">🗓 ${fmtDate(a.scheduled_at)}</div>
       <div class="apt-badges">
-        <span class="badge ${urgClass}">${urgLabel}</span>
-        ${a.doctor_name ? `<span class="badge badge-blue">Dr. ${a.doctor_name}</span>` : ''}
+        <span class="badge ${URGENCY_CLASS[a.urgency_level] || 'badge-green'}">${URGENCY_LABEL[a.urgency_level] || 'Normal'}</span>
+        ${a.doctor_name ? `<span class="badge badge-blue">Dr. ${esc(a.doctor_name)}</span>` : ''}
         ${a.duration_min ? `<span class="badge badge-gray">⏱ ${a.duration_min} min</span>` : ''}
       </div>
-      ${a.notes ? `<div style="font-size:11px;color:var(--text-muted);margin-top:7px;padding:6px 9px;background:var(--bg);border-radius:6px;border-left:3px solid var(--border)">📝 ${a.notes}</div>` : ''}
+      ${a.notes ? `<div style="font-size:12px;color:var(--text-muted);margin-top:8px;padding:7px 10px;background:var(--bg);border-radius:7px;border-left:3px solid var(--border)">📝 ${esc(a.notes)}</div>` : ''}
     </div>`;
 }
 
-function calcAge(birthStr) {
-  const b = new Date(birthStr);
-  const now = new Date();
-  let age = now.getFullYear() - b.getFullYear();
-  const m = now.getMonth() - b.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--;
-  return age;
+/* ── PRESCRIPTION HTML ───────────────────────────────────────── */
+function rxHTML(rx) {
+  const date = new Date(rx.created_at).toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
+  return `
+    <div class="rx-item">
+      <div class="rx-header">
+        <div class="rx-name">💊 ${esc(rx.medication)}</div>
+        <span class="badge badge-amber">${date}</span>
+      </div>
+      <div class="rx-meta">
+        ${rx.dose      ? `<div class="rx-field"><div class="rx-field-label">Dosis</div><div class="rx-field-value">${esc(rx.dose)}</div></div>` : ''}
+        ${rx.frequency ? `<div class="rx-field"><div class="rx-field-label">Frecuencia</div><div class="rx-field-value">${esc(rx.frequency)}</div></div>` : ''}
+        ${rx.duration  ? `<div class="rx-field"><div class="rx-field-label">Duración</div><div class="rx-field-value">${esc(rx.duration)}</div></div>` : ''}
+        ${rx.route     ? `<div class="rx-field"><div class="rx-field-label">Vía</div><div class="rx-field-value">${esc(rx.route)}</div></div>` : ''}
+      </div>
+      ${rx.instructions ? `<div class="rx-instructions">⚠️ ${esc(rx.instructions)}</div>` : ''}
+      <div class="rx-doctor">👨‍⚕️ Recetado por ${esc(rx.doctor_name || 'tu doctor')} · ${date}</div>
+    </div>`;
 }
 
+/* ── POST-OP HTML ────────────────────────────────────────────── */
+function postopHTML(po) {
+  return `
+    <div class="postop-item">
+      <div class="postop-procedure">
+        🩺 ${esc(po.procedure_name || 'Procedimiento dental')}
+        <span class="badge badge-teal" style="margin-left:auto">${fmtDateShort(po.created_at)}</span>
+      </div>
+      ${po.instructions ? `
+        <div class="postop-section">
+          <div class="postop-section-label">📋 Indicaciones</div>
+          <div class="postop-text">${esc(po.instructions).replace(/\n/g,'<br>')}</div>
+        </div>` : ''}
+      ${po.restrictions ? `
+        <div class="postop-section">
+          <div class="postop-section-label">🚫 Restricciones</div>
+          <div class="postop-text alert">${esc(po.restrictions).replace(/\n/g,'<br>')}</div>
+        </div>` : ''}
+      ${po.medications ? `
+        <div class="postop-section">
+          <div class="postop-section-label">💊 Medicamentos</div>
+          <div class="postop-text">${esc(po.medications).replace(/\n/g,'<br>')}</div>
+        </div>` : ''}
+      ${po.follow_up_date ? `<div class="postop-followup">📅 Cita de seguimiento: <strong>${fmtDateShort(po.follow_up_date)}</strong></div>` : ''}
+      ${po.emergency_contact ? `<div class="postop-emergency">🚨 Emergencias: <strong>${esc(po.emergency_contact)}</strong></div>` : ''}
+      <div style="font-size:11px;color:var(--text-muted);margin-top:10px">👨‍⚕️ Indicaciones de ${esc(po.doctor_name || 'tu doctor')}</div>
+    </div>`;
+}
+
+/* ── MESSAGE HTML ────────────────────────────────────────────── */
+function msgHTML(m) {
+  const isUnread = !m.read_at;
+  const date     = new Date(m.created_at).toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
+  return `
+    <div class="msg-item${isUnread ? ' unread' : ''}">
+      <div class="msg-header">
+        <div class="msg-subject">${isUnread ? '🔵 ' : ''}${esc(m.subject || 'Mensaje de tu doctor')}</div>
+        <div class="msg-date">${date}</div>
+      </div>
+      <div class="msg-from">👨‍⚕️ Dr. ${esc(m.doctor_name || 'tu doctor')}</div>
+      <div class="msg-body">${esc(m.body).replace(/\n/g,'<br>')}</div>
+    </div>`;
+}
+
+/* ── QR ──────────────────────────────────────────────────────── */
+function openQR() {
+  if (!currentPatient) return;
+  const code = currentPatient.portal_code;
+  const url  = `${PORTAL_URL}?code=${encodeURIComponent(code)}`;
+  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=200x200&color=1B4FD8&bgcolor=FFFFFF&margin=10`;
+  document.getElementById('qr-img').src         = qrSrc;
+  document.getElementById('qr-code-text').textContent   = code;
+  document.getElementById('qr-patient-name').textContent = currentPatient.name;
+  document.getElementById('qr-modal').classList.add('open');
+}
+
+function closeQR() {
+  document.getElementById('qr-modal').classList.remove('open');
+}
+
+function printQR() {
+  const win = window.open('', '_blank', 'width=400,height=500');
+  const code = currentPatient.portal_code;
+  const name = currentPatient.name;
+  const url  = `${PORTAL_URL}?code=${encodeURIComponent(code)}`;
+  const qr   = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=250x250&color=1B4FD8&bgcolor=FFFFFF&margin=14`;
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <title>QR — ${name}</title>
+    <style>
+      body{font-family:"DM Sans",system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#F8FAFC;margin:0}
+      .card{background:white;border:1px solid #E8EDF2;border-radius:20px;padding:32px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.1);max-width:320px;width:100%}
+      img{width:220px;height:220px;display:block;margin:0 auto 16px}
+      .code{font-family:monospace;font-size:18px;font-weight:800;color:#1B4FD8;letter-spacing:.1em;margin-bottom:4px}
+      .name{font-size:15px;font-weight:600;color:#0F172A;margin-bottom:4px}
+      .brand{font-size:11px;color:#94A3B8;margin-top:12px}
+      .tip{font-size:11px;color:#475569;margin-top:8px;line-height:1.5}
+    </style></head><body>
+    <div class="card">
+      <img src="${qr}" alt="QR">
+      <div class="code">${code}</div>
+      <div class="name">${name}</div>
+      <div class="tip">Escanea este QR con tu celular para acceder a tu portal dental</div>
+      <div class="brand">DentalPro · Portal del Paciente</div>
+    </div>
+    <script>window.onload=()=>window.print()<\/script>
+  </html>`);
+  win.document.close();
+}
+
+/* ── LOGOUT ──────────────────────────────────────────────────── */
 function logout() {
-  document.getElementById('login-section').style.display = 'flex';
+  currentCode    = '';
+  currentPatient = null;
+  document.getElementById('login-section').style.display  = 'flex';
   document.getElementById('portal-section').style.display = 'none';
-  document.getElementById('code-input').value = '';
-  document.getElementById('error-box').style.display = 'none';
+  document.getElementById('btn-qr').style.display         = 'none';
+  document.getElementById('code-input').value             = '';
+  document.getElementById('error-box').style.display      = 'none';
+  // Reset cards
+  ['rx-card','postop-card','msgs-card'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
   window.scrollTo(0, 0);
 }
 </script>

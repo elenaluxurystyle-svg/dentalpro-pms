@@ -20,6 +20,7 @@ async def get_pool():
 async def run_migrations():
     pool = await get_pool()
     async with pool.acquire() as conn:
+        # ── Core tables ───────────────────────────────────────────
         await conn.execute("""
             CREATE TABLE IF NOT EXISTS clinics (
                 id SERIAL PRIMARY KEY,
@@ -74,6 +75,55 @@ async def run_migrations():
                 unit VARCHAR(50) DEFAULT 'pza',
                 min_stock DECIMAL DEFAULT 5,
                 price DECIMAL DEFAULT 0,
+                created_at TIMESTAMPTZ DEFAULT NOW()
+            );
+        """)
+
+        # ── Staff invite enhancements (ALTER, idempotent) ─────────
+        await conn.execute("""
+            ALTER TABLE staff
+                ADD COLUMN IF NOT EXISTS invite_expires_at TIMESTAMPTZ,
+                ADD COLUMN IF NOT EXISTS invite_max_uses INTEGER DEFAULT 1,
+                ADD COLUMN IF NOT EXISTS invite_uses INTEGER DEFAULT 0,
+                ADD COLUMN IF NOT EXISTS referring_doctor_id INTEGER REFERENCES staff(id);
+        """)
+
+        # ── Patient communication tables ──────────────────────────
+        await conn.execute("""
+            CREATE TABLE IF NOT EXISTS patient_messages (
+                id SERIAL PRIMARY KEY,
+                clinic_id INTEGER REFERENCES clinics(id),
+                patient_id INTEGER REFERENCES patients(id),
+                doctor_name VARCHAR(200),
+                subject VARCHAR(300),
+                body TEXT NOT NULL,
+                read_at TIMESTAMPTZ,
+                created_at TIMESTAMPTZ DEFAULT NOW()
+            );
+            CREATE TABLE IF NOT EXISTS patient_prescriptions (
+                id SERIAL PRIMARY KEY,
+                clinic_id INTEGER REFERENCES clinics(id),
+                patient_id INTEGER REFERENCES patients(id),
+                doctor_name VARCHAR(200),
+                medication VARCHAR(300) NOT NULL,
+                dose VARCHAR(200),
+                frequency VARCHAR(200),
+                duration VARCHAR(200),
+                route VARCHAR(100),
+                instructions TEXT,
+                created_at TIMESTAMPTZ DEFAULT NOW()
+            );
+            CREATE TABLE IF NOT EXISTS patient_postop (
+                id SERIAL PRIMARY KEY,
+                clinic_id INTEGER REFERENCES clinics(id),
+                patient_id INTEGER REFERENCES patients(id),
+                doctor_name VARCHAR(200),
+                procedure_name VARCHAR(300),
+                instructions TEXT NOT NULL,
+                restrictions TEXT,
+                medications TEXT,
+                follow_up_date TIMESTAMPTZ,
+                emergency_contact VARCHAR(200),
                 created_at TIMESTAMPTZ DEFAULT NOW()
             );
         """)
@@ -156,6 +206,26 @@ class InventoryCreate(BaseModel):
     unit: Optional[str] = "pza"
     min_stock: Optional[float] = 5
     price: Optional[float] = 0
+
+class MessageCreate(BaseModel):
+    subject: Optional[str] = None
+    body: str
+
+class PrescriptionCreate(BaseModel):
+    medication: str
+    dose: Optional[str] = None
+    frequency: Optional[str] = None
+    duration: Optional[str] = None
+    route: Optional[str] = None
+    instructions: Optional[str] = None
+
+class PostOpCreate(BaseModel):
+    procedure_name: Optional[str] = None
+    instructions: str
+    restrictions: Optional[str] = None
+    medications: Optional[str] = None
+    follow_up_date: Optional[str] = None
+    emergency_contact: Optional[str] = None
 
 # ── ENDPOINTS ────────────────────────────────────────────────────────
 @app.get("/")
@@ -410,8 +480,124 @@ async def get_portal_patient(portal_code: str):
         patient = await conn.fetchrow("SELECT * FROM patients WHERE portal_code=$1", portal_code)
         if not patient:
             raise HTTPException(status_code=404, detail="Código no válido")
-        apts = await conn.fetch("SELECT * FROM appointments WHERE patient_id=$1 ORDER BY scheduled_at DESC LIMIT 10", patient["id"])
-    return {"patient": dict(patient), "appointments": [dict(a) for a in apts]}
+        pid = patient["id"]
+        apts   = await conn.fetch("SELECT * FROM appointments WHERE patient_id=$1 ORDER BY scheduled_at DESC LIMIT 20", pid)
+        rxs    = await conn.fetch("SELECT * FROM patient_prescriptions WHERE patient_id=$1 ORDER BY created_at DESC", pid)
+        postop = await conn.fetch("SELECT * FROM patient_postop WHERE patient_id=$1 ORDER BY created_at DESC", pid)
+        msgs   = await conn.fetch("SELECT * FROM patient_messages WHERE patient_id=$1 ORDER BY created_at DESC", pid)
+        # Mark unread messages as read
+        await conn.execute("UPDATE patient_messages SET read_at=NOW() WHERE patient_id=$1 AND read_at IS NULL", pid)
+    return {
+        "patient":       dict(patient),
+        "appointments":  [dict(a) for a in apts],
+        "prescriptions": [dict(r) for r in rxs],
+        "postop":        [dict(p) for p in postop],
+        "messages":      [dict(m) for m in msgs],
+    }
+
+# ── PATIENT MESSAGES ──────────────────────────────────────────────────
+@app.post("/patients/{patient_id}/messages")
+async def send_message(patient_id: int, data: MessageCreate, authorization: str = Header(None)):
+    clinic, user = await get_clinic_from_token(authorization)
+    if not clinic:
+        raise HTTPException(status_code=403, detail="Sin clínica")
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        patient = await conn.fetchrow("SELECT id FROM patients WHERE id=$1 AND clinic_id=$2", patient_id, clinic["id"])
+        if not patient:
+            raise HTTPException(status_code=404, detail="Paciente no encontrado")
+        row = await conn.fetchrow(
+            "INSERT INTO patient_messages (clinic_id, patient_id, doctor_name, subject, body) VALUES ($1,$2,$3,$4,$5) RETURNING *",
+            clinic["id"], patient_id, user.get("name"), data.subject, data.body
+        )
+    return dict(row)
+
+@app.get("/patients/{patient_id}/messages")
+async def get_messages(patient_id: int, authorization: str = Header(None)):
+    clinic, user = await get_clinic_from_token(authorization)
+    if not clinic:
+        raise HTTPException(status_code=403, detail="Sin clínica")
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            "SELECT * FROM patient_messages WHERE patient_id=$1 AND clinic_id=$2 ORDER BY created_at DESC",
+            patient_id, clinic["id"]
+        )
+    return [dict(r) for r in rows]
+
+# ── PATIENT PRESCRIPTIONS ─────────────────────────────────────────────
+@app.post("/patients/{patient_id}/prescriptions")
+async def add_prescription(patient_id: int, data: PrescriptionCreate, authorization: str = Header(None)):
+    clinic, user = await get_clinic_from_token(authorization)
+    if not clinic:
+        raise HTTPException(status_code=403, detail="Sin clínica")
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        patient = await conn.fetchrow("SELECT id FROM patients WHERE id=$1 AND clinic_id=$2", patient_id, clinic["id"])
+        if not patient:
+            raise HTTPException(status_code=404, detail="Paciente no encontrado")
+        row = await conn.fetchrow(
+            """INSERT INTO patient_prescriptions
+               (clinic_id, patient_id, doctor_name, medication, dose, frequency, duration, route, instructions)
+               VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *""",
+            clinic["id"], patient_id, user.get("name"),
+            data.medication, data.dose, data.frequency, data.duration, data.route, data.instructions
+        )
+    return dict(row)
+
+@app.get("/patients/{patient_id}/prescriptions")
+async def get_prescriptions(patient_id: int, authorization: str = Header(None)):
+    clinic, user = await get_clinic_from_token(authorization)
+    if not clinic:
+        raise HTTPException(status_code=403, detail="Sin clínica")
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            "SELECT * FROM patient_prescriptions WHERE patient_id=$1 AND clinic_id=$2 ORDER BY created_at DESC",
+            patient_id, clinic["id"]
+        )
+    return [dict(r) for r in rows]
+
+# ── PATIENT POST-OP INSTRUCTIONS ──────────────────────────────────────
+@app.post("/patients/{patient_id}/postop")
+async def add_postop(patient_id: int, data: PostOpCreate, authorization: str = Header(None)):
+    clinic, user = await get_clinic_from_token(authorization)
+    if not clinic:
+        raise HTTPException(status_code=403, detail="Sin clínica")
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        patient = await conn.fetchrow("SELECT id FROM patients WHERE id=$1 AND clinic_id=$2", patient_id, clinic["id"])
+        if not patient:
+            raise HTTPException(status_code=404, detail="Paciente no encontrado")
+        follow_up = None
+        if data.follow_up_date:
+            from datetime import datetime
+            try:
+                follow_up = datetime.fromisoformat(data.follow_up_date)
+            except ValueError:
+                pass
+        row = await conn.fetchrow(
+            """INSERT INTO patient_postop
+               (clinic_id, patient_id, doctor_name, procedure_name, instructions, restrictions, medications, follow_up_date, emergency_contact)
+               VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *""",
+            clinic["id"], patient_id, user.get("name"),
+            data.procedure_name, data.instructions, data.restrictions,
+            data.medications, follow_up, data.emergency_contact
+        )
+    return dict(row)
+
+@app.get("/patients/{patient_id}/postop")
+async def get_postop(patient_id: int, authorization: str = Header(None)):
+    clinic, user = await get_clinic_from_token(authorization)
+    if not clinic:
+        raise HTTPException(status_code=403, detail="Sin clínica")
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            "SELECT * FROM patient_postop WHERE patient_id=$1 AND clinic_id=$2 ORDER BY created_at DESC",
+            patient_id, clinic["id"]
+        )
+    return [dict(r) for r in rows]
 
 # ── INVITE CODE ───────────────────────────────────────────────────────
 @app.get("/invite/{code}")
@@ -425,4 +611,24 @@ async def get_invite(code: str):
         """, code.upper())
     if not staff:
         raise HTTPException(status_code=404, detail="Código de invitación no válido")
-    return {"name": staff["name"], "role": staff["role"], "clinic_name": staff["clinic_name"], "invite_code": code.upper()}
+
+    # Check expiration
+    if staff["invite_expires_at"] and staff["invite_expires_at"] < __import__("datetime").datetime.now(__import__("datetime").timezone.utc):
+        raise HTTPException(status_code=410, detail="Código de invitación expirado")
+
+    # Check max uses
+    max_uses = staff["invite_max_uses"] or 1
+    uses = staff["invite_uses"] or 0
+    if uses >= max_uses:
+        raise HTTPException(status_code=410, detail="Código de invitación ya fue utilizado")
+
+    # Increment use counter
+    async with pool.acquire() as conn:
+        await conn.execute("UPDATE staff SET invite_uses = COALESCE(invite_uses,0) + 1 WHERE invite_code=$1", code.upper())
+
+    return {
+        "name":        staff["name"],
+        "role":        staff["role"],
+        "clinic_name": staff["clinic_name"],
+        "invite_code": code.upper(),
+    }

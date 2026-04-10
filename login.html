@@ -315,6 +315,48 @@ body{
   animation:slideDown .2s ease;
 }
 
+/* ── SUPPORT BUTTON ──────────────────────────────────────────── */
+.support-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:12px;width:100%;
+  background:none;border:none;
+  font-size:12px;font-weight:500;color:rgba(255,255,255,.32);
+  cursor:pointer;font-family:"DM Sans",sans-serif;
+  transition:color .2s;padding:6px 0;
+}
+.support-btn:hover{color:rgba(255,255,255,.7)}
+
+/* ── INVITE VALIDATION STATES ────────────────────────────────── */
+.invite-input.validating{border-color:rgba(96,165,250,.6);animation:borderPulse 1s ease-in-out infinite}
+@keyframes borderPulse{0%,100%{box-shadow:0 0 0 0 rgba(27,79,216,.3)}50%{box-shadow:0 0 0 6px rgba(27,79,216,0)}}
+.invite-input.valid{border-color:rgba(74,222,128,.7);background:rgba(74,222,128,.08)}
+.invite-input.invalid{border-color:rgba(220,38,38,.5);background:rgba(220,38,38,.08)}
+
+.invite-btn.verifying{
+  background:rgba(27,79,216,.5);cursor:not-allowed;
+  display:flex;align-items:center;gap:6px;
+}
+.invite-btn.verified{background:rgba(22,163,74,.8)}
+
+/* Check animation */
+@keyframes checkIn{0%{stroke-dashoffset:40}100%{stroke-dashoffset:0}}
+.check-svg{width:16px;height:16px;flex-shrink:0}
+.check-svg path{stroke-dasharray:40;stroke-dashoffset:40;animation:checkIn .4s cubic-bezier(.4,0,.2,1) forwards}
+
+/* Welcome banner */
+.welcome-banner{
+  margin-top:10px;
+  padding:12px 14px;
+  background:linear-gradient(135deg,rgba(22,163,74,.12),rgba(74,222,128,.08));
+  border:1px solid rgba(74,222,128,.3);
+  border-radius:10px;
+  display:none;
+  animation:slideDown .3s cubic-bezier(.4,0,.2,1);
+}
+.wb-title{font-size:12px;font-weight:700;color:#4ADE80;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.wb-body{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6}
+.wb-body strong{color:rgba(255,255,255,.95)}
+
 /* ── TRUST BADGES ────────────────────────────────────────────── */
 .trust-row{
   display:flex;align-items:center;justify-content:center;
@@ -333,24 +375,46 @@ body{
 /* ── FOOTER ──────────────────────────────────────────────────── */
 .footer{
   position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  gap:12px;padding:20px 24px 28px;margin-top:20px;
+}
+.footer-links-row{
   display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:6px 20px;
-  padding:20px 24px 28px;
-  margin-top:20px;
+  flex-wrap:wrap;gap:4px 16px;
 }
 .footer-link{
   font-size:11px;color:rgba(255,255,255,.28);
   text-decoration:none;font-weight:500;
-  transition:color .2s;white-space:nowrap;
-  padding:4px 0;
+  transition:color .2s;white-space:nowrap;padding:4px 0;
 }
 .footer-link:hover{color:rgba(255,255,255,.65)}
 .footer-sep{color:rgba(255,255,255,.12);font-size:11px}
 .footer-status{
   display:flex;align-items:center;gap:5px;
-  font-size:11px;color:rgba(255,255,255,.28);
-  font-weight:500;
+  font-size:11px;color:rgba(255,255,255,.28);font-weight:500;
 }
+/* Certification badges row */
+.footer-certs{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:6px;
+}
+.cert-badge{
+  display:flex;align-items:center;gap:4px;
+  padding:4px 10px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r-pill,999px);
+  font-size:10px;font-weight:600;
+  color:rgba(255,255,255,.35);
+  white-space:nowrap;
+  transition:all .2s;cursor:default;
+}
+.cert-badge:hover{
+  background:rgba(255,255,255,.09);
+  color:rgba(255,255,255,.65);
+  border-color:rgba(255,255,255,.2);
+}
+.cert-icon{font-size:11px}
 
 /* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media(max-width:480px){
@@ -458,19 +522,33 @@ body{
         <input
           class="invite-input"
           id="invite-code"
-          placeholder="Ej: ABC-123"
-          maxlength="8"
-          oninput="this.value=this.value.toUpperCase()"
+          placeholder="DP-XXXX-XXXX"
+          maxlength="12"
+          oninput="maskInviteCode(this)"
           onkeydown="if(event.key==='Enter')verifyInvite()"
         >
-        <button class="invite-btn" onclick="verifyInvite()">Verificar</button>
+        <button class="invite-btn" id="invite-btn" onclick="verifyInvite()">Verificar</button>
       </div>
       <div class="invite-info" id="invite-info"></div>
+      <div class="welcome-banner" id="welcome-banner">
+        <div class="wb-title">
+          <svg class="check-svg" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 13l5 5L20 7"/>
+          </svg>
+          Identidad profesional verificada
+        </div>
+        <div class="wb-body" id="welcome-text"></div>
+      </div>
     </div>
+
+    <!-- SUPPORT BUTTON -->
+    <button class="support-btn" onclick="window.open('mailto:soporte@dentalpro.mx')">
+      💬 ¿Necesitas asistencia? Contactar soporte
+    </button>
 
     <!-- TRUST BADGES -->
     <div class="trust-row">
-      <div class="trust-item"><div class="trust-dot"></div>Cifrado TLS</div>
+      <div class="trust-item"><div class="trust-dot"></div>TLS 1.3</div>
       <div class="trust-item">🔒 OAuth 2.0</div>
       <div class="trust-item">🇲🇽 Datos en México</div>
     </div>
@@ -480,16 +558,33 @@ body{
 
 <!-- ── FOOTER ──────────────────────────────────────────────── -->
 <footer class="footer">
-  <a href="#" class="footer-link">Centro de Ayuda</a>
-  <span class="footer-sep">·</span>
-  <a href="#" class="footer-link">Cumplimiento NOM-024</a>
-  <span class="footer-sep">·</span>
-  <div class="footer-status">
-    <div class="trust-dot"></div>
-    <a href="#" class="footer-link" style="padding:0">Estado del Servidor</a>
+  <!-- Links row -->
+  <div class="footer-links-row">
+    <a href="mailto:soporte@dentalpro.mx" class="footer-link">Centro de Ayuda</a>
+    <span class="footer-sep">·</span>
+    <a href="#" class="footer-link">NOM-024-SSA3-2012</a>
+    <span class="footer-sep">·</span>
+    <div class="footer-status">
+      <div class="trust-dot"></div>
+      <a href="#" class="footer-link" style="padding:0">Estado del Servidor</a>
+    </div>
   </div>
-  <span class="footer-sep" style="display:block;width:100%;height:0;margin:0"></span>
-  <span style="font-size:11px;color:rgba(255,255,255,.15);font-weight:400">© 2025 DentalPro · Todos los derechos reservados</span>
+  <!-- Certification badges -->
+  <div class="footer-certs">
+    <div class="cert-badge" title="Norma Oficial Mexicana para expediente clínico electrónico">
+      <span class="cert-icon">🏥</span> NOM-024-SSA3-2012
+    </div>
+    <div class="cert-badge" title="Ley Federal de Protección de Datos Personales en Posesión de los Particulares">
+      <span class="cert-icon">🛡️</span> LFPDPPP
+    </div>
+    <div class="cert-badge" title="Transport Layer Security versión 1.3 — cifrado en tránsito">
+      <span class="cert-icon">🔐</span> TLS 1.3
+    </div>
+    <div class="cert-badge" title="Autenticación segura mediante Google OAuth 2.0">
+      <span class="cert-icon">🔑</span> OAuth 2.0
+    </div>
+  </div>
+  <span style="font-size:11px;color:rgba(255,255,255,.12);font-weight:400">© 2025 DentalPro · Todos los derechos reservados</span>
 </footer>
 
 <script>
@@ -499,9 +594,42 @@ const CLIENT = "113537762357-7u7b02i2lf3lnl6fsmaetud3nqelth0o.apps.googleusercon
 /* ── HELPERS ────────────────────────────────────────────────── */
 function showError(msg) {
   const el = document.getElementById("error-msg");
-  el.textContent = msg;
+  el.innerHTML = msg; // allow HTML for the empathetic copy
   el.style.display = "block";
-  setTimeout(() => el.style.display = "none", 5000);
+  setTimeout(() => el.style.display = "none", 6000);
+}
+
+/* Empathetic error messages — key: pattern to match, value: friendly copy */
+const FRIENDLY_ERRORS = {
+  "token":      "No localizamos esos datos. <a href='mailto:soporte@dentalpro.mx' style='color:#FCA5A5'>¿Desea asistencia?</a>",
+  "sesión":     "Hubo un inconveniente al iniciar sesión. Por favor intente de nuevo o <a href='mailto:soporte@dentalpro.mx' style='color:#FCA5A5'>contáctenos</a>.",
+  "default":    "No localizamos esos datos. <a href='mailto:soporte@dentalpro.mx' style='color:#FCA5A5'>¿Desea asistencia?</a>",
+};
+function empathetic(raw) {
+  const lower = raw.toLowerCase();
+  for (const [key, friendly] of Object.entries(FRIENDLY_ERRORS)) {
+    if (key !== "default" && lower.includes(key)) return friendly;
+  }
+  return FRIENDLY_ERRORS["default"];
+}
+
+/* ── INVITE CODE MASK ────────────────────────────────────────── */
+/* Formats raw input as DP-XXXX-XXXX, strips non-alphanumeric, max 10 real chars */
+function maskInviteCode(input) {
+  // Strip everything but alphanumeric
+  let raw = input.value.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(0, 10);
+  let masked = '';
+  if (raw.length > 0)  masked  = raw.slice(0, 2);
+  if (raw.length > 2)  masked += '-' + raw.slice(2, 6);
+  if (raw.length > 6)  masked += '-' + raw.slice(6, 10);
+  input.value = masked;
+  // Reset validation state when user types
+  input.classList.remove('valid','invalid','validating');
+  document.getElementById('welcome-banner').style.display = 'none';
+  document.getElementById('invite-info').style.display    = 'none';
+  const btn = document.getElementById('invite-btn');
+  btn.classList.remove('verified','verifying');
+  btn.textContent = 'Verificar';
 }
 
 function setLoading(on) {
@@ -521,25 +649,70 @@ function toggleInvite() {
 
 /* ── VERIFY INVITE ──────────────────────────────────────────── */
 async function verifyInvite() {
-  const code = document.getElementById("invite-code").value.trim();
-  if (!code) { showError("Ingresa el código de invitación"); return; }
+  const input  = document.getElementById("invite-code");
+  // Strip mask characters to send raw code
+  const raw    = input.value.replace(/-/g, '').trim();
+  if (!raw) { showError("Ingresa el código de invitación"); return; }
 
-  const btn = document.querySelector(".invite-btn");
-  btn.textContent = "…"; btn.disabled = true;
+  const btn    = document.getElementById("invite-btn");
+  const banner = document.getElementById("welcome-banner");
+  const info   = document.getElementById("invite-info");
+
+  // — Validating state —
+  input.classList.add('validating');
+  btn.classList.add('verifying');
+  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .65s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Verificando…`;
+  btn.disabled = true;
 
   try {
-    const r = await fetch(API + "/invite/" + code);
-    if (!r.ok) { showError("Código no válido. Pide uno nuevo a tu clínica."); return; }
+    const r = await fetch(API + "/invite/" + raw);
+
+    if (!r.ok) {
+      const detail = (await r.json().catch(() => ({}))).detail || '';
+      input.classList.remove('validating');
+      input.classList.add('invalid');
+      btn.classList.remove('verifying');
+      btn.textContent = 'Verificar'; btn.disabled = false;
+
+      if (detail.includes('expirado')) {
+        showError("Este código ha expirado. Solicita uno nuevo a tu clínica.");
+      } else if (detail.includes('utilizado')) {
+        showError("Este código ya fue utilizado. Pide uno nuevo a recepción.");
+      } else {
+        showError("Código no localizado. <a href='mailto:soporte@dentalpro.mx' style='color:#FCA5A5'>¿Desea asistencia?</a>");
+      }
+      return;
+    }
 
     const data = await r.json();
-    const info = document.getElementById("invite-info");
-    info.innerHTML = `✅ Código válido — <strong>${data.clinic_name}</strong><br>Rol: <strong>${data.role}</strong> · ${data.name}<br><em style="opacity:.7">Ahora inicia sesión con Google para acceder</em>`;
-    info.style.display = "block";
+
+    // — Success state —
+    input.classList.remove('validating','invalid');
+    input.classList.add('valid');
+    btn.classList.remove('verifying');
+    btn.classList.add('verified');
+    btn.innerHTML = `<svg class="check-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l5 5L20 7"/></svg> Verificado`;
+    btn.disabled = true;
+
+    // Show info row (hidden — replaced by welcome banner)
+    info.style.display = 'none';
+
+    // Welcome banner with empathetic professional copy
+    const roleLabels = { owner:'Director', co_owner:'Co-director', doctor:'Doctor', receptionist:'Recepcionista', assistant:'Asistente' };
+    const roleLabel  = roleLabels[data.role] || data.role;
+    document.getElementById('welcome-text').innerHTML =
+      `Bienvenido al estándar de oro de la odontología digital, <strong>Dr. ${data.name}</strong>.<br>` +
+      `Clínica: <strong>${data.clinic_name}</strong> · Rol: ${roleLabel}<br>` +
+      `<em style="opacity:.7;font-size:11px">Ahora inicia sesión con Google para acceder →</em>`;
+    banner.style.display = 'block';
+
     localStorage.setItem("dentalpro_invite", JSON.stringify(data));
   } catch (e) {
-    showError("Error verificando código");
-  } finally {
-    btn.textContent = "Verificar"; btn.disabled = false;
+    input.classList.remove('validating');
+    input.classList.add('invalid');
+    btn.classList.remove('verifying');
+    btn.textContent = 'Verificar'; btn.disabled = false;
+    showError("Error de conexión. <a href='mailto:soporte@dentalpro.mx' style='color:#FCA5A5'>¿Desea asistencia?</a>");
   }
 }
 
@@ -593,7 +766,7 @@ async function handleGoogleLogin(response) {
     }
   } catch (e) {
     setLoading(false);
-    showError("Error al iniciar sesión. Intenta de nuevo.");
+    showError(empathetic("sesión"));
     console.error(e);
   }
 }
