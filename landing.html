@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DentalPro — Software Dental Profesional para México</title>
+<meta name="description" content="El sistema de gestión dental más completo de México. Odontograma FDI, citas inteligentes, analytics y portal del paciente. Desde $299 MXN/mes.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:"DM Sans",sans-serif;background:#fff;color:#0F172A;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── TOKENS ───────────────────────────────────────────────────── */
+:root{
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;--brand-xlight:#F5F8FF;
+  --text:#0F172A;--text-2:#475569;--text-3:#94A3B8;
+  --border:#E8EDF2;--surface:#fff;--bg:#F8FAFC;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --red:#DC2626;--amber:#D97706;
+  --r:16px;--r-sm:10px;--r-xs:8px;--r-pill:999px;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-lg:0 24px 64px rgba(15,23,42,.10);
+  --shadow-brand:0 12px 40px rgba(27,79,216,.25);
+}
+
+/* ── NAV ──────────────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;transition:all .3s}
+nav.scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.nav-inner{max-width:1160px;margin:0 auto;padding:0 24px;height:68px;display:flex;align-items:center;gap:32px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:4px;margin-left:auto}
+.nav-link{padding:7px 14px;border-radius:var(--r-xs);font-size:14px;font-weight:500;color:var(--text-2);text-decoration:none;transition:all .2s;background:none;border:none;cursor:pointer;font-family:"DM Sans",sans-serif}
+.nav-link:hover{color:var(--brand);background:var(--brand-light)}
+.nav-cta{padding:9px 20px;background:var(--brand);color:white;border:none;border-radius:var(--r-xs);font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-left:8px}
+.nav-cta:hover{background:var(--brand-dark);transform:translateY(-1px);box-shadow:var(--shadow-brand)}
+.hamburger{display:none;width:40px;height:40px;background:none;border:1px solid var(--border);border-radius:var(--r-xs);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;margin-left:auto;flex-shrink:0}
+.hamburger span{display:block;width:18px;height:2px;background:var(--text-2);border-radius:2px;transition:all .25s}
+.mobile-menu{display:none;position:fixed;inset:0;top:68px;background:white;z-index:199;padding:20px 24px;flex-direction:column;gap:4px;border-top:1px solid var(--border)}
+.mobile-menu.open{display:flex}
+.mobile-link{padding:13px 16px;border-radius:var(--r-xs);font-size:15px;font-weight:500;color:var(--text);text-decoration:none;border:none;background:none;cursor:pointer;font-family:"DM Sans",sans-serif;text-align:left}
+.mobile-link:hover{background:var(--bg)}
+.mobile-cta{margin-top:8px;padding:14px;background:var(--brand);color:white;border:none;border-radius:var(--r-xs);font-size:15px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;text-align:center;text-decoration:none;display:block}
+@media(max-width:768px){.nav-links{display:none}.hamburger{display:flex}}
+
+/* ── HERO ─────────────────────────────────────────────────────── */
+.hero{min-height:100vh;background:linear-gradient(160deg,#060F2E 0%,#0D2267 45%,#1B4FD8 100%);display:flex;flex-direction:column;justify-content:center;padding:120px 24px 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 40%,rgba(27,79,216,.4) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:80px;background:linear-gradient(to bottom,transparent,#fff);pointer-events:none}
+/* Dot grid */
+.hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.hero-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:48px;text-align:center}}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:6px 14px;border-radius:var(--r-pill);font-size:12px;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:.04em;text-transform:uppercase;margin-bottom:20px}
+.hero-eyebrow-dot{width:6px;height:6px;background:#4ADE80;border-radius:50%;animation:pulse-green 2s infinite}
+@keyframes pulse-green{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.3)}}
+.hero-h1{font-size:clamp(36px,5vw,62px);font-weight:800;line-height:1.08;letter-spacing:-.03em;color:#fff;margin-bottom:20px}
+.hero-h1 span{background:linear-gradient(135deg,#60A5FA,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(16px,1.8vw,19px);color:rgba(255,255,255,.72);line-height:1.65;margin-bottom:36px;max-width:500px}
+@media(max-width:900px){.hero-sub{margin:0 auto 36px}}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:900px){.hero-actions{justify-content:center}}
+.btn-hero{padding:15px 28px;border-radius:var(--r-xs);font-size:15px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:8px;text-decoration:none;border:none}
+.btn-hero-primary{background:white;color:var(--brand)}
+.btn-hero-primary:hover{background:#F0F4FF;transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.2)}
+.btn-hero-outline{background:rgba(255,255,255,.1);color:white;border:1.5px solid rgba(255,255,255,.3)}
+.btn-hero-outline:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+.hero-trust{margin-top:36px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+@media(max-width:900px){.hero-trust{justify-content:center}}
+.trust-avatars{display:flex}
+.trust-av{width:32px;height:32px;border-radius:50%;border:2.5px solid rgba(27,79,216,.6);margin-left:-10px;background:linear-gradient(135deg,#1B4FD8,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white}
+.trust-av:first-child{margin-left:0}
+.trust-text{font-size:13px;color:rgba(255,255,255,.72)}
+.trust-text strong{color:white}
+.hero-visual{position:relative}
+@media(max-width:900px){.hero-visual{order:-1}}
+.app-mockup{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:14px;backdrop-filter:blur(20px);box-shadow:0 40px 80px rgba(0,0,0,.4)}
+.mockup-bar{height:36px;background:rgba(255,255,255,.08);border-radius:10px;display:flex;align-items:center;padding:0 12px;gap:8px;margin-bottom:12px}
+.mockup-dot{width:9px;height:9px;border-radius:50%}
+.mockup-title{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);margin-left:8px;font-family:"DM Mono",monospace}
+.mockup-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.mockup-kpi{background:rgba(255,255,255,.08);border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,.1)}
+.mkpi-label{font-size:9px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.mkpi-val{font-size:22px;font-weight:800;color:white;letter-spacing:-.02em}
+.mkpi-trend{font-size:10px;color:#4ADE80;font-weight:600;margin-top:2px}
+.mockup-chart{background:rgba(255,255,255,.08);border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,.1);height:80px;display:flex;align-items:flex-end;gap:4px}
+.bar{background:rgba(27,79,216,.8);border-radius:3px 3px 0 0;flex:1;transition:height .3s}
+.bar.hi{background:linear-gradient(to top,#1B4FD8,#60A5FA)}
+.mockup-tooth-row{display:flex;gap:6px;background:rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.1)}
+.tooth-mini{width:18px;height:22px;border-radius:4px;flex-shrink:0}
+.badge-mini{margin-left:auto;font-size:9px;font-weight:700;padding:3px 8px;border-radius:var(--r-pill);background:rgba(74,222,128,.2);color:#4ADE80;border:1px solid rgba(74,222,128,.3)}
+.float-notif{position:absolute;bottom:-20px;right:-20px;background:white;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);border:1px solid var(--border);animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.notif-icon{width:36px;height:36px;background:var(--green-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.notif-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:1px}
+.notif-sub{font-size:11px;color:var(--text-3)}
+.float-badge{position:absolute;top:-16px;left:-16px;background:linear-gradient(135deg,#7C3AED,#9333EA);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(124,58,237,.4);animation:float 3.5s ease-in-out infinite .5s}
+.fb-num{font-size:22px;font-weight:800;color:white;letter-spacing:-.02em;line-height:1}
+.fb-label{font-size:10px;color:rgba(255,255,255,.8);font-weight:600}
+
+/* ── SECTION COMMON ───────────────────────────────────────────── */
+section{padding:96px 24px}
+.section-inner{max-width:1160px;margin:0 auto}
+.section-eyebrow{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--brand);margin-bottom:12px}
+.section-title{font-size:clamp(28px,3.5vw,44px);font-weight:800;letter-spacing:-.03em;color:var(--text);line-height:1.12;margin-bottom:16px}
+.section-sub{font-size:17px;color:var(--text-2);line-height:1.65;max-width:560px}
+.text-center .section-sub{margin:0 auto}
+.text-center{text-align:center}
+
+/* ── LOGOS BAR ────────────────────────────────────────────────── */
+.logos-bar{padding:32px 24px;background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.logos-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap}
+.logos-label{font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.logo-item{font-size:15px;font-weight:700;color:var(--text-3);letter-spacing:-.01em;opacity:.6;transition:opacity .2s;white-space:nowrap}
+.logo-item:hover{opacity:1;color:var(--text-2)}
+
+/* ── FEATURES ─────────────────────────────────────────────────── */
+#features{background:#fff}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px}
+@media(max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:580px){.features-grid{grid-template-columns:1fr}}
+.feat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:28px;transition:all .3s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--brand-light),transparent);opacity:0;transition:opacity .3s}
+.feat-card:hover{border-color:var(--brand);box-shadow:var(--shadow-brand);transform:translateY(-4px)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px;position:relative;z-index:1}
+.feat-icon.blue{background:var(--brand-light)}
+.feat-icon.green{background:var(--green-bg)}
+.feat-icon.purple{background:#F5F3FF}
+.feat-icon.amber{background:#FFFBEB}
+.feat-icon.red{background:#FFF1F2}
+.feat-icon.teal{background:#F0FDFA}
+.feat-h{font-size:17px;font-weight:700;color:var(--text);margin-bottom:8px;position:relative;z-index:1}
+.feat-p{font-size:14px;color:var(--text-2);line-height:1.6;position:relative;z-index:1}
+.feat-tag{display:inline-flex;align-items:center;margin-top:14px;font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-light);padding:3px 10px;border-radius:var(--r-pill);position:relative;z-index:1}
+
+/* ── DEMO STRIP ───────────────────────────────────────────────── */
+.demo-strip{background:linear-gradient(135deg,#060F2E 0%,#1B4FD8 100%);padding:72px 24px;position:relative;overflow:hidden}
+.demo-strip::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(99,102,241,.3) 0%,transparent 70%);pointer-events:none}
+.demo-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
+@media(max-width:840px){.demo-inner{grid-template-columns:1fr;text-align:center}}
+.demo-title{font-size:clamp(26px,3vw,40px);font-weight:800;color:white;letter-spacing:-.03em;line-height:1.15;margin-bottom:16px}
+.demo-sub{font-size:16px;color:rgba(255,255,255,.72);line-height:1.65;margin-bottom:32px}
+.demo-features{display:flex;flex-direction:column;gap:12px}
+.demo-feat{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.85)}
+.demo-feat::before{content:'✓';width:22px;height:22px;background:rgba(74,222,128,.2);border:1px solid rgba(74,222,128,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#4ADE80;flex-shrink:0}
+.demo-screen{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:16px;backdrop-filter:blur(20px)}
+.ds-header{background:rgba(255,255,255,.08);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;gap:8px;align-items:center}
+.ds-num{font-size:28px;font-weight:800;color:white;letter-spacing:-.02em}
+.ds-label{font-size:11px;color:rgba(255,255,255,.5);font-weight:600}
+.tooth-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.tc{height:32px;border-radius:6px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(255,255,255,.5);font-family:"DM Mono",monospace;transition:all .2s;cursor:pointer}
+.tc:hover{background:rgba(27,79,216,.4);border-color:rgba(27,79,216,.6);color:white}
+.tc.caries{background:rgba(220,38,38,.25);border-color:rgba(220,38,38,.5);color:#FCA5A5}
+.tc.corona{background:rgba(215,119,0,.25);border-color:rgba(215,119,0,.5);color:#FCD34D}
+.tc.sano{background:rgba(22,163,74,.25);border-color:rgba(22,163,74,.5);color:#86EFAC}
+.tc.selected{background:rgba(27,79,216,.5);border-color:var(--brand);color:white;box-shadow:0 0 0 2px rgba(27,79,216,.4)}
+
+/* ── COMPARISON ───────────────────────────────────────────────── */
+#comparacion{background:var(--bg)}
+.comp-table{margin-top:56px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow)}
+.comp-thead{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;background:var(--text);color:white}
+.comp-thead .ch{padding:16px 20px;font-size:13px;font-weight:700;text-align:center}
+.comp-thead .ch:first-child{text-align:left}
+.comp-thead .ch.hl{background:var(--brand);position:relative}
+.comp-thead .ch.hl::after{content:'★ Recomendado';position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:var(--brand);color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--r-pill) var(--r-pill) 0 0;white-space:nowrap}
+.comp-row{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;background:white;border-top:1px solid var(--border);transition:background .15s}
+.comp-row:hover{background:var(--brand-xlight)}
+.comp-row:nth-child(even){background:var(--bg)}
+.comp-row:nth-child(even):hover{background:var(--brand-xlight)}
+.cc{padding:14px 20px;font-size:13px;color:var(--text-2);display:flex;align-items:center;justify-content:center}
+.cc:first-child{justify-content:flex-start;font-weight:500;color:var(--text)}
+.cc.hl{background:rgba(27,79,216,.04);border-left:2px solid rgba(27,79,216,.2);border-right:2px solid rgba(27,79,216,.2)}
+.comp-row:last-child .cc.hl{border-bottom:2px solid rgba(27,79,216,.2)}
+.check{color:var(--green);font-size:17px}
+.cross{color:var(--text-3);font-size:17px}
+.partial{color:var(--amber);font-size:13px;font-weight:600}
+@media(max-width:640px){
+  .comp-thead,.comp-row{grid-template-columns:1.5fr 0 1fr 1.2fr}
+  .comp-thead .ch:nth-child(3),.cc:nth-child(3){display:none}
+}
+
+/* ── PRICING ──────────────────────────────────────────────────── */
+#precios{background:#fff}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;align-items:start}
+@media(max-width:840px){.pricing-grid{grid-template-columns:1fr;max-width:440px;margin-left:auto;margin-right:auto}}
+.plan{border:1.5px solid var(--border);border-radius:20px;padding:32px;background:white;transition:all .3s;position:relative}
+.plan:hover{border-color:var(--brand);box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+.plan.popular{border-color:var(--brand);box-shadow:var(--shadow-brand)}
+.plan-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--brand);color:white;font-size:11px;font-weight:700;padding:5px 16px;border-radius:var(--r-pill);letter-spacing:.04em;white-space:nowrap}
+.plan-name{font-size:13px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:6px}
+.plan-currency{font-size:18px;font-weight:700;color:var(--text);margin-top:4px}
+.plan-amount{font-size:48px;font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1}
+.plan-period{font-size:13px;color:var(--text-3);font-weight:500}
+.plan-desc{font-size:13px;color:var(--text-2);margin-bottom:24px;line-height:1.5}
+.plan-cta{width:100%;padding:13px;border-radius:var(--r-xs);font-size:14px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;display:block;text-align:center;text-decoration:none;border:none;margin-bottom:24px}
+.plan-cta-outline{background:white;border:1.5px solid var(--border);color:var(--text)}
+.plan-cta-outline:hover{border-color:var(--brand);color:var(--brand)}
+.plan-cta-solid{background:var(--brand);color:white}
+.plan-cta-solid:hover{background:var(--brand-dark);box-shadow:var(--shadow-brand)}
+.plan-divider{height:1px;background:var(--border);margin-bottom:20px}
+.plan-features{display:flex;flex-direction:column;gap:10px}
+.pf{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--text-2);line-height:1.4}
+.pf-check{color:var(--green);font-size:15px;margin-top:1px;flex-shrink:0}
+.pf-x{color:var(--text-3);font-size:15px;margin-top:1px;flex-shrink:0}
+.plan-note{text-align:center;margin-top:40px;font-size:13px;color:var(--text-3)}
+.plan-note a{color:var(--brand);text-decoration:none;font-weight:600}
+.plan-note a:hover{text-decoration:underline}
+
+/* ── TESTIMONIALS ─────────────────────────────────────────────── */
+#testimonios{background:var(--bg)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+@media(max-width:840px){.testi-grid{grid-template-columns:1fr}}
+.testi{background:white;border:1px solid var(--border);border-radius:var(--r);padding:28px;transition:all .3s}
+.testi:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px);border-color:var(--brand)}
+.stars{display:flex;gap:3px;margin-bottom:16px}
+.star{color:#F59E0B;font-size:16px}
+.testi-text{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:20px;position:relative}
+.testi-text::before{content:'"';font-size:64px;color:var(--brand-light);position:absolute;top:-20px;left:-8px;font-family:Georgia,serif;line-height:1;z-index:0}
+.testi-text span{position:relative;z-index:1}
+.testi-author{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--border)}
+.testi-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:white;flex-shrink:0}
+.testi-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.testi-role{font-size:12px;color:var(--text-3)}
+.testi-city{font-size:11px;color:var(--brand);font-weight:600;margin-top:2px}
+
+/* ── FAQ ──────────────────────────────────────────────────────── */
+#faq{background:#fff}
+.faq-list{max-width:720px;margin:48px auto 0;display:flex;flex-direction:column;gap:8px}
+.faq-item{border:1px solid var(--border);border-radius:var(--r-xs);overflow:hidden}
+.faq-q{width:100%;padding:18px 20px;background:none;border:none;text-align:left;font-family:"DM Sans",sans-serif;font-size:15px;font-weight:600;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:background .2s}
+.faq-q:hover{background:var(--bg)}
+.faq-q.open{background:var(--brand-xlight);color:var(--brand)}
+.faq-arrow{font-size:18px;transition:transform .25s;flex-shrink:0;color:var(--text-3)}
+.faq-q.open .faq-arrow{transform:rotate(45deg);color:var(--brand)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+.faq-a.open{max-height:300px}
+.faq-a-inner{padding:0 20px 18px;font-size:14px;color:var(--text-2);line-height:1.7}
+
+/* ── CTA FINAL ────────────────────────────────────────────────── */
+.cta-final{background:linear-gradient(135deg,#060F2E 0%,#1B4FD8 100%);padding:96px 24px;text-align:center;position:relative;overflow:hidden}
+.cta-final::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:28px 28px;pointer-events:none}
+.cta-final-inner{max-width:640px;margin:0 auto;position:relative;z-index:1}
+.cta-final-title{font-size:clamp(30px,4vw,52px);font-weight:800;color:white;letter-spacing:-.03em;line-height:1.1;margin-bottom:16px}
+.cta-final-sub{font-size:18px;color:rgba(255,255,255,.72);line-height:1.6;margin-bottom:40px}
+.cta-final-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-final{padding:16px 32px;border-radius:var(--r-xs);font-size:15px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border:none}
+.btn-final-white{background:white;color:var(--brand)}
+.btn-final-white:hover{background:#F0F4FF;transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.btn-final-ghost{background:rgba(255,255,255,.12);color:white;border:1.5px solid rgba(255,255,255,.3)}
+.btn-final-ghost:hover{background:rgba(255,255,255,.2)}
+
+/* ── FOOTER ───────────────────────────────────────────────────── */
+footer{background:#060F2E;padding:64px 24px 32px}
+.footer-inner{max-width:1160px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+@media(max-width:840px){.footer-top{grid-template-columns:1fr 1fr;gap:32px}}
+@media(max-width:480px){.footer-top{grid-template-columns:1fr}}
+.footer-brand p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7;margin-top:14px;max-width:260px}
+.footer-col-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:16px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-link{font-size:14px;color:rgba(255,255,255,.6);text-decoration:none;transition:color .2s}
+.footer-link:hover{color:white}
+.footer-divider{height:1px;background:rgba(255,255,255,.08);margin-bottom:28px}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.footer-copy{font-size:13px;color:rgba(255,255,255,.35)}
+.footer-badge{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.4)}
+.footer-badge-dot{width:8px;height:8px;background:#4ADE80;border-radius:50%;animation:pulse-green 2.5s infinite}
+.social-links{display:flex;gap:8px}
+.social-link{width:36px;height:36px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);text-decoration:none;font-size:16px;transition:all .2s}
+.social-link:hover{background:var(--brand);border-color:var(--brand);color:white}
+
+/* ── SCROLL ANIMATIONS ────────────────────────────────────────── */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .6s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.fade-up-d1{transition-delay:.1s}
+.fade-up-d2{transition-delay:.2s}
+.fade-up-d3{transition-delay:.3s}
+.fade-up-d4{transition-delay:.4s}
+.fade-up-d5{transition-delay:.5s}
+
+/* ── UTILS ────────────────────────────────────────────────────── */
+.highlight{color:var(--brand)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ NAV ════════════════ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="logo.svg" alt="DentalPro" style="height:38px;width:auto">
+    </a>
+    <div class="nav-links">
+      <a href="#features" class="nav-link" onclick="scrollTo('#features')">Características</a>
+      <a href="#comparacion" class="nav-link">Comparación</a>
+      <a href="#precios" class="nav-link">Precios</a>
+      <a href="#testimonios" class="nav-link">Testimonios</a>
+      <a href="login.html" class="nav-link">Iniciar sesión</a>
+      <a href="login.html" class="nav-cta">Empezar gratis →</a>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#features" class="mobile-link" onclick="closeMenu()">Características</a>
+  <a href="#comparacion" class="mobile-link" onclick="closeMenu()">Comparación</a>
+  <a href="#precios" class="mobile-link" onclick="closeMenu()">Precios</a>
+  <a href="#testimonios" class="mobile-link" onclick="closeMenu()">Testimonios</a>
+  <a href="login.html" class="mobile-link">Iniciar sesión</a>
+  <a href="login.html" class="mobile-cta">Empezar gratis →</a>
+</div>
+
+<!-- ═══════════════════════════════════════ HERO ════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-inner">
+    <!-- Left -->
+    <div>
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        Nuevo · Sistema actualizado 2025
+      </div>
+      <h1 class="hero-h1">
+        El software dental<br>que <span>tu clínica</span><br>merece
+      </h1>
+      <p class="hero-sub">
+        Gestiona citas, odontogramas, expedientes y finanzas desde un solo lugar. Diseñado para dentistas mexicanos que quieren crecer.
+      </p>
+      <div class="hero-actions">
+        <a href="login.html" class="btn-hero btn-hero-primary">
+          🦷 Empezar gratis — 14 días
+        </a>
+        <a href="#features" class="btn-hero btn-hero-outline">
+          Ver demo ↓
+        </a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-avatars">
+          <div class="trust-av">DR</div>
+          <div class="trust-av">MA</div>
+          <div class="trust-av">CL</div>
+          <div class="trust-av">PG</div>
+          <div class="trust-av">+</div>
+        </div>
+        <div class="trust-text">
+          <strong>+480 clínicas</strong> ya usan DentalPro en México
+        </div>
+      </div>
+    </div>
+    <!-- Right — app mockup -->
+    <div class="hero-visual">
+      <div class="app-mockup">
+        <div class="mockup-bar">
+          <div class="mockup-dot" style="background:#FF5F57"></div>
+          <div class="mockup-dot" style="background:#FFBD2E"></div>
+          <div class="mockup-dot" style="background:#28C840"></div>
+          <span class="mockup-title">DentalPro — Dashboard</span>
+        </div>
+        <div class="mockup-grid">
+          <div class="mockup-kpi">
+            <div class="mkpi-label">Citas hoy</div>
+            <div class="mkpi-val">12</div>
+            <div class="mkpi-trend">↑ 3 vs ayer</div>
+          </div>
+          <div class="mockup-kpi">
+            <div class="mkpi-label">Ingresos mes</div>
+            <div class="mkpi-val" style="font-size:18px">$48,200</div>
+            <div class="mkpi-trend">↑ 18% MoM</div>
+          </div>
+        </div>
+        <div class="mockup-chart" style="margin-bottom:8px">
+          <div class="bar" style="height:40%"></div>
+          <div class="bar" style="height:65%"></div>
+          <div class="bar hi" style="height:55%"></div>
+          <div class="bar" style="height:80%"></div>
+          <div class="bar hi" style="height:70%"></div>
+          <div class="bar" style="height:90%"></div>
+          <div class="bar hi" style="height:100%"></div>
+          <div class="bar" style="height:75%"></div>
+        </div>
+        <div class="mockup-tooth-row">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);align-self:center">Odontograma FDI</div>
+          <span class="badge-mini">FDI ISO 3950</span>
+        </div>
+      </div>
+      <div class="float-notif">
+        <div class="notif-icon">✅</div>
+        <div>
+          <div class="notif-title">Cita confirmada</div>
+          <div class="notif-sub">María García · 10:30 am</div>
+        </div>
+      </div>
+      <div class="float-badge">
+        <div>
+          <div class="fb-num">4.9</div>
+          <div class="fb-label">★ App Store</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ LOGOS / SOCIAL PROOF ════════ -->
+<div class="logos-bar">
+  <div class="logos-inner">
+    <span class="logos-label">Confiado por clínicas en</span>
+    <span class="logo-item">🏙️ CDMX</span>
+    <span class="logo-item">🌵 Monterrey</span>
+    <span class="logo-item">🌊 Guadalajara</span>
+    <span class="logo-item">🌅 Cancún</span>
+    <span class="logo-item">⛰️ Puebla</span>
+    <span class="logo-item">🌿 Mérida</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ FEATURES ════════════════ -->
+<section id="features">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <div class="section-eyebrow">Características</div>
+      <h2 class="section-title">Todo lo que tu clínica necesita</h2>
+      <p class="section-sub">Un sistema completo, sin módulos extras ni costos ocultos. Lo que ves es lo que obtienes desde el día uno.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card fade-up fade-up-d1">
+        <div class="feat-icon blue">🦷</div>
+        <div class="feat-h">Odontograma FDI</div>
+        <p class="feat-p">Odontograma interactivo con estándar internacional FDI ISO 3950. Documenta caries, coronas, extracciones y más por cara dental.</p>
+        <span class="feat-tag">32 piezas · 5 caras · historial</span>
+      </div>
+      <div class="feat-card fade-up fade-up-d2">
+        <div class="feat-icon green">📅</div>
+        <div class="feat-h">Agenda Inteligente</div>
+        <p class="feat-p">Calendario visual con recordatorios automáticos por WhatsApp y email. Reduce las faltas hasta un 40% con confirmaciones automáticas.</p>
+        <span class="feat-tag">Recordatorios · Multi-doctor</span>
+      </div>
+      <div class="feat-card fade-up fade-up-d3">
+        <div class="feat-icon purple">📊</div>
+        <div class="feat-h">Analytics Actuariales</div>
+        <p class="feat-p">Reportes financieros detallados, tasa de retención, ingresos por doctor y proyecciones mensuales. Toma decisiones con datos.</p>
+        <span class="feat-tag">KPIs · Gráficas · Exportar PDF</span>
+      </div>
+      <div class="feat-card fade-up fade-up-d1">
+        <div class="feat-icon amber">💊</div>
+        <div class="feat-h">Recetas Digitales</div>
+        <p class="feat-p">Genera recetas médicas con firma digital en segundos. Historial completo de prescripciones por paciente, conforme a la NOM mexicana.</p>
+        <span class="feat-tag">PDF · Firma digital · NOM</span>
+      </div>
+      <div class="feat-card fade-up fade-up-d2">
+        <div class="feat-icon teal">👥</div>
+        <div class="feat-h">Portal del Paciente</div>
+        <p class="feat-p">Tus pacientes acceden a su historial, próximas citas y recetas con un código único. Sin apps, sin descargas, solo un enlace.</p>
+        <span class="feat-tag">Web · Código único · Sin app</span>
+      </div>
+      <div class="feat-card fade-up fade-up-d3">
+        <div class="feat-icon red">💓</div>
+        <div class="feat-h">Seguimiento Post-op</div>
+        <p class="feat-p">Encuestas automáticas de dolor y recuperación post-cirugía. Alertas al doctor si el paciente reporta complicaciones.</p>
+        <span class="feat-tag">Alertas · WhatsApp · Automático</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ DEMO STRIP ══════════════ -->
+<div class="demo-strip">
+  <div class="demo-inner">
+    <div>
+      <div class="section-eyebrow" style="color:rgba(255,255,255,.5)">Odontograma FDI</div>
+      <div class="demo-title">Documenta en segundos,<br>no en minutos</div>
+      <p class="demo-sub">Haz clic en cualquier cara del diente para registrar el tratamiento. El sistema calcula el presupuesto automáticamente.</p>
+      <div class="demo-features">
+        <div class="demo-feat">Click en cara → diagnóstico registrado</div>
+        <div class="demo-feat">Presupuesto automático con precios de tu clínica</div>
+        <div class="demo-feat">Historial completo de cada pieza dental</div>
+        <div class="demo-feat">Fotos y radiografías adjuntas al diente</div>
+        <div class="demo-feat">Exporta a PDF con un clic</div>
+      </div>
+    </div>
+    <div class="demo-screen">
+      <div class="ds-header">
+        <div>
+          <div class="ds-label">Paciente activo</div>
+          <div class="ds-num">Diente 36</div>
+        </div>
+        <div style="margin-left:auto;font-size:10px;font-weight:700;padding:4px 10px;background:rgba(74,222,128,.2);color:#4ADE80;border:1px solid rgba(74,222,128,.3);border-radius:99px">● Sesión activa</div>
+      </div>
+      <!-- Arcade superior (11-18, 21-28) -->
+      <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Maxilar Superior</div>
+      <div class="tooth-grid" style="margin-bottom:12px">
+        <div class="tc">18</div><div class="tc caries">17</div><div class="tc">16</div><div class="tc corona">15</div>
+        <div class="tc">14</div><div class="tc">13</div><div class="tc sano">12</div><div class="tc sano">11</div>
+        <div class="tc sano">21</div><div class="tc sano">22</div><div class="tc">23</div><div class="tc">24</div>
+        <div class="tc corona">25</div><div class="tc">26</div><div class="tc caries">27</div><div class="tc">28</div>
+      </div>
+      <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Maxilar Inferior</div>
+      <div class="tooth-grid">
+        <div class="tc">48</div><div class="tc">47</div><div class="tc selected">46</div><div class="tc caries">45</div>
+        <div class="tc">44</div><div class="tc sano">43</div><div class="tc sano">42</div><div class="tc sano">41</div>
+        <div class="tc sano">31</div><div class="tc sano">32</div><div class="tc sano">33</div><div class="tc">34</div>
+        <div class="tc corona">35</div><div class="tc selected">36</div><div class="tc">37</div><div class="tc">38</div>
+      </div>
+      <div style="margin-top:10px;padding:10px 12px;background:rgba(255,255,255,.07);border-radius:8px;border:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:11px;color:rgba(255,255,255,.5)">Presupuesto estimado</div>
+        <div style="font-size:16px;font-weight:800;color:#4ADE80">$3,450 MXN</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ COMPARACIÓN ══════════════════ -->
+<section id="comparacion">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <div class="section-eyebrow">Comparación</div>
+      <h2 class="section-title">¿Por qué DentalPro?</h2>
+      <p class="section-sub">Comparado con Excel y otros sistemas del mercado, DentalPro ofrece más por menos.</p>
+    </div>
+    <div class="comp-table fade-up" style="margin-top:56px;position:relative">
+      <div style="position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--brand),#7C3AED);border-radius:var(--r) var(--r) 0 0"></div>
+      <div class="comp-thead" style="margin-top:6px">
+        <div class="ch">Funcionalidad</div>
+        <div class="ch">Excel / Papel</div>
+        <div class="ch">Otros PMS</div>
+        <div class="ch hl">✦ DentalPro</div>
+      </div>
+      <div class="comp-row">
+        <div class="cc">Odontograma FDI interactivo</div>
+        <div class="cc"><span class="cross">✕</span></div>
+        <div class="cc"><span class="partial">Básico</span></div>
+        <div class="cc hl"><span class="check">✓</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="cc">Recordatorios automáticos</div>
+        <div class="cc"><span class="cross">✕</span></div>
+        <div class="cc"><span class="partial">Extra $$$</span></div>
+        <div class="cc hl"><span class="check">✓ incluido</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="cc">Portal del paciente</div>
+        <div class="cc"><span class="cross">✕</span></div>
+        <div class="cc"><span class="cross">✕</span></div>
+        <div class="cc hl"><span class="check">✓</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="cc">Analytics e informes financieros</div>
+        <div class="cc"><span class="partial">Manual</span></div>
+        <div class="cc"><span class="partial">Limitado</span></div>
+        <div class="cc hl"><span class="check">✓ completo</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="cc">Multi-clínica / multi-doctor</div>
+        <div class="cc"><span class="cross">✕</span></div>
+        <div class="cc"><span class="partial">Extra $$$</span></div>
+        <div class="cc hl"><span class="check">✓ incluido</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="cc">Recetas digitales NOM</div>
+        <div class="cc"><span class="cross">✕</span></div>
+        <div class="cc"><span class="partial">Parcial</span></div>
+        <div class="cc hl"><span class="check">✓</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="cc">Seguimiento post-operatorio</div>
+        <div class="cc"><span class="cross">✕</span></div>
+        <div class="cc"><span class="cross">✕</span></div>
+        <div class="cc hl"><span class="check">✓</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="cc">Inventario de materiales</div>
+        <div class="cc"><span class="partial">Manual</span></div>
+        <div class="cc"><span class="partial">Básico</span></div>
+        <div class="cc hl"><span class="check">✓</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="cc" style="font-weight:700;color:var(--text)">Precio mensual</div>
+        <div class="cc" style="font-size:12px;color:var(--text-3)">Tiempo perdido</div>
+        <div class="cc" style="font-size:12px">$800–$2,000</div>
+        <div class="cc hl" style="font-weight:800;color:var(--brand);font-size:15px">Desde $299</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════ PRECIOS ════════════════ -->
+<section id="precios">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <div class="section-eyebrow">Precios</div>
+      <h2 class="section-title">Planes para cada clínica</h2>
+      <p class="section-sub">Sin contratos de permanencia. Cancela cuando quieras. 14 días de prueba gratis en todos los planes.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- BÁSICO -->
+      <div class="plan fade-up fade-up-d1">
+        <div class="plan-name">Básico</div>
+        <div class="plan-price">
+          <span class="plan-currency">$</span>
+          <span class="plan-amount">299</span>
+          <span class="plan-period">MXN/mes</span>
+        </div>
+        <p class="plan-desc">Para dentistas independientes que quieren digitalizar su práctica sin complicaciones.</p>
+        <a href="login.html" class="plan-cta plan-cta-outline">Empezar gratis</a>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="pf"><span class="pf-check">✓</span>1 doctor · 1 consultorio</div>
+          <div class="pf"><span class="pf-check">✓</span>Hasta 200 pacientes activos</div>
+          <div class="pf"><span class="pf-check">✓</span>Odontograma FDI completo</div>
+          <div class="pf"><span class="pf-check">✓</span>Agenda y citas</div>
+          <div class="pf"><span class="pf-check">✓</span>Recetas digitales</div>
+          <div class="pf"><span class="pf-check">✓</span>Portal del paciente</div>
+          <div class="pf"><span class="pf-x">✕</span><span style="color:var(--text-3)">Recordatorios automáticos</span></div>
+          <div class="pf"><span class="pf-x">✕</span><span style="color:var(--text-3)">Analytics avanzados</span></div>
+          <div class="pf"><span class="pf-x">✕</span><span style="color:var(--text-3)">Soporte prioritario</span></div>
+        </div>
+      </div>
+
+      <!-- PROFESIONAL (popular) -->
+      <div class="plan popular fade-up fade-up-d2">
+        <div class="plan-badge">Más popular</div>
+        <div class="plan-name" style="color:var(--brand)">Profesional</div>
+        <div class="plan-price">
+          <span class="plan-currency" style="color:var(--brand)">$</span>
+          <span class="plan-amount" style="color:var(--brand)">599</span>
+          <span class="plan-period">MXN/mes</span>
+        </div>
+        <p class="plan-desc">Para clínicas en crecimiento que necesitan automatización y datos para tomar mejores decisiones.</p>
+        <a href="login.html" class="plan-cta plan-cta-solid">Empezar gratis →</a>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="pf"><span class="pf-check">✓</span>Hasta 3 doctores</div>
+          <div class="pf"><span class="pf-check">✓</span>Pacientes ilimitados</div>
+          <div class="pf"><span class="pf-check">✓</span>Todo del plan Básico</div>
+          <div class="pf"><span class="pf-check">✓</span>Recordatorios por WhatsApp y email</div>
+          <div class="pf"><span class="pf-check">✓</span>Analytics e informes financieros</div>
+          <div class="pf"><span class="pf-check">✓</span>Inventario de materiales</div>
+          <div class="pf"><span class="pf-check">✓</span>Seguimiento post-operatorio</div>
+          <div class="pf"><span class="pf-check">✓</span>Marketing y reactivación de pacientes</div>
+          <div class="pf"><span class="pf-x">✕</span><span style="color:var(--text-3)">Multi-clínica</span></div>
+        </div>
+      </div>
+
+      <!-- CLÍNICA -->
+      <div class="plan fade-up fade-up-d3">
+        <div class="plan-name">Clínica</div>
+        <div class="plan-price">
+          <span class="plan-currency">$</span>
+          <span class="plan-amount">1,200</span>
+          <span class="plan-period">MXN/mes</span>
+        </div>
+        <p class="plan-desc">Para clínicas con múltiples sucursales y equipos grandes que necesitan control total.</p>
+        <a href="login.html" class="plan-cta plan-cta-outline">Empezar gratis</a>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="pf"><span class="pf-check">✓</span>Doctores ilimitados</div>
+          <div class="pf"><span class="pf-check">✓</span>Multi-clínica / sucursales</div>
+          <div class="pf"><span class="pf-check">✓</span>Todo del plan Profesional</div>
+          <div class="pf"><span class="pf-check">✓</span>Roles y permisos granulares</div>
+          <div class="pf"><span class="pf-check">✓</span>API para integraciones propias</div>
+          <div class="pf"><span class="pf-check">✓</span>Reportes por sucursal</div>
+          <div class="pf"><span class="pf-check">✓</span>Onboarding personalizado</div>
+          <div class="pf"><span class="pf-check">✓</span>Soporte prioritario 24/7</div>
+          <div class="pf"><span class="pf-check">✓</span>SLA garantizado</div>
+        </div>
+      </div>
+    </div>
+    <p class="plan-note">¿Tienes preguntas sobre el plan correcto para ti? <a href="mailto:hola@dentalpro.mx">Habla con nosotros</a> · Todos los precios incluyen IVA</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ TESTIMONIALES ═════════════════ -->
+<section id="testimonios">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <div class="section-eyebrow">Testimonios</div>
+      <h2 class="section-title">Lo que dicen nuestros usuarios</h2>
+      <p class="section-sub">Dentistas reales que transformaron su práctica con DentalPro.</p>
+    </div>
+    <div class="testi-grid">
+
+      <div class="testi fade-up fade-up-d1">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <div class="testi-text">
+          <span>Antes llevaba todo en Excel y perdía horas buscando expedientes. Con DentalPro tengo el historial completo de cada paciente en segundos. El odontograma es increíblemente fácil de usar.</span>
+        </div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#1B4FD8,#7C3AED)">MR</div>
+          <div>
+            <div class="testi-name">Dra. Mariana Reyes</div>
+            <div class="testi-role">Odontóloga General · Plan Profesional</div>
+            <div class="testi-city">📍 Guadalajara, Jalisco</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi fade-up fade-up-d2">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <div class="testi-text">
+          <span>Los recordatorios automáticos de WhatsApp redujeron nuestras faltas a casi cero. Antes perdíamos 3-4 citas por semana. El ROI fue inmediato desde el primer mes.</span>
+        </div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#059669,#047857)">CL</div>
+          <div>
+            <div class="testi-name">Dr. Carlos López</div>
+            <div class="testi-role">Cirujano Maxilofacial · Plan Clínica</div>
+            <div class="testi-city">📍 Monterrey, Nuevo León</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi fade-up fade-up-d3">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <div class="testi-text">
+          <span>Tenemos 3 sucursales y DentalPro nos permite ver el desempeño de cada una en tiempo real. Los analytics me ayudaron a identificar qué tratamientos son más rentables.</span>
+        </div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#D97706,#B45309)">PG</div>
+          <div>
+            <div class="testi-name">Dra. Patricia González</div>
+            <div class="testi-role">Directora Clínica · Plan Clínica</div>
+            <div class="testi-city">📍 Ciudad de México</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ FAQ ════════════════ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="text-center fade-up">
+      <div class="section-eyebrow">Preguntas frecuentes</div>
+      <h2 class="section-title">¿Tienes dudas?</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item fade-up">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Necesito instalar algo?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">No. DentalPro es 100% web, funciona en cualquier navegador moderno desde computadora, tablet o celular. Sin instalaciones, sin actualizaciones manuales. Tus datos siempre sincronizados.</div>
+        </div>
+      </div>
+      <div class="faq-item fade-up">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Mis datos están seguros?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Sí. Usamos cifrado TLS en tránsito y AES-256 en reposo. Los datos se alojan en servidores en México con respaldos automáticos cada 6 horas. Cumplimos con la Ley Federal de Protección de Datos Personales (LFPDPPP).</div>
+        </div>
+      </div>
+      <div class="faq-item fade-up">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Puedo importar mis pacientes actuales?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Sí. Puedes importar desde Excel o CSV. Para clientes del plan Clínica, ofrecemos migración asistida sin costo adicional, incluyendo expedientes desde otros sistemas como Dentsply o Softdent.</div>
+        </div>
+      </div>
+      <div class="faq-item fade-up">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Qué pasa si cancelo?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Puedes cancelar en cualquier momento sin penalizaciones. Antes de que se cierre tu cuenta, puedes exportar todos tus datos en formato CSV y PDF. Tus datos te pertenecen.</div>
+        </div>
+      </div>
+      <div class="faq-item fade-up">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          ¿Funciona para especialidades?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Sí. DentalPro es usado por odontólogos generales, ortodoncistas, endodoncistas, periodoncistas, cirujanos maxilofaciales y más. El odontograma y los formularios se adaptan a cada especialidad.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ CTA FINAL ═════════════════════ -->
+<div class="cta-final">
+  <div class="cta-final-inner">
+    <h2 class="cta-final-title">Tu clínica merece el mejor software</h2>
+    <p class="cta-final-sub">Únete a más de 480 clínicas en México. 14 días gratis, sin tarjeta de crédito, sin compromisos.</p>
+    <div class="cta-final-actions">
+      <a href="login.html" class="btn-final btn-final-white">🦷 Empezar prueba gratuita</a>
+      <a href="mailto:hola@dentalpro.mx" class="btn-final btn-final-ghost">Hablar con ventas</a>
+    </div>
+    <div style="margin-top:24px;font-size:13px;color:rgba(255,255,255,.4)">✓ Sin tarjeta · ✓ 14 días gratis · ✓ Cancela cuando quieras</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ FOOTER ══════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="logo.svg" alt="DentalPro" style="height:40px;width:auto;filter:brightness(0) invert(1);opacity:.9">
+        <p>El sistema de gestión dental más completo de México. Diseñado por dentistas, para dentistas.</p>
+        <div class="social-links" style="margin-top:20px">
+          <a href="#" class="social-link" title="Instagram">📸</a>
+          <a href="#" class="social-link" title="Facebook">📘</a>
+          <a href="#" class="social-link" title="YouTube">▶️</a>
+          <a href="#" class="social-link" title="WhatsApp">💬</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Producto</div>
+        <div class="footer-links">
+          <a href="#features" class="footer-link">Características</a>
+          <a href="#precios" class="footer-link">Precios</a>
+          <a href="#comparacion" class="footer-link">Comparación</a>
+          <a href="login.html" class="footer-link">Iniciar sesión</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Recursos</div>
+        <div class="footer-links">
+          <a href="#faq" class="footer-link">Preguntas frecuentes</a>
+          <a href="#" class="footer-link">Blog dental</a>
+          <a href="#" class="footer-link">Guías y tutoriales</a>
+          <a href="#" class="footer-link">Estado del sistema</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Empresa</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Sobre nosotros</a>
+          <a href="mailto:hola@dentalpro.mx" class="footer-link">Contacto</a>
+          <a href="#" class="footer-link">Privacidad</a>
+          <a href="#" class="footer-link">Términos de uso</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 DentalPro · Todos los derechos reservados · Hecho en México 🇲🇽</div>
+      <div class="footer-badge">
+        <div class="footer-badge-dot"></div>
+        Todos los sistemas operativos
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════ SCRIPTS ═════════════════════ -->
+<script>
+// ── NAV scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// ── Mobile menu
+function toggleMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const isOpen = menu.classList.toggle('open');
+  document.getElementById('hamburger').style.opacity = isOpen ? '.6' : '1';
+}
+function closeMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+
+// ── Smooth scroll para nav links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      const offset = 80;
+      window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+    }
+  });
+});
+
+// ── Scroll animations (IntersectionObserver)
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ── FAQ accordion
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = btn.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.classList.remove('open');
+    q.nextElementSibling.classList.remove('open');
+  });
+  // Open clicked (if wasn't open)
+  if (!isOpen) {
+    btn.classList.add('open');
+    btn.nextElementSibling.classList.add('open');
+  }
+}
+
+// ── Animate chart bars on load
+window.addEventListener('load', () => {
+  const heights = [40,65,55,80,70,90,100,75];
+  document.querySelectorAll('.mockup-chart .bar').forEach((b, i) => {
+    b.style.height = '4px';
+    setTimeout(() => { b.style.height = heights[i] + '%'; }, 300 + i * 80);
+  });
+});
+
+// ── Tooth demo interaction
+document.querySelectorAll('.tc').forEach(tc => {
+  tc.addEventListener('click', function() {
+    document.querySelectorAll('.tc').forEach(t => t.classList.remove('selected'));
+    this.classList.toggle('selected');
+    const num = this.textContent.trim();
+    const header = document.querySelector('.ds-num');
+    if (header && num) header.textContent = 'Diente ' + num;
+  });
+});
+</script>
+</body>
+</html>
