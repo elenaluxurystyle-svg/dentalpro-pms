@@ -4,200 +4,629 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iniciar Sesión — DentalPro</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
+/* ── RESET ───────────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:"DM Sans",sans-serif;background:linear-gradient(135deg,#0a2463 0%,#1B4FD8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:white;border-radius:24px;padding:40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
-.logo{display:flex;justify-content:center;margin-bottom:24px}
-.title{font-size:22px;font-weight:800;color:#0F172A;text-align:center;margin-bottom:6px}
-.subtitle{font-size:13px;color:#94A3B8;text-align:center;margin-bottom:28px;line-height:1.5}
-.features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
-.feat{display:flex;align-items:center;gap:8px;padding:10px;background:#F8FAFC;border-radius:10px;border:1px solid #E8EDF2;font-size:12px;font-weight:600;color:#475569}
-#google-btn{display:flex;justify-content:center;margin-bottom:16px}
-.divider{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.divider-line{flex:1;height:1px;background:#E8EDF2}
-.divider-text{font-size:11px;color:#94A3B8}
-.invite-section{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #E8EDF2}
-.invite-title{font-size:13px;font-weight:700;color:#0F172A;margin-bottom:10px;text-align:center}
-.invite-input-wrap{display:flex;gap:8px}
-.invite-input{flex:1;padding:10px 13px;background:#F8FAFC;border:1.5px solid #E8EDF2;border-radius:8px;font-size:14px;font-family:"DM Sans",sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#0F172A}
-.invite-input:focus{outline:none;border-color:#1B4FD8}
-.invite-btn{padding:10px 16px;background:#1B4FD8;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;white-space:nowrap}
-.invite-btn:hover{background:#1239A6}
-.invite-info{background:#EEF2FF;border:1px solid #1B4FD8;border-radius:8px;padding:12px;margin-top:10px;font-size:12px;color:#1B4FD8;display:none}
-.error-msg{background:#FFF1F2;border:1px solid #FECDD3;color:#DC2626;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:500;text-align:center;margin-bottom:12px;display:none}
-.loading{text-align:center;padding:16px;font-size:13px;color:#64748b;display:none}
-.loading-spinner{width:24px;height:24px;border:3px solid #E8EDF2;border-top-color:#1B4FD8;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 8px}
+html,body{height:100%;font-family:"DM Sans",sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ── SCENE ───────────────────────────────────────────────────── */
+body{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:#03091C;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* Deep gradient layers */
+.bg-gradient{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 120% 80% at 15% 10%,  rgba(27,79,216,.32) 0%, transparent 55%),
+    radial-gradient(ellipse 80%  70% at 85% 90%,  rgba(99,38,237,.22) 0%, transparent 55%),
+    radial-gradient(ellipse 60%  50% at 50% 50%,  rgba(10,30,100,.40) 0%, transparent 70%),
+    linear-gradient(160deg, #060F2E 0%, #08153A 40%, #03091C 100%);
+}
+
+/* ── GEOMETRIC PATTERN ───────────────────────────────────────── */
+/* SVG hex pattern injected via CSS mask — zero DOM weight */
+.bg-pattern{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.18;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='92' viewBox='0 0 80 92'%3E%3Cpath d='M40 4 L74 22 L74 58 L40 76 L6 58 L6 22 Z' fill='none' stroke='%234B7FFF' stroke-width='1'/%3E%3C/svg%3E");
+  background-size:80px 92px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 80%);
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 80%);
+}
+
+/* Medical cross accent — corners */
+.bg-cross{
+  position:fixed;z-index:0;pointer-events:none;
+  opacity:.06;
+  width:220px;height:220px;
+}
+.bg-cross.tl{top:-40px;left:-40px}
+.bg-cross.br{bottom:-40px;right:-40px;transform:rotate(45deg)}
+
+/* Ambient orbs */
+.orb{
+  position:fixed;border-radius:50%;pointer-events:none;z-index:0;
+  filter:blur(80px);
+}
+.orb-1{width:500px;height:500px;top:-200px;left:-150px;background:rgba(27,79,216,.15)}
+.orb-2{width:400px;height:400px;bottom:-150px;right:-100px;background:rgba(124,58,237,.12)}
+.orb-3{width:300px;height:300px;top:40%;left:55%;background:rgba(6,182,212,.08)}
+
+/* ── LAYOUT ──────────────────────────────────────────────────── */
+.page{
+  position:relative;z-index:1;
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 20px 20px;
+  gap:0;
+}
+
+/* ── CARD ────────────────────────────────────────────────────── */
+.card{
+  width:100%;max-width:420px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:28px;
+  padding:44px 40px 36px;
+  backdrop-filter:blur(28px) saturate(1.4);
+  -webkit-backdrop-filter:blur(28px) saturate(1.4);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06) inset,
+    0 32px 80px rgba(0,0,0,.55),
+    0 8px 24px rgba(27,79,216,.18);
+  position:relative;
+  overflow:hidden;
+}
+
+/* Card inner shimmer */
+.card::before{
+  content:'';position:absolute;
+  top:0;left:-60%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent);
+  animation:shimmer 6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes shimmer{0%,100%{left:-60%}50%{left:120%}}
+
+/* Top accent line */
+.card::after{
+  content:'';position:absolute;
+  top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  border-radius:1px;
+}
+
+/* ── LOGO AREA ───────────────────────────────────────────────── */
+.logo-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  margin-bottom:32px;
+}
+.logo-img{
+  height:62px;width:auto;
+  filter:drop-shadow(0 4px 20px rgba(27,79,216,.5));
+  transition:filter .3s;
+}
+.logo-img:hover{filter:drop-shadow(0 6px 28px rgba(27,79,216,.7))}
+
+/* ── TITLE ───────────────────────────────────────────────────── */
+.title{
+  font-size:17px;font-weight:700;
+  color:rgba(255,255,255,.95);
+  text-align:center;
+  line-height:1.4;
+  letter-spacing:-.02em;
+  margin-bottom:6px;
+}
+.title em{
+  font-style:normal;
+  background:linear-gradient(130deg,#60A5FA 0%,#A78BFA 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.subtitle{
+  font-size:12px;color:rgba(255,255,255,.38);
+  text-align:center;margin-bottom:28px;
+  font-weight:400;letter-spacing:.01em;
+}
+
+/* ── FEATURES CHIPS ──────────────────────────────────────────── */
+.features{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:7px;margin-bottom:28px;
+}
+.feat{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.65);
+  cursor:default;
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  position:relative;overflow:hidden;
+}
+.feat::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(27,79,216,.2),rgba(124,58,237,.15));
+  opacity:0;transition:opacity .25s;
+}
+.feat:hover{
+  border-color:rgba(96,165,250,.4);
+  color:rgba(255,255,255,.95);
+  transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(27,79,216,.2);
+}
+.feat:hover::before{opacity:1}
+.feat-icon{
+  font-size:15px;flex-shrink:0;position:relative;z-index:1;
+  transition:transform .25s;
+}
+.feat:hover .feat-icon{transform:scale(1.15)}
+.feat-text{position:relative;z-index:1;line-height:1.2}
+
+/* Pulse on hover */
+@keyframes pulse-ring{
+  0%{box-shadow:0 0 0 0 rgba(27,79,216,.5)}
+  70%{box-shadow:0 0 0 8px rgba(27,79,216,0)}
+  100%{box-shadow:0 0 0 0 rgba(27,79,216,0)}
+}
+.feat:hover{animation:pulse-ring .6s ease-out}
+
+/* ── DIVIDER ─────────────────────────────────────────────────── */
+.divider{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.div-line{flex:1;height:1px;background:rgba(255,255,255,.1)}
+.div-text{font-size:11px;color:rgba(255,255,255,.3);white-space:nowrap;font-weight:500}
+
+/* ── GOOGLE BTN WRAPPER ──────────────────────────────────────── */
+#google-btn{
+  display:flex;justify-content:center;margin-bottom:20px;
+  transition:opacity .3s,transform .3s;
+}
+#google-btn.loading-state{opacity:.35;pointer-events:none;transform:scale(.98)}
+
+/* ── ERROR ───────────────────────────────────────────────────── */
+.error-msg{
+  background:rgba(220,38,38,.12);
+  border:1px solid rgba(220,38,38,.3);
+  color:#FCA5A5;
+  padding:10px 14px;border-radius:10px;
+  font-size:12px;font-weight:500;text-align:center;
+  margin-bottom:14px;display:none;
+  backdrop-filter:blur(8px);
+  animation:shake .4s cubic-bezier(.36,.07,.19,.97);
+}
+@keyframes shake{
+  10%,90%{transform:translateX(-2px)}
+  20%,80%{transform:translateX(3px)}
+  30%,50%,70%{transform:translateX(-3px)}
+  40%,60%{transform:translateX(3px)}
+}
+
+/* ── LOADING ─────────────────────────────────────────────────── */
+.loading{
+  display:none;text-align:center;padding:14px 0;
+}
+.spin-wrap{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  color:rgba(255,255,255,.5);font-size:13px;
+}
+.spinner{
+  width:20px;height:20px;
+  border:2px solid rgba(255,255,255,.15);
+  border-top-color:rgba(96,165,250,.8);
+  border-radius:50%;
+  animation:spin .65s linear infinite;
+  flex-shrink:0;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
-.role-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;margin:8px auto;display:block;text-align:center}
-.terms{font-size:11px;color:#94A3B8;text-align:center;margin-top:14px;line-height:1.5}
+
+/* ── INVITE TOGGLE ───────────────────────────────────────────── */
+.invite-toggle{
+  width:100%;
+  background:none;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  padding:10px 16px;
+  font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.5);
+  cursor:pointer;
+  font-family:"DM Sans",sans-serif;
+  transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.invite-toggle:hover{
+  border-color:rgba(96,165,250,.4);
+  color:rgba(255,255,255,.85);
+  background:rgba(255,255,255,.05);
+}
+
+/* ── INVITE SECTION ──────────────────────────────────────────── */
+.invite-section{
+  display:none;
+  margin-top:14px;
+  padding:16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;
+  animation:slideDown .25s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+.invite-label{
+  font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;
+  color:rgba(255,255,255,.35);
+  margin-bottom:10px;
+}
+.invite-row{display:flex;gap:8px}
+.invite-input{
+  flex:1;
+  padding:10px 13px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:8px;
+  font-size:14px;font-family:"DM Sans",sans-serif;
+  font-weight:700;letter-spacing:.12em;
+  color:rgba(255,255,255,.9);
+  text-transform:uppercase;
+  transition:all .2s;
+  outline:none;
+}
+.invite-input::placeholder{
+  font-weight:400;letter-spacing:.04em;
+  color:rgba(255,255,255,.25);text-transform:none;
+}
+.invite-input:focus{
+  border-color:rgba(96,165,250,.6);
+  background:rgba(27,79,216,.15);
+  box-shadow:0 0 0 3px rgba(27,79,216,.2);
+}
+.invite-btn{
+  padding:10px 16px;
+  background:rgba(27,79,216,.8);
+  color:white;border:none;border-radius:8px;
+  font-size:13px;font-weight:700;
+  cursor:pointer;font-family:"DM Sans",sans-serif;
+  transition:all .2s;white-space:nowrap;
+  backdrop-filter:blur(8px);
+}
+.invite-btn:hover{background:rgba(18,57,166,.9);transform:translateY(-1px)}
+.invite-btn:active{transform:translateY(0)}
+
+.invite-info{
+  margin-top:10px;
+  padding:10px 12px;
+  background:rgba(27,79,216,.15);
+  border:1px solid rgba(96,165,250,.25);
+  border-radius:8px;
+  font-size:12px;color:rgba(147,197,253,.9);
+  line-height:1.6;display:none;
+  animation:slideDown .2s ease;
+}
+
+/* ── TRUST BADGES ────────────────────────────────────────────── */
+.trust-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:16px;margin-top:20px;flex-wrap:wrap;
+}
+.trust-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:rgba(255,255,255,.28);font-weight:500;
+}
+.trust-dot{
+  width:6px;height:6px;border-radius:50%;background:#4ADE80;
+  animation:pulse-g 2.5s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes pulse-g{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+.footer{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:6px 20px;
+  padding:20px 24px 28px;
+  margin-top:20px;
+}
+.footer-link{
+  font-size:11px;color:rgba(255,255,255,.28);
+  text-decoration:none;font-weight:500;
+  transition:color .2s;white-space:nowrap;
+  padding:4px 0;
+}
+.footer-link:hover{color:rgba(255,255,255,.65)}
+.footer-sep{color:rgba(255,255,255,.12);font-size:11px}
+.footer-status{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:rgba(255,255,255,.28);
+  font-weight:500;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media(max-width:480px){
+  .page{padding:24px 16px 16px;justify-content:flex-start;padding-top:48px}
+  .card{padding:36px 24px 28px;border-radius:24px}
+  .logo-img{height:54px}
+  .title{font-size:16px}
+  .features{gap:6px}
+  .feat{padding:9px 10px;font-size:11px}
+  #google-btn iframe{width:100% !important}
+  .footer{gap:8px 16px;padding:16px 16px 32px}
+}
+@media(max-width:360px){
+  .features{grid-template-columns:1fr}
+  .card{padding:28px 18px 24px}
+}
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo"><img src="logo.svg" alt="DentalPro" style="height:56px;width:auto"></div>
-  <div class="title">Bienvenido a DentalPro</div>
-  <div class="subtitle">Sistema de gestión dental profesional para México y LATAM</div>
 
-  <div class="features">
-    <div class="feat">🦷 Odontograma FDI</div>
-    <div class="feat">📅 Citas inteligentes</div>
-    <div class="feat">📊 Analytics actuarial</div>
-    <div class="feat">💓 Seguimiento post-op</div>
-  </div>
+<!-- BG LAYERS -->
+<div class="bg-gradient"></div>
+<div class="bg-pattern"></div>
 
-  <div id="error-msg" class="error-msg"></div>
-  <div class="loading" id="loading">
-    <div class="loading-spinner"></div>
-    Verificando acceso...
-  </div>
+<!-- Medical cross SVGs (corners) -->
+<svg class="bg-cross tl" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="90" y="20" width="40" height="180" rx="8" fill="#4B7FFF"/>
+  <rect x="20" y="90" width="180" height="40" rx="8" fill="#4B7FFF"/>
+</svg>
+<svg class="bg-cross br" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="90" y="20" width="40" height="180" rx="8" fill="#7C3AED"/>
+  <rect x="20" y="90" width="180" height="40" rx="8" fill="#7C3AED"/>
+</svg>
 
-  <div id="google-btn"></div>
+<!-- Ambient orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-text">¿Eres personal de una clínica?</div>
-    <div class="divider-line"></div>
-  </div>
+<!-- ── MAIN PAGE ────────────────────────────────────────────── -->
+<main class="page">
+  <div class="card">
 
-  <div style="text-align:center">
-    <button onclick="toggleInvite()" style="background:none;border:1.5px solid #E8EDF2;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;color:#475569;cursor:pointer;font-family:DM Sans,sans-serif;transition:all .2s" onmouseover="this.style.borderColor='#1B4FD8';this.style.color='#1B4FD8'" onmouseout="this.style.borderColor='#E8EDF2';this.style.color='#475569'">
-      🔑 Tengo código de invitación
-    </button>
-  </div>
-
-  <div class="invite-section" id="invite-section">
-    <div class="invite-title">Código de Invitación</div>
-    <div class="invite-input-wrap">
-      <input class="invite-input" id="invite-code" placeholder="ABC123" maxlength="8" oninput="this.value=this.value.toUpperCase()">
-      <button class="invite-btn" onclick="verifyInvite()">Verificar</button>
+    <!-- LOGO -->
+    <div class="logo-wrap">
+      <img src="logo.svg" alt="DentalPro" class="logo-img">
     </div>
-    <div class="invite-info" id="invite-info"></div>
-  </div>
 
-  <div class="terms">Al iniciar sesión aceptas los <a href="#" style="color:#1B4FD8">Términos de Servicio</a> y <a href="#" style="color:#1B4FD8">Política de Privacidad</a></div>
-</div>
+    <!-- TITLE -->
+    <div class="title">DentalPro: <em>La inteligencia</em><br>que tu clínica merece</div>
+    <div class="subtitle">Sistema de gestión dental profesional · México &amp; LATAM</div>
+
+    <!-- FEATURE CHIPS -->
+    <div class="features">
+      <div class="feat">
+        <span class="feat-icon">🦷</span>
+        <span class="feat-text">Odontograma FDI</span>
+      </div>
+      <div class="feat">
+        <span class="feat-icon">📅</span>
+        <span class="feat-text">Agenda inteligente</span>
+      </div>
+      <div class="feat">
+        <span class="feat-icon">📊</span>
+        <span class="feat-text">Analytics actuarial</span>
+      </div>
+      <div class="feat">
+        <span class="feat-icon">💓</span>
+        <span class="feat-text">Seguimiento post-op</span>
+      </div>
+    </div>
+
+    <!-- ERROR -->
+    <div class="error-msg" id="error-msg"></div>
+
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+      <div class="spin-wrap">
+        <div class="spinner"></div>
+        Verificando acceso...
+      </div>
+    </div>
+
+    <!-- GOOGLE BTN -->
+    <div id="google-btn"></div>
+
+    <!-- DIVIDER -->
+    <div class="divider">
+      <div class="div-line"></div>
+      <div class="div-text">¿Eres personal de una clínica?</div>
+      <div class="div-line"></div>
+    </div>
+
+    <!-- INVITE TOGGLE -->
+    <button class="invite-toggle" onclick="toggleInvite()" id="invite-toggle-btn">
+      <span>🔑</span>
+      <span>Tengo código de invitación</span>
+      <span id="invite-arrow" style="margin-left:auto;transition:transform .25s;color:rgba(255,255,255,.3)">›</span>
+    </button>
+
+    <!-- INVITE SECTION -->
+    <div class="invite-section" id="invite-section">
+      <div class="invite-label">Código de Invitación</div>
+      <div class="invite-row">
+        <input
+          class="invite-input"
+          id="invite-code"
+          placeholder="Ej: ABC-123"
+          maxlength="8"
+          oninput="this.value=this.value.toUpperCase()"
+          onkeydown="if(event.key==='Enter')verifyInvite()"
+        >
+        <button class="invite-btn" onclick="verifyInvite()">Verificar</button>
+      </div>
+      <div class="invite-info" id="invite-info"></div>
+    </div>
+
+    <!-- TRUST BADGES -->
+    <div class="trust-row">
+      <div class="trust-item"><div class="trust-dot"></div>Cifrado TLS</div>
+      <div class="trust-item">🔒 OAuth 2.0</div>
+      <div class="trust-item">🇲🇽 Datos en México</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <a href="#" class="footer-link">Centro de Ayuda</a>
+  <span class="footer-sep">·</span>
+  <a href="#" class="footer-link">Cumplimiento NOM-024</a>
+  <span class="footer-sep">·</span>
+  <div class="footer-status">
+    <div class="trust-dot"></div>
+    <a href="#" class="footer-link" style="padding:0">Estado del Servidor</a>
+  </div>
+  <span class="footer-sep" style="display:block;width:100%;height:0;margin:0"></span>
+  <span style="font-size:11px;color:rgba(255,255,255,.15);font-weight:400">© 2025 DentalPro · Todos los derechos reservados</span>
+</footer>
 
 <script>
-const API = "https://dentalpro-docker.onrender.com";
-const CLIENT_ID = "113537762357-7u7b02i2lf3lnl6fsmaetud3nqelth0o.apps.googleusercontent.com";
+const API    = "https://dentalpro-docker.onrender.com";
+const CLIENT = "113537762357-7u7b02i2lf3lnl6fsmaetud3nqelth0o.apps.googleusercontent.com";
 
-function showError(msg){
-  const el=document.getElementById("error-msg");
-  el.textContent=msg;el.style.display="block";
-  setTimeout(()=>el.style.display="none",5000);
-}
-function showLoading(show){
-  document.getElementById("loading").style.display=show?"block":"none";
-  document.getElementById("google-btn").style.opacity=show?"0.3":"1";
+/* ── HELPERS ────────────────────────────────────────────────── */
+function showError(msg) {
+  const el = document.getElementById("error-msg");
+  el.textContent = msg;
+  el.style.display = "block";
+  setTimeout(() => el.style.display = "none", 5000);
 }
 
-function toggleInvite(){
-  const sec=document.getElementById("invite-section");
-  sec.style.display=sec.style.display==="none"?"block":"none";
+function setLoading(on) {
+  document.getElementById("loading").style.display    = on ? "block" : "none";
+  document.getElementById("google-btn").classList.toggle("loading-state", on);
 }
 
-async function verifyInvite(){
-  const code=document.getElementById("invite-code").value.trim();
-  if(!code){showError("Ingresa el código de invitación");return;}
-  try{
-    const r=await fetch(API+"/invite/"+code);
-    if(!r.ok){showError("Código no válido. Pide uno nuevo a tu clínica.");return;}
-    const data=await r.json();
-    const info=document.getElementById("invite-info");
-    info.innerHTML="✅ Código válido — <strong>"+data.clinic_name+"</strong><br>Rol: <strong>"+data.role+"</strong> · Nombre: "+data.name+"<br><br><em>Ahora inicia sesión con Google para acceder</em>";
-    info.style.display="block";
-    localStorage.setItem("dentalpro_invite",JSON.stringify(data));
-  }catch(e){showError("Error verificando código");}
+/* ── INVITE TOGGLE ──────────────────────────────────────────── */
+function toggleInvite() {
+  const sec   = document.getElementById("invite-section");
+  const arrow = document.getElementById("invite-arrow");
+  const open  = sec.style.display === "block";
+  sec.style.display   = open ? "none" : "block";
+  arrow.style.transform = open ? "" : "rotate(90deg)";
+  if (!open) setTimeout(() => document.getElementById("invite-code").focus(), 50);
 }
 
-async function handleGoogleLogin(response){
-  showLoading(true);
-  try{
-    const token=response.credential;
-    // Decodificar token para obtener info básica
-    const parts=token.split(".");
-    const padding=4-parts[1].length%4;
-    const payload=JSON.parse(atob(parts[1]+"=".repeat(padding)));
+/* ── VERIFY INVITE ──────────────────────────────────────────── */
+async function verifyInvite() {
+  const code = document.getElementById("invite-code").value.trim();
+  if (!code) { showError("Ingresa el código de invitación"); return; }
 
-    // Verificar con backend
-    const r=await fetch(API+"/auth/verify",{
-      headers:{"Authorization":"Bearer "+token}
+  const btn = document.querySelector(".invite-btn");
+  btn.textContent = "…"; btn.disabled = true;
+
+  try {
+    const r = await fetch(API + "/invite/" + code);
+    if (!r.ok) { showError("Código no válido. Pide uno nuevo a tu clínica."); return; }
+
+    const data = await r.json();
+    const info = document.getElementById("invite-info");
+    info.innerHTML = `✅ Código válido — <strong>${data.clinic_name}</strong><br>Rol: <strong>${data.role}</strong> · ${data.name}<br><em style="opacity:.7">Ahora inicia sesión con Google para acceder</em>`;
+    info.style.display = "block";
+    localStorage.setItem("dentalpro_invite", JSON.stringify(data));
+  } catch (e) {
+    showError("Error verificando código");
+  } finally {
+    btn.textContent = "Verificar"; btn.disabled = false;
+  }
+}
+
+/* ── GOOGLE CALLBACK ────────────────────────────────────────── */
+async function handleGoogleLogin(response) {
+  setLoading(true);
+  try {
+    const token = response.credential;
+
+    // Decode JWT payload (no verification — solo lectura de campos públicos)
+    const b64   = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    const pad   = b64.length % 4 ? "=".repeat(4 - b64.length % 4) : "";
+    const payload = JSON.parse(atob(b64 + pad));
+
+    // Verify with backend
+    const r = await fetch(API + "/auth/verify", {
+      headers: { "Authorization": "Bearer " + token }
     });
 
-    let userData={
+    let user = {
       token,
-      name:payload.name,
-      email:payload.email,
-      picture:payload.picture,
+      name:    payload.name,
+      email:   payload.email,
+      picture: payload.picture,
     };
 
-    if(r.ok){
-      const backendData=await r.json();
-      userData.role=backendData.role;
-      userData.clinic_id=backendData.clinic_id;
-      userData.clinic_name=backendData.clinic_name;
-      userData.permissions=backendData.permissions||{};
+    if (r.ok) {
+      const bd = await r.json();
+      Object.assign(user, {
+        role:        bd.role,
+        clinic_id:   bd.clinic_id,
+        clinic_name: bd.clinic_name,
+        permissions: bd.permissions || {},
+      });
+      localStorage.setItem("dentalpro_user", JSON.stringify(user));
 
-      localStorage.setItem("dentalpro_user",JSON.stringify(userData));
-
-      if(backendData.role==="new"){
-        // Si tiene código de invitación guardado, es staff nuevo
-        const invite=localStorage.getItem("dentalpro_invite");
-        if(invite){
-          const inv=JSON.parse(invite);
-          // El staff ya existe en BD, solo necesita hacer login
-          showLoading(false);
-          showError("Tu cuenta está lista. Accediendo...");
-          setTimeout(()=>location.href="index.html",1500);
-        } else {
-          // Dueño nuevo → setup
-          showLoading(false);
-          location.href="setup.html";
-        }
-      } else if(backendData.role==="owner"||backendData.role==="co_owner"){
-        showLoading(false);
-        location.href="index.html";
+      if (bd.role === "new") {
+        const invite = localStorage.getItem("dentalpro_invite");
+        setLoading(false);
+        location.href = invite ? "index.html" : "setup.html";
       } else {
-        // Doctor, recepcionista, asistente
-        showLoading(false);
-        location.href="index.html";
+        setLoading(false);
+        location.href = "index.html";
       }
     } else {
-      // Backend no responde → guardar datos básicos y decidir
-      userData.role="new";
-      localStorage.setItem("dentalpro_user",JSON.stringify(userData));
-      showLoading(false);
-      location.href="setup.html";
+      // Backend no responde → tratar como usuario nuevo
+      user.role = "new";
+      localStorage.setItem("dentalpro_user", JSON.stringify(user));
+      setLoading(false);
+      location.href = "setup.html";
     }
-  }catch(e){
-    showLoading(false);
+  } catch (e) {
+    setLoading(false);
     showError("Error al iniciar sesión. Intenta de nuevo.");
     console.error(e);
   }
 }
 
-window.onload=function(){
+/* ── INIT ───────────────────────────────────────────────────── */
+window.onload = function () {
+  // Si ya tiene sesión válida, saltar login
+  try {
+    const stored = JSON.parse(localStorage.getItem("dentalpro_user") || "{}");
+    if (stored.token && stored.role && stored.role !== "new") {
+      location.href = "index.html";
+      return;
+    }
+  } catch (_) {}
+
   google.accounts.id.initialize({
-    client_id:CLIENT_ID,
-    callback:handleGoogleLogin,
-    auto_select:false,
-    cancel_on_tap_outside:true,
+    client_id:             CLIENT,
+    callback:              handleGoogleLogin,
+    auto_select:           false,
+    cancel_on_tap_outside: true,
   });
+
   google.accounts.id.renderButton(
     document.getElementById("google-btn"),
-    {theme:"outline",size:"large",text:"signin_with",shape:"rectangular",width:340,logo_alignment:"left"}
-  );
-  // Si ya está logueado, redirigir
-  const u=localStorage.getItem("dentalpro_user");
-  if(u){
-    const user=JSON.parse(u);
-    if(user.token&&user.role&&user.role!=="new"){
-      location.href="index.html";
+    {
+      theme:          "outline",
+      size:           "large",
+      text:           "signin_with",
+      shape:          "rectangular",
+      width:          340,
+      logo_alignment: "left",
     }
-  }
+  );
 };
 </script>
 </body>
