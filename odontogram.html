@@ -956,7 +956,7 @@ function renderEraseFaces(n){
     const cv=C[st]||C.healthy;
     const hasColor=st!=='healthy';
     const style=hasColor?'background:'+cv.f+'22;border-color:'+cv.s+';color:'+cv.s:'';
-    html+='<button class="ef-btn" onclick="eraseFace('+n+',''+f+'')" style="'+style+'" title="Borrar '+fn[f]+'">✕ '+fn[f]+(hasColor?' '+cv.ico:'')+'</button>';
+    html+=`<button class="ef-btn" onclick="eraseFace(${n},'${f}')" style="${style}" title="Borrar ${fn[f]}">✕ ${fn[f]}${hasColor?' '+cv.ico:''}</button>`;
   });
   html+='<button class="ef-btn" onclick="resetTooth('+n+')" style="background:var(--red-bg);border-color:var(--red);color:var(--red)">↺ Resetear todo</button>';
   html+='</div>';

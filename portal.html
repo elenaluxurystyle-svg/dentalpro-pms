@@ -3,125 +3,351 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Paciente — DentalPro</title>
+<title>Portal del Paciente — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+:root{
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;
+  --surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-lg:0 20px 48px rgba(15,23,42,.12);
+  --r:16px;--r-sm:10px;--r-xs:8px;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
-.header{background:#1e293b;padding:16px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #334155}
-.title{font-size:18px;font-weight:700;color:#38bdf8}
-.content{padding:24px;max-width:600px;margin:0 auto}
-.card{background:#1e293b;border-radius:16px;padding:24px;border:1px solid #334155;margin-bottom:16px}
-.card h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#cbd5e1}
-.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #0f172a;font-size:14px}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.header{background:var(--surface);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:100}
+.header-brand{display:flex;align-items:center;gap:10px}
+.header-badge{font-size:11px;font-weight:600;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:4px 10px;border-radius:20px}
+
+/* LOGIN */
+.login-wrap{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#F0F4FF 0%,var(--bg) 100%)}
+.login-card{background:var(--surface);border-radius:24px;padding:40px;width:100%;max-width:420px;box-shadow:var(--shadow-lg);border:1px solid var(--border-light)}
+.login-logo{display:flex;justify-content:center;margin-bottom:28px}
+.login-title{font-size:22px;font-weight:800;color:var(--text-primary);text-align:center;margin-bottom:8px}
+.login-sub{font-size:14px;color:var(--text-muted);text-align:center;line-height:1.6;margin-bottom:32px}
+.input-wrap{position:relative;margin-bottom:12px}
+.input-wrap input{width:100%;padding:13px 16px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:16px;font-family:"DM Sans",sans-serif;color:var(--text-primary);letter-spacing:.12em;text-align:center;text-transform:uppercase;transition:all .2s}
+.input-wrap input:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px rgba(27,79,216,.1)}
+.input-wrap input::placeholder{letter-spacing:.04em;text-transform:none;color:var(--text-muted)}
+.btn-primary{width:100%;padding:13px;background:var(--brand);color:white;border:none;border-radius:var(--r-xs);font-size:15px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{background:var(--brand-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(27,79,216,.3)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.error-box{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);padding:11px 14px;border-radius:var(--r-xs);font-size:13px;font-weight:500;text-align:center;margin-bottom:12px;display:none}
+.help-tip{background:var(--brand-light);border:1px solid var(--brand);border-radius:var(--r-xs);padding:11px 14px;margin-top:14px;font-size:12px;color:var(--brand);line-height:1.5;text-align:center}
+.loading-spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* PORTAL */
+.portal-wrap{max-width:680px;margin:0 auto;padding:28px 20px}
+.patient-hero{background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand) 100%);border-radius:var(--r);padding:24px;margin-bottom:20px;color:white;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(27,79,216,.3)}
+.patient-avatar{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;border:2.5px solid rgba(255,255,255,.4)}
+.patient-name{font-size:20px;font-weight:700;margin-bottom:4px}
+.patient-meta{font-size:13px;opacity:.8;margin-bottom:8px}
+.portal-code-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.06em}
+
+/* CARDS */
+.card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.card-hdr{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:8px}
+.card-hdr-icon{width:32px;height:32px;border-radius:var(--r-xs);background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.card-hdr-title{font-size:14px;font-weight:700;color:var(--text-primary)}
+.card-hdr-count{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:20px}
+.card-body{padding:4px 0}
+
+/* INFO ROWS */
+.info-row{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-bottom:1px solid var(--border-light);font-size:13px}
 .info-row:last-child{border-bottom:none}
-.info-label{color:#64748b}
-.info-value{color:#e2e8f0;font-weight:500}
-.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.green{background:#064e3b;color:#34d399}
-.amber{background:#451a03;color:#fbbf24}
-.red{background:#4c0519;color:#fb7185}
-.blue{background:#1e3a5f;color:#60a5fa}
-.empty{text-align:center;color:#475569;padding:20px;font-size:14px}
-.portal-code{font-size:24px;font-weight:700;color:#38bdf8;letter-spacing:4px;text-align:center;padding:16px;background:#0f172a;border-radius:8px;margin-bottom:8px}
-.login-box{max-width:400px;margin:40px auto;background:#1e293b;border-radius:16px;padding:24px;border:1px solid #334155}
-.login-box h2{font-size:18px;font-weight:700;margin-bottom:8px;text-align:center}
-.login-box p{font-size:13px;color:#64748b;text-align:center;margin-bottom:20px}
-input{width:100%;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:16px;letter-spacing:2px;text-align:center;margin-bottom:12px}
-input:focus{outline:none;border-color:#0ea5e9}
-.btn{width:100%;padding:12px;background:#0ea5e9;border:none;border-radius:8px;color:white;font-size:15px;font-weight:600;cursor:pointer}
-.btn:hover{background:#0284c7}
-.appt-item{padding:12px;background:#0f172a;border-radius:8px;margin-bottom:8px}
-.appt-date{font-size:13px;color:#64748b;margin-bottom:4px}
-.appt-reason{font-size:14px;font-weight:500}
+.info-label{color:var(--text-muted);font-weight:500}
+.info-value{color:var(--text-primary);font-weight:600}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-blue{background:var(--brand-light);color:var(--brand);border:1px solid rgba(27,79,216,.2)}
+.badge-gray{background:var(--bg);color:var(--text-secondary);border:1px solid var(--border)}
+
+/* APPOINTMENT ITEMS */
+.apt-item{padding:14px 18px;border-bottom:1px solid var(--border-light);transition:background .15s}
+.apt-item:last-child{border-bottom:none}
+.apt-item:hover{background:var(--bg)}
+.apt-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px}
+.apt-reason{font-size:13px;font-weight:600;color:var(--text-primary)}
+.apt-date{font-size:12px;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.apt-badges{display:flex;gap:5px;flex-wrap:wrap}
+
+/* RECETA ITEMS */
+.rx-item{padding:14px 18px;border-bottom:1px solid var(--border-light)}
+.rx-item:last-child{border-bottom:none}
+.rx-name{font-size:13px;font-weight:600;margin-bottom:3px}
+.rx-dose{font-size:12px;color:var(--text-muted)}
+.rx-notes{font-size:12px;color:var(--text-secondary);margin-top:4px;background:var(--bg);padding:6px 9px;border-radius:6px;border-left:3px solid var(--border)}
+
+/* EMPTY */
+.empty{text-align:center;padding:32px 20px;color:var(--text-muted)}
+.empty-icon{font-size:32px;margin-bottom:8px}
+.empty-text{font-size:13px}
+
+/* FOOTER */
+.portal-footer{text-align:center;padding:16px;margin-top:8px}
+.btn-logout{background:none;border:1.5px solid var(--border);padding:8px 20px;border-radius:var(--r-xs);font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red);background:var(--red-bg)}
+
+@media(max-width:520px){
+  .login-card{padding:28px 20px}
+  .patient-hero{flex-direction:column;text-align:center}
+  .portal-wrap{padding:16px 12px}
+}
 </style>
 </head>
 <body>
+
+<!-- HEADER -->
 <div class="header">
-  <span style="font-size:20px">🦷</span>
-  <span class="title">Portal del Paciente</span>
+  <div class="header-brand">
+    <img src="logo.svg" alt="DentalPro" style="height:36px;width:auto">
+  </div>
+  <div class="header-badge">Portal del Paciente</div>
 </div>
-<div class="content">
-  <div id="login-section">
-    <div class="login-box">
-      <h2>Bienvenido</h2>
-      <p>Ingresa tu código de portal para ver tu historial dental</p>
-      <input id="code-input" placeholder="PAC-XXXX-XXXX" maxlength="20">
-      <button class="btn" onclick="loadPortal()">Ver mi historial</button>
-      <p id="error-msg" style="color:#fb7185;text-align:center;margin-top:12px;font-size:13px;display:none">Código no encontrado</p>
+
+<!-- LOGIN SECTION -->
+<div id="login-section" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="logo.svg" alt="DentalPro" style="height:52px;width:auto">
+    </div>
+    <div class="login-title">Consulta tu expediente</div>
+    <div class="login-sub">Ingresa el código único que te proporcionó tu clínica dental para ver tus citas y recetas.</div>
+
+    <div id="error-box" class="error-box">Código no encontrado. Verifica con tu clínica.</div>
+
+    <div class="input-wrap">
+      <input id="code-input" type="text" placeholder="Ej: PAC-A1B2-C3D4" maxlength="20"
+        oninput="this.value=this.value.toUpperCase()"
+        onkeydown="if(event.key==='Enter')loadPortal()">
+    </div>
+    <button class="btn-primary" id="btn-acceder" onclick="loadPortal()">
+      <span id="btn-text">Ver mi expediente</span>
+      <div class="loading-spin" id="btn-spin" style="display:none"></div>
+    </button>
+
+    <div class="help-tip">
+      🔒 Tu información es privada y solo tú tienes acceso con este código.<br>
+      Si no tienes tu código, solicítalo en recepción.
     </div>
   </div>
-  <div id="portal-section" style="display:none">
+</div>
+
+<!-- PORTAL SECTION -->
+<div id="portal-section" style="display:none">
+  <div class="portal-wrap">
+
+    <!-- HERO PACIENTE -->
+    <div class="patient-hero" id="patient-hero"></div>
+
+    <!-- INFORMACIÓN PERSONAL -->
     <div class="card">
-      <h2>👤 Mi Información</h2>
-      <div id="patient-info"></div>
+      <div class="card-hdr">
+        <div class="card-hdr-icon">👤</div>
+        <div class="card-hdr-title">Mi Información</div>
+      </div>
+      <div class="card-body" id="patient-info"></div>
     </div>
+
+    <!-- PRÓXIMAS CITAS -->
     <div class="card">
-      <h2>📅 Mis Citas</h2>
+      <div class="card-hdr">
+        <div class="card-hdr-icon">📅</div>
+        <div class="card-hdr-title">Mis Citas</div>
+        <div class="card-hdr-count" id="apt-count">0</div>
+      </div>
       <div id="appointments-info"></div>
     </div>
-    <div style="text-align:center;margin-top:16px">
-      <button onclick="logout()" style="background:#334155;border:none;color:#94a3b8;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:13px">Cerrar sesión</button>
+
+    <!-- RECETAS -->
+    <div class="card" id="rx-card" style="display:none">
+      <div class="card-hdr">
+        <div class="card-hdr-icon">💊</div>
+        <div class="card-hdr-title">Mis Recetas</div>
+        <div class="card-hdr-count" id="rx-count">0</div>
+      </div>
+      <div id="rx-info"></div>
+    </div>
+
+    <div class="portal-footer">
+      <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+      <div style="margin-top:12px;font-size:11px;color:var(--text-muted)">
+        DentalPro · Sistema de Gestión Dental
+      </div>
     </div>
   </div>
 </div>
+
 <script>
 const API = 'https://dentalpro-docker.onrender.com';
 
+// Auto-fill code from URL param
 const params = new URLSearchParams(window.location.search);
 const codeFromUrl = params.get('code');
 if (codeFromUrl) {
-  document.getElementById('code-input').value = codeFromUrl;
+  document.getElementById('code-input').value = codeFromUrl.toUpperCase();
   loadPortal();
+}
+
+function setLoading(on) {
+  document.getElementById('btn-acceder').disabled = on;
+  document.getElementById('btn-text').textContent = on ? 'Verificando...' : 'Ver mi expediente';
+  document.getElementById('btn-spin').style.display = on ? 'block' : 'none';
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-box');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 5000);
+}
+
+const URGENCY_LABEL = { green: 'Normal', amber: 'Urgente', red: 'Emergencia' };
+const URGENCY_CLASS = { green: 'badge-green', amber: 'badge-amber', red: 'badge-red' };
+
+const STATUS_LABEL = {
+  scheduled: 'Agendada', confirmed: 'Confirmada', completed: 'Completada',
+  cancelled: 'Cancelada', no_show: 'No asistió'
+};
+const STATUS_CLASS = {
+  scheduled: 'badge-blue', confirmed: 'badge-green', completed: 'badge-gray',
+  cancelled: 'badge-red', no_show: 'badge-amber'
+};
+
+function initials(name) {
+  return (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+function formatDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-MX', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) +
+    ' · ' + d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
 }
 
 async function loadPortal() {
   const code = document.getElementById('code-input').value.trim().toUpperCase();
-  if (!code) return;
+  if (!code) { showError('Ingresa tu código de portal'); return; }
+
+  setLoading(true);
+  document.getElementById('error-box').style.display = 'none';
+
   try {
-    const r = await fetch(API + '/patients');
-    const patients = await r.json();
-    const patient = patients.find(p => p.portal_code === code);
-    if (!patient) {
-      document.getElementById('error-msg').style.display = 'block';
+    const r = await fetch(API + '/portal/' + encodeURIComponent(code));
+    if (!r.ok) {
+      showError('Código no encontrado. Verifica con tu clínica.');
+      setLoading(false);
       return;
     }
-    document.getElementById('error-msg').style.display = 'none';
-    document.getElementById('login-section').style.display = 'none';
-    document.getElementById('portal-section').style.display = 'block';
-
-    document.getElementById('patient-info').innerHTML = `
-      <div class="info-row"><span class="info-label">Nombre</span><span class="info-value">${patient.name}</span></div>
-      <div class="info-row"><span class="info-label">Email</span><span class="info-value">${patient.email||'-'}</span></div>
-      <div class="info-row"><span class="info-label">Teléfono</span><span class="info-value">${patient.phone||'-'}</span></div>
-      <div class="info-row"><span class="info-label">Código Portal</span><span class="info-value"><span class="badge blue">${patient.portal_code}</span></span></div>
-    `;
-
-    const ar = await fetch(API + '/appointments');
-    const allAppts = await ar.json();
-    const myAppts = allAppts.filter(a => a.patient_name === patient.name);
-    const ul = {green:'green',amber:'amber',red:'red'};
-    const ll = {green:'Normal',amber:'Urgente',red:'Emergencia'};
-
-    if (!myAppts.length) {
-      document.getElementById('appointments-info').innerHTML = '<div class="empty">No tienes citas registradas</div>';
-    } else {
-      document.getElementById('appointments-info').innerHTML = myAppts.map(a => `
-        <div class="appt-item">
-          <div class="appt-date">${new Date(a.scheduled_at).toLocaleString('es-MX')}</div>
-          <div class="appt-reason">${a.reason||'Consulta general'}</div>
-          <div style="margin-top:6px"><span class="badge ${ul[a.urgency_level]||'green'}">${ll[a.urgency_level]||'Normal'}</span> <span class="badge blue">${a.status}</span></div>
-        </div>
-      `).join('');
-    }
-  } catch(e) {
-    alert('Error conectando con el servidor');
+    const data = await r.json();
+    renderPortal(data.patient, data.appointments || []);
+  } catch (e) {
+    showError('Error de conexión. Intenta de nuevo.');
+    console.error(e);
+  } finally {
+    setLoading(false);
   }
 }
 
+function renderPortal(p, apts) {
+  // Hero
+  document.getElementById('patient-hero').innerHTML = `
+    <div class="patient-avatar">${initials(p.name)}</div>
+    <div>
+      <div class="patient-name">${p.name}</div>
+      <div class="patient-meta">${p.email || ''} ${p.phone ? '· ' + p.phone : ''}</div>
+      <div class="portal-code-chip">🔑 ${p.portal_code}</div>
+    </div>
+  `;
+
+  // Info personal
+  const age = p.birth_date ? calcAge(p.birth_date) : null;
+  document.getElementById('patient-info').innerHTML = `
+    ${p.email    ? `<div class="info-row"><span class="info-label">Correo</span><span class="info-value">${p.email}</span></div>` : ''}
+    ${p.phone    ? `<div class="info-row"><span class="info-label">Teléfono</span><span class="info-value">${p.phone}</span></div>` : ''}
+    ${age != null? `<div class="info-row"><span class="info-label">Edad</span><span class="info-value">${age} años</span></div>` : ''}
+    ${p.blood_type ? `<div class="info-row"><span class="info-label">Tipo de sangre</span><span class="info-value"><span class="badge badge-red">${p.blood_type}</span></span></div>` : ''}
+    ${p.allergies ? `<div class="info-row"><span class="info-label">Alergias</span><span class="info-value" style="color:var(--amber)">${p.allergies}</span></div>` : ''}
+    <div class="info-row"><span class="info-label">Clínica</span><span class="info-value">${p.clinic_name || 'DentalPro'}</span></div>
+  `;
+
+  // Citas
+  document.getElementById('apt-count').textContent = apts.length;
+  if (!apts.length) {
+    document.getElementById('appointments-info').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📅</div>
+        <div class="empty-text">No tienes citas registradas</div>
+      </div>`;
+  } else {
+    const upcoming = apts.filter(a => a.status !== 'cancelled' && a.status !== 'no_show');
+    const past = apts.filter(a => a.status === 'completed' || a.status === 'cancelled' || a.status === 'no_show');
+    let html = '';
+    if (upcoming.length) {
+      html += upcoming.map(a => aptHTML(a)).join('');
+    }
+    if (past.length) {
+      html += `<div style="padding:8px 18px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);background:var(--bg);border-top:1px solid var(--border-light)">Historial</div>`;
+      html += past.map(a => aptHTML(a)).join('');
+    }
+    document.getElementById('appointments-info').innerHTML = html;
+  }
+
+  // Mostrar portal
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('portal-section').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function aptHTML(a) {
+  const urgClass = URGENCY_CLASS[a.urgency_level] || 'badge-green';
+  const urgLabel = URGENCY_LABEL[a.urgency_level] || 'Normal';
+  const stClass = STATUS_CLASS[a.status] || 'badge-gray';
+  const stLabel = STATUS_LABEL[a.status] || a.status;
+  return `
+    <div class="apt-item">
+      <div class="apt-top">
+        <div class="apt-reason">${a.reason || 'Consulta general'}</div>
+        <span class="badge ${stClass}">${stLabel}</span>
+      </div>
+      <div class="apt-date">🗓 ${formatDate(a.scheduled_at)}</div>
+      <div class="apt-badges">
+        <span class="badge ${urgClass}">${urgLabel}</span>
+        ${a.doctor_name ? `<span class="badge badge-blue">Dr. ${a.doctor_name}</span>` : ''}
+        ${a.duration_min ? `<span class="badge badge-gray">⏱ ${a.duration_min} min</span>` : ''}
+      </div>
+      ${a.notes ? `<div style="font-size:11px;color:var(--text-muted);margin-top:7px;padding:6px 9px;background:var(--bg);border-radius:6px;border-left:3px solid var(--border)">📝 ${a.notes}</div>` : ''}
+    </div>`;
+}
+
+function calcAge(birthStr) {
+  const b = new Date(birthStr);
+  const now = new Date();
+  let age = now.getFullYear() - b.getFullYear();
+  const m = now.getMonth() - b.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--;
+  return age;
+}
+
 function logout() {
-  document.getElementById('login-section').style.display = 'block';
+  document.getElementById('login-section').style.display = 'flex';
   document.getElementById('portal-section').style.display = 'none';
   document.getElementById('code-input').value = '';
+  document.getElementById('error-box').style.display = 'none';
+  window.scrollTo(0, 0);
 }
 </script>
 </body>
