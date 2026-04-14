@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Interactivo — DentalPro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#1B4FD8;--brand-dark:#1239A6;--brand-light:#EEF2FF;--brand-xlight:#F5F8FF;
+  --surface:#fff;--bg:#F8FAFC;--border:#E8EDF2;--border-light:#F1F5F9;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-border:#BBF7D0;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --red:#DC2626;--red-bg:#FFF1F2;--red-border:#FECDD3;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;--purple-border:#DDD6FE;
+  --teal:#0D9488;--teal-bg:#F0FDFA;--teal-border:#99F6E4;
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-lg:0 20px 48px rgba(15,23,42,.12);
+  --r:16px;--r-sm:10px;--r-xs:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── DEMO BANNER ─────────────────────────────────────────────── */
+.demo-banner{
+  background:linear-gradient(90deg,#7C3AED,#1B4FD8,#0D9488);
+  padding:9px 20px;text-align:center;
+  font-size:12px;font-weight:700;color:white;letter-spacing:.04em;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.demo-banner-badge{
+  background:rgba(255,255,255,.25);padding:2px 10px;
+  border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.08em;
+}
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+.header{
+  background:var(--surface);padding:0 24px;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);
+  position:sticky;top:34px;z-index:100;
+}
+.header-brand{display:flex;align-items:center;gap:10px}
+.header-nav{display:flex;align-items:center;gap:2px}
+.nav-btn{
+  display:flex;align-items:center;gap:6px;padding:7px 14px;
+  background:none;border:none;border-radius:var(--r-xs);
+  font-size:13px;font-weight:500;color:var(--text-secondary);
+  cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;
+}
+.nav-btn:hover{background:var(--bg);color:var(--brand)}
+.nav-btn.active{background:var(--brand-light);color:var(--brand);font-weight:600}
+.nav-btn .nav-icon{font-size:14px}
+.header-right{display:flex;align-items:center;gap:8px}
+.clinic-chip{
+  display:flex;align-items:center;gap:7px;padding:5px 12px;
+  background:var(--brand-light);border:1.5px solid rgba(27,79,216,.2);
+  border-radius:20px;font-size:12px;font-weight:600;color:var(--brand);
+}
+.user-chip{
+  display:flex;align-items:center;gap:7px;padding:5px 10px;
+  background:var(--bg);border:1px solid var(--border);border-radius:20px;
+  font-size:12px;font-weight:600;color:var(--text-secondary);cursor:pointer;
+}
+.avatar{
+  width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--brand-dark),var(--brand));
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:white;flex-shrink:0;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────── */
+.layout{display:flex;min-height:calc(100vh - 94px)}
+.sidebar{
+  width:220px;flex-shrink:0;border-right:1px solid var(--border);
+  background:var(--surface);padding:16px 12px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.sidebar-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);padding:8px 8px 4px;margin-top:8px}
+.sidebar-btn{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;
+  border-radius:var(--r-xs);cursor:pointer;transition:all .15s;
+  font-size:13px;font-weight:500;color:var(--text-secondary);
+  border:none;background:none;width:100%;text-align:left;font-family:"DM Sans",sans-serif;
+}
+.sidebar-btn:hover{background:var(--bg);color:var(--text-primary)}
+.sidebar-btn.active{background:var(--brand-light);color:var(--brand);font-weight:700}
+.sidebar-btn .sb-icon{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.sb-icon-blue{background:var(--brand-light)}
+.sb-icon-green{background:var(--green-bg)}
+.sb-icon-amber{background:var(--amber-bg)}
+.sb-icon-purple{background:var(--purple-bg)}
+.sb-icon-teal{background:var(--teal-bg)}
+.sb-icon-red{background:var(--red-bg)}
+.sb-badge{margin-left:auto;background:var(--red-bg);color:var(--red);font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.sb-badge-green{background:var(--green-bg);color:var(--green)}
+
+.main{flex:1;overflow-y:auto;padding:24px}
+
+/* ── VIEWS ───────────────────────────────────────────────────── */
+.view{display:none}
+.view.active{display:block}
+
+/* ── PAGE HEADER ─────────────────────────────────────────────── */
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.page-sub{font-size:13px;color:var(--text-muted);margin-top:2px}
+.btn-primary{
+  display:flex;align-items:center;gap:6px;padding:9px 18px;
+  background:var(--brand);color:white;border:none;border-radius:var(--r-xs);
+  font-size:13px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;
+  transition:all .2s;
+}
+.btn-primary:hover{background:var(--brand-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(27,79,216,.3)}
+.btn-secondary{
+  display:flex;align-items:center;gap:6px;padding:8px 16px;
+  background:var(--surface);color:var(--text-secondary);border:1.5px solid var(--border);
+  border-radius:var(--r-xs);font-size:13px;font-weight:600;cursor:pointer;
+  font-family:"DM Sans",sans-serif;transition:all .2s;
+}
+.btn-secondary:hover{border-color:var(--brand);color:var(--brand)}
+
+/* ── KPI GRID ────────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{
+  background:var(--surface);border-radius:var(--r);border:1px solid var(--border);
+  padding:18px;box-shadow:var(--shadow-sm);transition:all .25s;position:relative;overflow:hidden;
+}
+.kpi-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--brand));border-radius:var(--r) var(--r) 0 0}
+.kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:8px}
+.kpi-value{font-size:28px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;color:var(--text-primary)}
+.kpi-trend{font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px}
+.trend-up{background:var(--green-bg);color:var(--green)}
+.trend-down{background:var(--red-bg);color:var(--red)}
+.kpi-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* ── BENTO ───────────────────────────────────────────────────── */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-bottom:20px}
+.bento-card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden}
+.bento-hdr{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between}
+.bento-title{font-size:13px;font-weight:700}
+.bento-sub{font-size:11px;color:var(--text-muted)}
+.bento-body{padding:18px}
+
+/* ── CARDS ───────────────────────────────────────────────────── */
+.card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.card-hdr{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:10px}
+.card-hdr-icon{width:34px;height:34px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.icon-blue{background:var(--brand-light)}
+.icon-green{background:var(--green-bg)}
+.icon-amber{background:var(--amber-bg)}
+.icon-purple{background:var(--purple-bg)}
+.icon-teal{background:var(--teal-bg)}
+.icon-red{background:var(--red-bg)}
+.card-hdr-title{font-size:14px;font-weight:700}
+.card-hdr-sub{font-size:11px;color:var(--text-muted)}
+.card-hdr-count{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:20px}
+
+/* ── TABLES ──────────────────────────────────────────────────── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);background:var(--bg);border-bottom:1px solid var(--border)}
+tbody tr{border-bottom:1px solid var(--border-light);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--brand-xlight)}
+tbody td{padding:12px 16px;font-size:13px}
+
+/* ── BADGES ──────────────────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.badge-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge-blue{background:var(--brand-light);color:var(--brand);border:1px solid rgba(27,79,216,.2)}
+.badge-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.badge-teal{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
+.badge-gray{background:var(--bg);color:var(--text-secondary);border:1px solid var(--border)}
+
+/* ── MINI BAR CHART ──────────────────────────────────────────── */
+.mini-bar-wrap{display:flex;align-items:flex-end;gap:4px;height:64px;padding:0 0 4px}
+.mini-bar{flex:1;border-radius:4px 4px 0 0;background:var(--brand-light);transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;cursor:pointer}
+.mini-bar:hover{filter:brightness(.92)}
+.mini-bar.highlight{background:var(--brand)}
+.mini-bar-label{text-align:center;font-size:9px;color:var(--text-muted);margin-top:4px}
+
+/* ── DONUT CHART (CSS) ───────────────────────────────────────── */
+.donut{width:120px;height:120px;border-radius:50%;position:relative;flex-shrink:0;
+  background:conic-gradient(var(--brand) 0% 42%, #10B981 42% 63%, var(--amber) 63% 78%, var(--purple) 78% 88%, var(--border) 88% 100%)}
+.donut::after{content:'';position:absolute;inset:20px;background:var(--surface);border-radius:50%}
+.donut-legend{display:flex;flex-direction:column;gap:6px;flex:1}
+.donut-legend-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-secondary)}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── SPARKLINE ───────────────────────────────────────────────── */
+.sparkline{height:40px;display:flex;align-items:flex-end;gap:2px}
+.spark-bar{flex:1;border-radius:2px;background:rgba(27,79,216,.15);transition:height .3s}
+.spark-bar.hi{background:var(--brand)}
+
+/* ── PATIENT CARD ────────────────────────────────────────────── */
+.patient-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-light);transition:background .12s;cursor:pointer}
+.patient-row:last-child{border-bottom:none}
+.patient-row:hover{background:var(--brand-xlight)}
+.patient-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:white;flex-shrink:0}
+.patient-info{flex:1;min-width:0}
+.patient-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.patient-meta{font-size:11px;color:var(--text-muted)}
+.patient-code{font-size:10px;font-family:"DM Mono",monospace;font-weight:600;color:var(--brand);background:var(--brand-light);padding:2px 7px;border-radius:10px}
+
+/* ── CALENDAR ────────────────────────────────────────────────── */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-label{text-align:center;font-size:10px;font-weight:700;color:var(--text-muted);padding:4px 0;text-transform:uppercase;letter-spacing:.05em}
+.cal-day{
+  aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .15s;position:relative;
+}
+.cal-day:hover{background:var(--brand-light);color:var(--brand)}
+.cal-day.today{background:var(--brand);color:white;font-weight:800}
+.cal-day.has-apts::after{content:'';position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--green)}
+.cal-day.today.has-apts::after{background:rgba(255,255,255,.6)}
+.cal-day.other-month{opacity:.3}
+.cal-day.busy{background:var(--amber-bg);color:var(--amber)}
+
+/* ── APT LIST ────────────────────────────────────────────────── */
+.apt-item{padding:12px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:12px}
+.apt-item:last-child{border-bottom:none}
+.apt-time-col{width:52px;text-align:right;flex-shrink:0}
+.apt-time{font-size:13px;font-weight:700;color:var(--text-primary)}
+.apt-time-sub{font-size:10px;color:var(--text-muted)}
+.apt-bar{width:3px;height:40px;border-radius:2px;flex-shrink:0}
+.apt-content{flex:1;min-width:0}
+.apt-patient{font-size:13px;font-weight:600}
+.apt-reason{font-size:11px;color:var(--text-muted);margin-top:1px}
+
+/* ── MSG ITEM ────────────────────────────────────────────────── */
+.msg-item{padding:14px 18px;border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .12s}
+.msg-item:last-child{border-bottom:none}
+.msg-item:hover{background:var(--brand-xlight)}
+.msg-item.unread{background:var(--brand-xlight)}
+.msg-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.msg-subject{font-size:13px;font-weight:700}
+.msg-date{font-size:11px;color:var(--text-muted);white-space:nowrap}
+.msg-from{font-size:11px;color:var(--brand);font-weight:600;margin-bottom:6px}
+.msg-preview{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── RX ITEM ─────────────────────────────────────────────────── */
+.rx-item{padding:14px 18px;border-bottom:1px solid var(--border-light)}
+.rx-item:last-child{border-bottom:none}
+.rx-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.rx-name{font-size:14px;font-weight:700}
+.rx-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.rx-field{background:var(--bg);border-radius:6px;padding:7px 10px;border:1px solid var(--border-light)}
+.rx-field-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:2px}
+.rx-field-value{font-size:12px;font-weight:600;color:var(--text-secondary)}
+.rx-instructions{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--amber);line-height:1.5;border-left:3px solid var(--amber)}
+
+/* ── POSTOP ──────────────────────────────────────────────────── */
+.postop-item{padding:16px 18px;border-bottom:1px solid var(--border-light)}
+.postop-item:last-child{border-bottom:none}
+.postop-procedure{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.postop-text{font-size:13px;color:var(--text-secondary);line-height:1.7;background:var(--bg);padding:10px 12px;border-radius:8px;border-left:3px solid var(--border)}
+
+/* ── INVENTORY ───────────────────────────────────────────────── */
+.inv-row{padding:10px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:12px}
+.inv-row:last-child{border-bottom:none}
+.inv-icon{width:32px;height:32px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.inv-info{flex:1;min-width:0}
+.inv-name{font-size:13px;font-weight:600}
+.inv-cat{font-size:11px;color:var(--text-muted)}
+.inv-stock-bar{flex:1;max-width:120px}
+.inv-bar-bg{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.inv-bar-fill{height:100%;border-radius:3px;transition:width .4s}
+.inv-stock-text{font-size:11px;font-weight:700;text-align:right;margin-top:2px}
+
+/* ── STAFF ───────────────────────────────────────────────────── */
+.staff-card{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border-light)}
+.staff-card:last-child{border-bottom:none}
+.staff-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white;flex-shrink:0}
+.staff-info{flex:1;min-width:0}
+.staff-name{font-size:13px;font-weight:700}
+.staff-role{font-size:11px;color:var(--text-muted);margin-top:2px}
+.staff-status{font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px;color:var(--green)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+/* ── NOTIFICATION ────────────────────────────────────────────── */
+.notif-toast{
+  position:fixed;bottom:20px;right:20px;z-index:9999;
+  background:var(--text-primary);color:white;
+  padding:12px 18px;border-radius:12px;
+  font-size:13px;font-weight:500;max-width:320px;
+  box-shadow:var(--shadow-lg);
+  display:none;
+  animation:toastIn .3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── MODAL ───────────────────────────────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--surface);border-radius:20px;padding:28px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);animation:mIn .2s cubic-bezier(.4,0,.2,1)}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-title{font-size:16px;font-weight:700}
+.modal-close{width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:14px}
+.modal-close:hover{background:var(--red-bg);color:var(--red)}
+.modal-field{margin-bottom:14px}
+.modal-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:6px}
+.modal-input{width:100%;padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-xs);font-size:14px;font-family:"DM Sans",sans-serif;color:var(--text-primary);transition:all .2s}
+.modal-input:focus{outline:none;border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px rgba(27,79,216,.08)}
+.modal-textarea{resize:vertical;min-height:80px}
+
+/* ── SEARCH ──────────────────────────────────────────────────── */
+.search-bar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-xs);padding:8px 14px;
+  transition:all .2s;
+}
+.search-bar:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px rgba(27,79,216,.08)}
+.search-bar input{flex:1;border:none;background:none;font-size:13px;font-family:"DM Sans",sans-serif;color:var(--text-primary);outline:none}
+.search-bar input::placeholder{color:var(--text-muted)}
+
+/* ── TOOLTIP ─────────────────────────────────────────────────── */
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--text-primary);color:white;font-size:11px;font-weight:500;
+  padding:4px 9px;border-radius:6px;white-space:nowrap;z-index:999;
+  font-family:"DM Sans",sans-serif;pointer-events:none;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .header-nav{display:none}
+}
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:1fr}
+  .bento{display:block}
+  .bento-card{margin-bottom:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- DEMO BANNER -->
+<div class="demo-banner">
+  <span class="demo-banner-badge">DEMO</span>
+  <span>Modo demostración — Datos de muestra. Sin acceso a servidores ni datos reales.</span>
+  <a href="login.html" style="color:rgba(255,255,255,.75);font-size:11px;text-decoration:underline;margin-left:8px">Iniciar sesión →</a>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <img src="logo.svg" alt="DentalPro" style="height:34px;width:auto">
+    <div style="width:1px;height:28px;background:var(--border);margin:0 6px"></div>
+    <div class="nav-btn active nav-icon" onclick="switchView('dashboard')">📊 Dashboard</div>
+  </div>
+  <div class="header-nav">
+    <button class="nav-btn" onclick="switchView('patients')"><span class="nav-icon">👥</span> Pacientes</button>
+    <button class="nav-btn" onclick="switchView('agenda')"><span class="nav-icon">📅</span> Agenda</button>
+    <button class="nav-btn" onclick="switchView('mensajes')"><span class="nav-icon">✉️</span> Mensajes</button>
+    <button class="nav-btn" onclick="switchView('recetas')"><span class="nav-icon">💊</span> Recetas</button>
+    <button class="nav-btn" onclick="switchView('inventario')"><span class="nav-icon">📦</span> Inventario</button>
+  </div>
+  <div class="header-right">
+    <div class="clinic-chip">🦷 Clínica Dental Orozco</div>
+    <div class="user-chip">
+      <div class="avatar">DR</div>
+      Dr. Rodríguez
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-section">Principal</div>
+    <button class="sidebar-btn active" id="sb-dashboard" onclick="switchView('dashboard')">
+      <div class="sb-icon sb-icon-blue">📊</div> Dashboard
+    </button>
+    <button class="sidebar-btn" id="sb-patients" onclick="switchView('patients')">
+      <div class="sb-icon sb-icon-green">👥</div> Pacientes
+      <span class="sb-badge sb-badge-green">3</span>
+    </button>
+    <button class="sidebar-btn" id="sb-agenda" onclick="switchView('agenda')">
+      <div class="sb-icon sb-icon-blue">📅</div> Agenda
+    </button>
+
+    <div class="sidebar-section">Comunicación</div>
+    <button class="sidebar-btn" id="sb-mensajes" onclick="switchView('mensajes')">
+      <div class="sb-icon sb-icon-purple">✉️</div> Mensajes
+      <span class="sb-badge">2</span>
+    </button>
+    <button class="sidebar-btn" id="sb-recetas" onclick="switchView('recetas')">
+      <div class="sb-icon sb-icon-amber">💊</div> Recetas
+    </button>
+    <button class="sidebar-btn" id="sb-postop" onclick="switchView('postop')">
+      <div class="sb-icon sb-icon-teal">🩺</div> Post-operatorio
+    </button>
+
+    <div class="sidebar-section">Operaciones</div>
+    <button class="sidebar-btn" id="sb-inventario" onclick="switchView('inventario')">
+      <div class="sb-icon sb-icon-amber">📦</div> Inventario
+      <span class="sb-badge">2</span>
+    </button>
+    <button class="sidebar-btn" id="sb-staff" onclick="switchView('staff')">
+      <div class="sb-icon sb-icon-purple">👨‍⚕️</div> Personal
+    </button>
+    <button class="sidebar-btn" id="sb-analytics" onclick="switchView('analytics')">
+      <div class="sb-icon sb-icon-blue">📈</div> Analytics
+    </button>
+
+    <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border-light);margin-left:-4px;margin-right:-4px;padding-left:4px;padding-right:4px">
+      <div style="font-size:11px;color:var(--text-muted);text-align:center;padding:8px">
+        <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span>Demo activo</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ══════════════════════════ DASHBOARD ═════════════════════ -->
+    <div class="view active" id="view-dashboard">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Buenos días, Dr. Rodríguez 👋</div>
+          <div class="page-sub">Lunes 14 de abril, 2025 · Clínica Dental Orozco</div>
+        </div>
+        <button class="btn-primary" onclick="showToast('Nueva cita agregada al sistema')">
+          + Nueva cita
+        </button>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--accent:var(--brand)">
+          <div class="kpi-label">Pacientes totales</div>
+          <div class="kpi-value">248</div>
+          <span class="kpi-trend trend-up">↑ 12% vs mes anterior</span>
+        </div>
+        <div class="kpi-card" style="--accent:var(--green)">
+          <div class="kpi-label">Citas este mes</div>
+          <div class="kpi-value">67</div>
+          <span class="kpi-trend trend-up">↑ 8% vs mes anterior</span>
+          <div class="kpi-sub">14 pendientes esta semana</div>
+        </div>
+        <div class="kpi-card" style="--accent:var(--amber)">
+          <div class="kpi-label">Ingresos (abril)</div>
+          <div class="kpi-value">$47,200</div>
+          <span class="kpi-trend trend-up">↑ 23% vs mes anterior</span>
+          <div class="kpi-sub">Meta: $55,000 · 86% completado</div>
+        </div>
+        <div class="kpi-card" style="--accent:var(--purple)">
+          <div class="kpi-label">Tasa de regreso</div>
+          <div class="kpi-value">74%</div>
+          <span class="kpi-trend trend-up">↑ 4% vs trimestre anterior</span>
+        </div>
+      </div>
+
+      <!-- BENTO GRID -->
+      <div class="bento">
+        <!-- Citas de hoy -->
+        <div class="bento-card" style="grid-column:span 5">
+          <div class="bento-hdr">
+            <div>
+              <div class="bento-title">Citas de hoy</div>
+              <div class="bento-sub">Lunes 14 abr · 8 pacientes</div>
+            </div>
+            <span class="badge badge-blue">8 programadas</span>
+          </div>
+          <div>
+            <div class="apt-item">
+              <div class="apt-time-col"><div class="apt-time">09:00</div><div class="apt-time-sub">30 min</div></div>
+              <div class="apt-bar" style="background:var(--green)"></div>
+              <div class="apt-content"><div class="apt-patient">María García López</div><div class="apt-reason">Limpieza dental rutina · Confirmada</div></div>
+              <span class="badge badge-green">Confirmada</span>
+            </div>
+            <div class="apt-item">
+              <div class="apt-time-col"><div class="apt-time">10:00</div><div class="apt-time-sub">60 min</div></div>
+              <div class="apt-bar" style="background:var(--amber)"></div>
+              <div class="apt-content"><div class="apt-patient">Carlos Mendoza</div><div class="apt-reason">Extracción muela del juicio · Urgente</div></div>
+              <span class="badge badge-amber">Urgente</span>
+            </div>
+            <div class="apt-item">
+              <div class="apt-time-col"><div class="apt-time">11:30</div><div class="apt-time-sub">45 min</div></div>
+              <div class="apt-bar" style="background:var(--brand)"></div>
+              <div class="apt-content"><div class="apt-patient">Ana Sofía Torres</div><div class="apt-reason">Ortodoncia — seguimiento brackets</div></div>
+              <span class="badge badge-blue">Programada</span>
+            </div>
+            <div class="apt-item">
+              <div class="apt-time-col"><div class="apt-time">13:00</div><div class="apt-time-sub">30 min</div></div>
+              <div class="apt-bar" style="background:var(--green)"></div>
+              <div class="apt-content"><div class="apt-patient">Roberto Jiménez</div><div class="apt-reason">Revisión post-op extracción</div></div>
+              <span class="badge badge-green">Confirmada</span>
+            </div>
+            <div class="apt-item">
+              <div class="apt-time-col"><div class="apt-time">15:00</div><div class="apt-time-sub">90 min</div></div>
+              <div class="apt-bar" style="background:var(--purple)"></div>
+              <div class="apt-content"><div class="apt-patient">Valeria Cruz</div><div class="apt-reason">Implante dental — fase 1</div></div>
+              <span class="badge badge-purple">Especial</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfica ingresos semanales -->
+        <div class="bento-card" style="grid-column:span 4">
+          <div class="bento-hdr">
+            <div>
+              <div class="bento-title">Ingresos semanales</div>
+              <div class="bento-sub">Últimas 8 semanas · MXN</div>
+            </div>
+          </div>
+          <div class="bento-body">
+            <div style="font-size:24px;font-weight:800;margin-bottom:4px;letter-spacing:-.02em">$47,200</div>
+            <div style="font-size:11px;color:var(--green);font-weight:600;margin-bottom:16px">↑ $8,400 vs semana anterior</div>
+            <div class="mini-bar-wrap" id="bar-chart"></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px">
+              <span style="font-size:9px;color:var(--text-muted)">Feb 17</span>
+              <span style="font-size:9px;color:var(--text-muted)">Abr 14</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mix procedimientos -->
+        <div class="bento-card" style="grid-column:span 3">
+          <div class="bento-hdr">
+            <div class="bento-title">Mix de procedimientos</div>
+          </div>
+          <div class="bento-body" style="display:flex;align-items:center;gap:16px">
+            <div class="donut"></div>
+            <div class="donut-legend">
+              <div class="donut-legend-item"><div class="legend-dot" style="background:var(--brand)"></div>Limpiezas 42%</div>
+              <div class="donut-legend-item"><div class="legend-dot" style="background:#10B981"></div>Ortodoncia 21%</div>
+              <div class="donut-legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Extracciones 15%</div>
+              <div class="donut-legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Implantes 10%</div>
+              <div class="donut-legend-item"><div class="legend-dot" style="background:var(--border)"></div>Otros 12%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alertas / pendientes -->
+        <div class="bento-card" style="grid-column:span 4">
+          <div class="bento-hdr">
+            <div class="bento-title">Alertas y pendientes</div>
+          </div>
+          <div class="bento-body" style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:10px;cursor:pointer" onclick="switchView('inventario')">
+              <span style="font-size:16px">⚠️</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--amber)">Stock bajo · 2 artículos</div>
+                <div style="font-size:11px;color:var(--text-muted)">Anestesia y guantes T-M</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:10px;cursor:pointer" onclick="switchView('mensajes')">
+              <span style="font-size:16px">📬</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--purple)">2 mensajes sin leer</div>
+                <div style="font-size:11px;color:var(--text-muted)">De pacientes: García, Torres</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:10px">
+              <span style="font-size:16px">✅</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--green)">Expedientes al día</div>
+                <div style="font-size:11px;color:var(--text-muted)">248 pacientes actualizados</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Próximas citas -->
+        <div class="bento-card" style="grid-column:span 8">
+          <div class="bento-hdr">
+            <div class="bento-title">Agenda de la semana</div>
+            <button class="btn-secondary" style="font-size:12px;padding:5px 12px" onclick="switchView('agenda')">Ver completa</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Paciente</th><th>Fecha y hora</th><th>Procedimiento</th><th>Urgencia</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td><b>María García</b></td><td>Lun 14 abr · 09:00</td><td>Limpieza dental</td><td><span class="badge badge-green">Normal</span></td><td><span class="badge badge-green">Confirmada</span></td></tr>
+                <tr><td><b>Carlos Mendoza</b></td><td>Lun 14 abr · 10:00</td><td>Extracción</td><td><span class="badge badge-amber">Urgente</span></td><td><span class="badge badge-green">Confirmada</span></td></tr>
+                <tr><td><b>Ana Torres</b></td><td>Mar 15 abr · 09:30</td><td>Ortodoncia</td><td><span class="badge badge-green">Normal</span></td><td><span class="badge badge-blue">Programada</span></td></tr>
+                <tr><td><b>Luisa Morales</b></td><td>Mié 16 abr · 11:00</td><td>Blanqueamiento</td><td><span class="badge badge-green">Normal</span></td><td><span class="badge badge-blue">Programada</span></td></tr>
+                <tr><td><b>Héctor Ramírez</b></td><td>Jue 17 abr · 14:00</td><td>Implante — fase 2</td><td><span class="badge badge-green">Normal</span></td><td><span class="badge badge-gray">Sin confirmar</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ PACIENTES ═════════════════════ -->
+    <div class="view" id="view-patients">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Pacientes</div>
+          <div class="page-sub">248 pacientes registrados · 3 nuevos este mes</div>
+        </div>
+        <button class="btn-primary" onclick="openModal('modal-new-patient')">+ Nuevo paciente</button>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border-light)">
+          <div class="search-bar">
+            <span style="font-size:14px;color:var(--text-muted)">🔍</span>
+            <input type="text" placeholder="Buscar por nombre, teléfono o código…" oninput="filterPatients(this.value)">
+          </div>
+        </div>
+        <div id="patient-list">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ AGENDA ════════════════════════ -->
+    <div class="view" id="view-agenda">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Agenda</div>
+          <div class="page-sub">Abril 2025 · 67 citas este mes</div>
+        </div>
+        <button class="btn-primary" onclick="showToast('Módulo de nueva cita disponible en versión completa')">+ Nueva cita</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
+        <!-- Calendario -->
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-hdr-icon icon-blue">📅</div>
+            <div>
+              <div class="card-hdr-title">Abril 2025</div>
+              <div class="card-hdr-sub">Selecciona un día para ver detalles</div>
+            </div>
+          </div>
+          <div style="padding:16px">
+            <div class="cal-grid" id="calendar"></div>
+          </div>
+        </div>
+        <!-- Citas del día seleccionado -->
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-hdr-icon icon-green">🗓</div>
+            <div>
+              <div class="card-hdr-title" id="selected-day-title">Hoy, 14 de abril</div>
+              <div class="card-hdr-sub">8 citas</div>
+            </div>
+          </div>
+          <div id="day-appointments">
+            <div class="apt-item">
+              <div class="apt-time-col"><div class="apt-time">09:00</div></div>
+              <div class="apt-bar" style="background:var(--green)"></div>
+              <div class="apt-content"><div class="apt-patient">María García</div><div class="apt-reason">Limpieza dental</div></div>
+            </div>
+            <div class="apt-item">
+              <div class="apt-time-col"><div class="apt-time">10:00</div></div>
+              <div class="apt-bar" style="background:var(--amber)"></div>
+              <div class="apt-content"><div class="apt-patient">Carlos Mendoza</div><div class="apt-reason">Extracción</div></div>
+            </div>
+            <div class="apt-item">
+              <div class="apt-time-col"><div class="apt-time">11:30</div></div>
+              <div class="apt-bar" style="background:var(--brand)"></div>
+              <div class="apt-content"><div class="apt-patient">Ana Torres</div><div class="apt-reason">Ortodoncia</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ MENSAJES ══════════════════════ -->
+    <div class="view" id="view-mensajes">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Mensajes a Pacientes</div>
+          <div class="page-sub">Comunicación directa · Solo lectura para el paciente</div>
+        </div>
+        <button class="btn-primary" onclick="openModal('modal-new-msg')">✉️ Nuevo mensaje</button>
+      </div>
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-icon icon-purple">✉️</div>
+          <div class="card-hdr-title">Bandeja de mensajes</div>
+          <span class="badge badge-purple" style="margin-left:auto">2 sin leer</span>
+        </div>
+        <div>
+          <div class="msg-item unread" onclick="showToast('Mensaje de María García marcado como leído')">
+            <div class="msg-hdr">
+              <div class="msg-subject">🔵 Indicaciones post-operatorias</div>
+              <div class="msg-date">Hoy 09:15</div>
+            </div>
+            <div class="msg-from">→ María García López · PAC-A1B2-0001</div>
+            <div class="msg-preview">Estimada María, recuerda mantener el área limpia durante los primeros 3 días...</div>
+          </div>
+          <div class="msg-item unread" onclick="showToast('Mensaje de Ana Torres marcado como leído')">
+            <div class="msg-hdr">
+              <div class="msg-subject">🔵 Recordatorio: tu próxima cita</div>
+              <div class="msg-date">Ayer 16:30</div>
+            </div>
+            <div class="msg-from">→ Ana Sofía Torres · PAC-C3D4-0003</div>
+            <div class="msg-preview">Ana, tu cita de ortodoncia está programada para mañana martes 15 de abril a las 9:30...</div>
+          </div>
+          <div class="msg-item" onclick="showToast('Mensaje ya leído')">
+            <div class="msg-hdr">
+              <div class="msg-subject">Resultado de análisis dental</div>
+              <div class="msg-date">12 abr</div>
+            </div>
+            <div class="msg-from">→ Carlos Mendoza · PAC-E5F6-0002</div>
+            <div class="msg-preview">Carlos, los resultados de tus radiografías indican que necesitamos proceder con la extracción...</div>
+          </div>
+          <div class="msg-item">
+            <div class="msg-hdr">
+              <div class="msg-subject">Plan de tratamiento personalizado</div>
+              <div class="msg-date">10 abr</div>
+            </div>
+            <div class="msg-from">→ Valeria Cruz · PAC-G7H8-0004</div>
+            <div class="msg-preview">Valeria, hemos preparado tu plan de tratamiento para implante dental en 3 fases...</div>
+          </div>
+          <div class="msg-item">
+            <div class="msg-hdr">
+              <div class="msg-subject">Felicitación por tu progreso</div>
+              <div class="msg-date">8 abr</div>
+            </div>
+            <div class="msg-from">→ Roberto Jiménez · PAC-I9J0-0005</div>
+            <div class="msg-preview">Roberto, tu proceso de recuperación ha sido excelente. La extracción sanó perfectamente...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ RECETAS ═══════════════════════ -->
+    <div class="view" id="view-recetas">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Recetas Médicas</div>
+          <div class="page-sub">Historial de prescripciones · Visible al paciente en su portal</div>
+        </div>
+        <button class="btn-primary" onclick="openModal('modal-new-rx')">💊 Nueva receta</button>
+      </div>
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-icon icon-amber">💊</div>
+          <div class="card-hdr-title">Recetas recientes</div>
+          <span class="badge badge-amber" style="margin-left:auto">8 este mes</span>
+        </div>
+        <div>
+          <div class="rx-item">
+            <div class="rx-hdr">
+              <div class="rx-name">💊 Amoxicilina 500mg</div>
+              <span class="badge badge-amber">14 abr 2025</span>
+            </div>
+            <div class="rx-meta">
+              <div class="rx-field"><div class="rx-field-label">Dosis</div><div class="rx-field-value">500 mg</div></div>
+              <div class="rx-field"><div class="rx-field-label">Frecuencia</div><div class="rx-field-value">Cada 8 horas</div></div>
+              <div class="rx-field"><div class="rx-field-label">Duración</div><div class="rx-field-value">7 días</div></div>
+              <div class="rx-field"><div class="rx-field-label">Vía</div><div class="rx-field-value">Oral</div></div>
+            </div>
+            <div class="rx-instructions">⚠️ Tomar con alimentos. No suspender aunque se sienta mejoría. En caso de reacción alérgica suspender y acudir a urgencias.</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:8px">👨‍⚕️ Recetado a Carlos Mendoza por Dr. Rodríguez</div>
+          </div>
+          <div class="rx-item">
+            <div class="rx-hdr">
+              <div class="rx-name">💊 Ketorolaco 10mg</div>
+              <span class="badge badge-amber">14 abr 2025</span>
+            </div>
+            <div class="rx-meta">
+              <div class="rx-field"><div class="rx-field-label">Dosis</div><div class="rx-field-value">10 mg</div></div>
+              <div class="rx-field"><div class="rx-field-label">Frecuencia</div><div class="rx-field-value">Cada 6 horas</div></div>
+              <div class="rx-field"><div class="rx-field-label">Duración</div><div class="rx-field-value">3 días</div></div>
+              <div class="rx-field"><div class="rx-field-label">Vía</div><div class="rx-field-value">Oral</div></div>
+            </div>
+            <div class="rx-instructions">⚠️ Antiinflamatorio. Tomar únicamente en caso de dolor. No exceder 4 tabletas en 24 horas.</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:8px">👨‍⚕️ Recetado a Carlos Mendoza por Dr. Rodríguez</div>
+          </div>
+          <div class="rx-item">
+            <div class="rx-hdr">
+              <div class="rx-name">💊 Clorhexidina 0.12% (enjuague)</div>
+              <span class="badge badge-amber">12 abr 2025</span>
+            </div>
+            <div class="rx-meta">
+              <div class="rx-field"><div class="rx-field-label">Dosis</div><div class="rx-field-value">15 mL</div></div>
+              <div class="rx-field"><div class="rx-field-label">Frecuencia</div><div class="rx-field-value">2 veces al día</div></div>
+              <div class="rx-field"><div class="rx-field-label">Duración</div><div class="rx-field-value">10 días</div></div>
+              <div class="rx-field"><div class="rx-field-label">Vía</div><div class="rx-field-value">Enjuague bucal</div></div>
+            </div>
+            <div class="rx-instructions">⚠️ Enjuagar por 30 segundos sin tragar. No enjuaguar con agua por al menos 30 minutos después.</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:8px">👨‍⚕️ Recetado a María García por Dr. Rodríguez</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ POST-OP ═══════════════════════ -->
+    <div class="view" id="view-postop">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Indicaciones Post-Operatorias</div>
+          <div class="page-sub">Instrucciones de cuidado · El paciente las ve en su portal</div>
+        </div>
+        <button class="btn-primary" onclick="showToast('Módulo disponible en versión completa')">🩺 Nueva indicación</button>
+      </div>
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-icon icon-teal">🩺</div>
+          <div class="card-hdr-title">Instrucciones post-operatorias recientes</div>
+        </div>
+        <div>
+          <div class="postop-item">
+            <div class="postop-procedure">🩺 Extracción de muela del juicio <span class="badge badge-teal" style="margin-left:auto">14 abr 2025</span></div>
+            <div style="margin-bottom:8px">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:5px">📋 Indicaciones generales</div>
+              <div class="postop-text">Mantener compresa de gasa por 30 minutos aplicando presión suave. Evitar enjuagarse la boca con fuerza durante las primeras 24 horas. Aplicar hielo en la mejilla (20 min frío / 20 min descanso) durante las primeras 6 horas.</div>
+            </div>
+            <div style="margin-bottom:8px">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin-bottom:5px">🚫 Restricciones</div>
+              <div class="postop-text" style="background:var(--red-bg);border-color:var(--red)">NO fumar por al menos 72 horas. NO tomar bebidas con popote. NO consumir alimentos sólidos o muy calientes el primer día. NO realizar actividad física intensa por 48 horas.</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:8px;font-size:12px;font-weight:600;color:var(--green);margin-top:10px">
+              📅 Cita de seguimiento: <strong>21 de abril, 2025</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:8px;font-size:12px;font-weight:600;color:var(--red);margin-top:8px">
+              🚨 Emergencias: <strong>55-1234-5678 · Dr. Rodríguez</strong>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:10px">👨‍⚕️ Indicaciones para Carlos Mendoza — Dr. Rodríguez</div>
+          </div>
+
+          <div class="postop-item">
+            <div class="postop-procedure">🩺 Ajuste de brackets ortodoncia <span class="badge badge-teal" style="margin-left:auto">8 abr 2025</span></div>
+            <div style="margin-bottom:8px">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:5px">📋 Indicaciones generales</div>
+              <div class="postop-text">Es normal sentir sensibilidad en los dientes 2-3 días después del ajuste. Cepilla con suavidad y usa enjuague con agua tibia. Cortar los alimentos en pedazos pequeños durante los primeros días.</div>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:10px">👨‍⚕️ Indicaciones para Ana Torres — Dr. Rodríguez</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ INVENTARIO ════════════════════ -->
+    <div class="view" id="view-inventario">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Inventario</div>
+          <div class="page-sub">34 artículos · 2 con stock bajo</div>
+        </div>
+        <button class="btn-primary" onclick="showToast('Artículo agregado al inventario')">+ Agregar artículo</button>
+      </div>
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-icon icon-amber">📦</div>
+          <div class="card-hdr-title">Stock de materiales</div>
+          <span class="badge badge-red" style="margin-left:auto">⚠️ 2 artículos bajos</span>
+        </div>
+        <div id="inventory-list"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ PERSONAL ══════════════════════ -->
+    <div class="view" id="view-staff">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Personal de la Clínica</div>
+          <div class="page-sub">5 miembros activos · Clínica Dental Orozco</div>
+        </div>
+        <button class="btn-primary" onclick="showToast('Invitación enviada al nuevo colaborador')">+ Invitar colaborador</button>
+      </div>
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-hdr-icon icon-purple">👥</div>
+          <div class="card-hdr-title">Equipo médico y administrativo</div>
+        </div>
+        <div>
+          <div class="staff-card">
+            <div class="staff-av" style="background:linear-gradient(135deg,#1B4FD8,#7C3AED)">DR</div>
+            <div class="staff-info">
+              <div class="staff-name">Dr. Alejandro Rodríguez</div>
+              <div class="staff-role">Director General · Cirujano Dentista</div>
+            </div>
+            <div><span class="badge badge-purple">Dueño</span></div>
+            <div class="staff-status"><div class="status-dot"></div>En línea</div>
+          </div>
+          <div class="staff-card">
+            <div class="staff-av" style="background:linear-gradient(135deg,#0D9488,#16A34A)">LM</div>
+            <div class="staff-info">
+              <div class="staff-name">Dra. Laura Martínez</div>
+              <div class="staff-role">Doctora · Ortodoncia y Ortopedia Maxilar</div>
+            </div>
+            <div><span class="badge badge-blue">Doctora</span></div>
+            <div class="staff-status"><div class="status-dot"></div>En línea</div>
+          </div>
+          <div class="staff-card">
+            <div class="staff-av" style="background:linear-gradient(135deg,#D97706,#F59E0B)">SV</div>
+            <div class="staff-info">
+              <div class="staff-name">Sofía Vargas</div>
+              <div class="staff-role">Recepcionista · Gestión de citas y cobros</div>
+            </div>
+            <div><span class="badge badge-amber">Recepcionista</span></div>
+            <div class="staff-status" style="color:var(--amber)"><div class="status-dot" style="background:var(--amber)"></div>Ocupada</div>
+          </div>
+          <div class="staff-card">
+            <div class="staff-av" style="background:linear-gradient(135deg,#7C3AED,#A855F7)">JP</div>
+            <div class="staff-info">
+              <div class="staff-name">Jorge Peña</div>
+              <div class="staff-role">Asistente Dental · Instrumentación</div>
+            </div>
+            <div><span class="badge badge-gray">Asistente</span></div>
+            <div class="staff-status"><div class="status-dot"></div>En línea</div>
+          </div>
+          <div class="staff-card">
+            <div class="staff-av" style="background:linear-gradient(135deg,#DC2626,#F87171)">CE</div>
+            <div class="staff-info">
+              <div class="staff-name">Carmen Espinoza</div>
+              <div class="staff-role">Co-Directora · Administración y finanzas</div>
+            </div>
+            <div><span class="badge badge-teal">Co-Directora</span></div>
+            <div class="staff-status" style="color:var(--text-muted)"><div class="status-dot" style="background:var(--text-muted)"></div>Ausente</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ ANALYTICS ════════════════════ -->
+    <div class="view" id="view-analytics">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Analytics BI</div>
+          <div class="page-sub">Inteligencia de negocio · Abril 2025</div>
+        </div>
+        <button class="btn-secondary" onclick="showToast('Reporte exportado como PDF')">⬇️ Exportar PDF</button>
+      </div>
+
+      <!-- KPIs analytics -->
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi-card" style="--accent:var(--green)">
+          <div class="kpi-label">Ticket promedio</div>
+          <div class="kpi-value">$1,890</div>
+          <span class="kpi-trend trend-up">↑ 14% vs marzo</span>
+        </div>
+        <div class="kpi-card" style="--accent:var(--brand)">
+          <div class="kpi-label">NPS pacientes</div>
+          <div class="kpi-value">87</div>
+          <span class="kpi-trend trend-up">Excelente</span>
+        </div>
+        <div class="kpi-card" style="--accent:var(--purple)">
+          <div class="kpi-label">Tasa cancelación</div>
+          <div class="kpi-value">4.2%</div>
+          <span class="kpi-trend trend-up">↓ 1.8% vs marzo</span>
+        </div>
+        <div class="kpi-card" style="--accent:var(--amber)">
+          <div class="kpi-label">Tiempo esp. prom.</div>
+          <div class="kpi-value">8 min</div>
+          <span class="kpi-trend trend-up">↓ 3 min vs febrero</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-hdr-icon icon-blue">📈</div>
+            <div class="card-hdr-title">Ingresos mensuales 2025</div>
+          </div>
+          <div style="padding:20px">
+            <div class="mini-bar-wrap" id="monthly-chart" style="height:100px"></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px">
+              <div style="text-align:center"><div style="font-size:18px;font-weight:800">$38.4k</div><div style="font-size:10px;color:var(--text-muted)">Enero</div></div>
+              <div style="text-align:center"><div style="font-size:18px;font-weight:800">$41.2k</div><div style="font-size:10px;color:var(--text-muted)">Febrero</div></div>
+              <div style="text-align:center"><div style="font-size:18px;font-weight:800">$38.3k</div><div style="font-size:10px;color:var(--text-muted)">Marzo</div></div>
+              <div style="text-align:center;color:var(--brand)"><div style="font-size:18px;font-weight:800">$47.2k</div><div style="font-size:10px;font-weight:700">Abril ↑</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-hdr-icon icon-green">🦷</div>
+            <div class="card-hdr-title">Top procedimientos</div>
+          </div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Limpiezas dentales</span><span style="font-size:12px;color:var(--text-muted)">$18,400 · 42%</span></div>
+              <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:42%;background:var(--brand);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Ortodoncia</span><span style="font-size:12px;color:var(--text-muted)">$9,900 · 21%</span></div>
+              <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:21%;background:#10B981;border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Extracciones</span><span style="font-size:12px;color:var(--text-muted)">$7,080 · 15%</span></div>
+              <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:15%;background:var(--amber);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Implantes</span><span style="font-size:12px;color:var(--text-muted)">$4,720 · 10%</span></div>
+              <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:10%;background:var(--purple);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Otros servicios</span><span style="font-size:12px;color:var(--text-muted)">$7,100 · 12%</span></div>
+              <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:12%;background:var(--text-muted);border-radius:4px"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- NOTIFICATION TOAST -->
+<div class="notif-toast" id="toast"></div>
+
+<!-- MODAL: Nuevo paciente -->
+<div class="modal-overlay" id="modal-new-patient" onclick="if(event.target===this)closeModal('modal-new-patient')">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">👤 Nuevo paciente</div>
+      <button class="modal-close" onclick="closeModal('modal-new-patient')">✕</button>
+    </div>
+    <div class="modal-field"><div class="modal-label">Nombre completo</div><input class="modal-input" type="text" placeholder="Ej: María García López"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="modal-field"><div class="modal-label">Teléfono</div><input class="modal-input" type="tel" placeholder="55 1234 5678"></div>
+      <div class="modal-field"><div class="modal-label">Correo</div><input class="modal-input" type="email" placeholder="paciente@correo.com"></div>
+    </div>
+    <div class="modal-field"><div class="modal-label">Alergias conocidas</div><input class="modal-input" type="text" placeholder="Ej: Penicilina, látex…"></div>
+    <button class="btn-primary" style="width:100%;justify-content:center;margin-top:6px" onclick="closeModal('modal-new-patient');showToast('✅ Paciente registrado — código PAC-X1Y2-0249 generado')">
+      Registrar paciente
+    </button>
+  </div>
+</div>
+
+<!-- MODAL: Nuevo mensaje -->
+<div class="modal-overlay" id="modal-new-msg" onclick="if(event.target===this)closeModal('modal-new-msg')">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">✉️ Nuevo mensaje al paciente</div>
+      <button class="modal-close" onclick="closeModal('modal-new-msg')">✕</button>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Paciente</div>
+      <select class="modal-input">
+        <option>María García López · PAC-A1B2-0001</option>
+        <option>Carlos Mendoza · PAC-E5F6-0002</option>
+        <option>Ana Sofía Torres · PAC-C3D4-0003</option>
+        <option>Valeria Cruz · PAC-G7H8-0004</option>
+      </select>
+    </div>
+    <div class="modal-field"><div class="modal-label">Asunto</div><input class="modal-input" type="text" placeholder="Ej: Indicaciones post-operatorias"></div>
+    <div class="modal-field"><div class="modal-label">Mensaje</div><textarea class="modal-input modal-textarea" placeholder="Escribe el mensaje para el paciente. Solo el paciente podrá leerlo en su portal…"></textarea></div>
+    <div style="background:var(--brand-xlight);border:1px solid rgba(27,79,216,.15);border-radius:8px;padding:9px 12px;font-size:11px;color:var(--brand);margin-bottom:14px">
+      🔒 El paciente verá este mensaje en su portal personal (solo lectura). No puede responder.
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center" onclick="closeModal('modal-new-msg');showToast('✅ Mensaje enviado al portal del paciente')">
+      Enviar mensaje
+    </button>
+  </div>
+</div>
+
+<!-- MODAL: Nueva receta -->
+<div class="modal-overlay" id="modal-new-rx" onclick="if(event.target===this)closeModal('modal-new-rx')">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">💊 Nueva receta médica</div>
+      <button class="modal-close" onclick="closeModal('modal-new-rx')">✕</button>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Paciente</div>
+      <select class="modal-input">
+        <option>Carlos Mendoza · PAC-E5F6-0002</option>
+        <option>María García López · PAC-A1B2-0001</option>
+        <option>Ana Sofía Torres · PAC-C3D4-0003</option>
+      </select>
+    </div>
+    <div class="modal-field"><div class="modal-label">Medicamento</div><input class="modal-input" type="text" placeholder="Ej: Amoxicilina 500mg"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="modal-field"><div class="modal-label">Dosis</div><input class="modal-input" type="text" placeholder="Ej: 500mg"></div>
+      <div class="modal-field"><div class="modal-label">Vía</div><input class="modal-input" type="text" placeholder="Oral / Tópica…"></div>
+      <div class="modal-field"><div class="modal-label">Frecuencia</div><input class="modal-input" type="text" placeholder="Cada 8 horas"></div>
+      <div class="modal-field"><div class="modal-label">Duración</div><input class="modal-input" type="text" placeholder="7 días"></div>
+    </div>
+    <div class="modal-field"><div class="modal-label">Indicaciones especiales</div><textarea class="modal-input modal-textarea" style="min-height:60px" placeholder="Tomar con alimentos, precauciones…"></textarea></div>
+    <button class="btn-primary" style="width:100%;justify-content:center" onclick="closeModal('modal-new-rx');showToast('✅ Receta guardada y visible en el portal del paciente')">
+      Guardar receta
+    </button>
+  </div>
+</div>
+
+<script>
+/* ─── DATA ─────────────────────────────────────────────────── */
+const PATIENTS = [
+  {id:1,name:"María García López",phone:"55 1234 5678",email:"maria.garcia@gmail.com",code:"PAC-A1B2-0001",color:"#1B4FD8",status:"Activa",blood:"O+",procedure:"Ortodoncia"},
+  {id:2,name:"Carlos Mendoza Ruiz",phone:"55 9876 5432",email:"c.mendoza@hotmail.com",code:"PAC-E5F6-0002",color:"#16A34A",status:"Post-op",blood:"A+",procedure:"Extracción"},
+  {id:3,name:"Ana Sofía Torres",phone:"55 5555 1111",email:"ana.torres@gmail.com",code:"PAC-C3D4-0003",color:"#7C3AED",status:"Activa",blood:"B+",procedure:"Ortodoncia"},
+  {id:4,name:"Valeria Cruz Espinoza",phone:"55 2222 3333",email:"valeria.c@outlook.com",code:"PAC-G7H8-0004",color:"#0D9488",status:"Activa",blood:"O-",procedure:"Implante"},
+  {id:5,name:"Roberto Jiménez Mora",phone:"55 4444 7777",email:"r.jimenez@gmail.com",code:"PAC-I9J0-0005",color:"#D97706",status:"Activa",blood:"AB+",procedure:"Limpieza"},
+  {id:6,name:"Luisa Morales Vega",phone:"55 6666 8888",email:"luisa.m@gmail.com",code:"PAC-K1L2-0006",color:"#DC2626",status:"Activa",blood:"A-",procedure:"Blanqueamiento"},
+  {id:7,name:"Héctor Ramírez",phone:"55 3333 9999",email:"hector.r@correo.com",code:"PAC-M3N4-0007",color:"#7C3AED",status:"Activa",blood:"B-",procedure:"Implante"},
+];
+
+const INVENTORY = [
+  {name:"Anestesia Articaína",cat:"Medicamentos",stock:4,max:20,unit:"ampolletas",low:true},
+  {name:"Guantes de nitrilo T-M",cat:"Consumibles",stock:3,max:50,unit:"paquetes",low:true},
+  {name:"Gasas esteriles 4x4",cat:"Consumibles",stock:22,max:30,unit:"paquetes",low:false},
+  {name:"Clorhexidina 0.12%",cat:"Medicamentos",stock:18,max:25,unit:"frascos",low:false},
+  {name:"Espejos bucales",cat:"Instrumental",stock:14,max:20,unit:"piezas",low:false},
+  {name:"Curetas periodontales",cat:"Instrumental",stock:8,max:10,unit:"sets",low:false},
+  {name:"Material de impresión",cat:"Prostodoncia",stock:12,max:15,unit:"tubos",low:false},
+  {name:"Hilo de sutura 3-0",cat:"Quirúrgico",stock:25,max:30,unit:"paquetes",low:false},
+];
+
+/* ─── VIEWS ─────────────────────────────────────────────────── */
+function switchView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById('view-' + name);
+  if (el) el.classList.add('active');
+  const sb = document.getElementById('sb-' + name);
+  if (sb) sb.classList.add('active');
+  // Update header nav
+  document.querySelectorAll('.header-nav .nav-btn').forEach(b => b.classList.remove('active'));
+}
+
+/* ─── PATIENTS ──────────────────────────────────────────────── */
+function initials(n){ return (n||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+
+function renderPatients(list) {
+  const el = document.getElementById('patient-list');
+  if (!list.length) {
+    el.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-muted)">Sin resultados</div>`;
+    return;
+  }
+  el.innerHTML = list.map(p => `
+    <div class="patient-row" onclick="showToast('Expediente de ${p.name} — Portal: ${p.code}')">
+      <div class="patient-av" style="background:${p.color}">${initials(p.name)}</div>
+      <div class="patient-info">
+        <div class="patient-name">${p.name}</div>
+        <div class="patient-meta">${p.phone} · ${p.email}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="patient-code">${p.code}</div>
+        <span class="badge ${p.status==='Post-op'?'badge-amber':'badge-green'}">${p.status}</span>
+      </div>
+    </div>`).join('');
+}
+
+function filterPatients(q) {
+  const lower = q.toLowerCase();
+  renderPatients(PATIENTS.filter(p =>
+    p.name.toLowerCase().includes(lower) ||
+    p.phone.includes(lower) ||
+    p.code.toLowerCase().includes(lower)
+  ));
+}
+
+/* ─── INVENTORY ─────────────────────────────────────────────── */
+function renderInventory() {
+  const el = document.getElementById('inventory-list');
+  el.innerHTML = INVENTORY.map(i => {
+    const pct = Math.round(i.stock / i.max * 100);
+    const color = i.low ? 'var(--red)' : pct < 50 ? 'var(--amber)' : 'var(--green)';
+    return `
+      <div class="inv-row">
+        <div class="inv-icon">${i.cat==='Medicamentos'?'💊':i.cat==='Instrumental'?'🔧':i.cat==='Quirúrgico'?'🩺':'📦'}</div>
+        <div class="inv-info"><div class="inv-name">${i.name}</div><div class="inv-cat">${i.cat}</div></div>
+        <div class="inv-stock-bar">
+          <div class="inv-bar-bg"><div class="inv-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+          <div class="inv-stock-text" style="color:${color}">${i.stock} / ${i.max} ${i.unit}</div>
+        </div>
+        ${i.low ? `<span class="badge badge-red">⚠️ Bajo</span>` : `<span class="badge badge-green">OK</span>`}
+      </div>`;
+  }).join('');
+}
+
+/* ─── CHARTS ─────────────────────────────────────────────────── */
+function renderBarChart(elId, data, highlight) {
+  const el = document.getElementById(elId);
+  const max = Math.max(...data);
+  const labels = ['Feb17','Feb24','Mar3','Mar10','Mar17','Mar24','Abr7','Abr14'];
+  el.innerHTML = data.map((v,i) => `
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+      <div class="mini-bar ${i===highlight?'highlight':''}" style="height:${Math.round(v/max*60)+4}px"
+        data-tip="$${v.toLocaleString()}"></div>
+    </div>`).join('');
+}
+
+function renderMonthlyChart() {
+  const el = document.getElementById('monthly-chart');
+  if (!el) return;
+  const data = [38400,41200,38300,47200];
+  const max = Math.max(...data);
+  const months = ['Ene','Feb','Mar','Abr'];
+  el.innerHTML = data.map((v,i) => `
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+      <div class="mini-bar ${i===3?'highlight':''}" style="height:${Math.round(v/max*90)+4}px"></div>
+      <div class="mini-bar-label">${months[i]}</div>
+    </div>`).join('');
+}
+
+/* ─── CALENDAR ──────────────────────────────────────────────── */
+function renderCalendar() {
+  const el = document.getElementById('calendar');
+  if (!el) return;
+  const days = ['L','M','M','J','V','S','D'];
+  const aptsOn = [1,3,7,8,9,10,14,15,16,17,21,22,23,24,28,29];
+  const busy   = [10,17,24];
+  let html = days.map(d => `<div class="cal-day-label">${d}</div>`).join('');
+  // April 2025 starts on Tuesday (index 1)
+  for (let i=0;i<1;i++) html += `<div class="cal-day other-month"></div>`;
+  for (let d=1;d<=30;d++) {
+    const isToday = d===14;
+    const hasApts = aptsOn.includes(d);
+    const isBusy  = busy.includes(d);
+    html += `<div class="cal-day${isToday?' today':''}${hasApts?' has-apts':''}${isBusy&&!isToday?' busy':''}" onclick="showToast('${d} de abril — ${hasApts?'Citas programadas':'Sin citas}')">${d}</div>`;
+  }
+  el.innerHTML = html;
+}
+
+/* ─── MODALS ─────────────────────────────────────────────────── */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+/* ─── TOAST ──────────────────────────────────────────────────── */
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.style.display = 'none'; }, 3200);
+}
+
+/* ─── INIT ───────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  renderPatients(PATIENTS);
+  renderInventory();
+  renderBarChart('bar-chart', [28400,31200,26800,33500,29900,36700,38800,47200], 7);
+  renderCalendar();
+
+  // Lazy render analytics charts when tab is opened
+  document.getElementById('sb-analytics').addEventListener('click', () => {
+    setTimeout(renderMonthlyChart, 50);
+  });
+
+  // Welcome toast after 1.5s
+  setTimeout(() => showToast('👋 Bienvenido al demo de DentalPro — Explora todas las funciones'), 1500);
+});
+</script>
+</body>
+</html>

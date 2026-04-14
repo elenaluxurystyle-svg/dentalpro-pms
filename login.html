@@ -106,14 +106,17 @@ body{
 /* ── LOGO AREA ───────────────────────────────────────────────── */
 .logo-wrap{
   display:flex;flex-direction:column;align-items:center;
-  margin-bottom:32px;
+  margin-bottom:44px;padding-top:8px;
 }
 .logo-img{
-  height:62px;width:auto;
-  filter:drop-shadow(0 4px 20px rgba(27,79,216,.5));
-  transition:filter .3s;
+  height:74px;width:auto;
+  filter:drop-shadow(0 6px 24px rgba(27,79,216,.6));
+  transition:filter .35s,transform .35s;
 }
-.logo-img:hover{filter:drop-shadow(0 6px 28px rgba(27,79,216,.7))}
+.logo-img:hover{
+  filter:drop-shadow(0 8px 32px rgba(27,79,216,.8));
+  transform:translateY(-2px);
+}
 
 /* ── TITLE ───────────────────────────────────────────────────── */
 .title{
@@ -346,16 +349,35 @@ body{
 /* Welcome banner */
 .welcome-banner{
   margin-top:10px;
-  padding:12px 14px;
-  background:linear-gradient(135deg,rgba(22,163,74,.12),rgba(74,222,128,.08));
-  border:1px solid rgba(74,222,128,.3);
-  border-radius:10px;
+  padding:14px 16px;
+  background:linear-gradient(135deg,rgba(22,163,74,.15),rgba(74,222,128,.06));
+  border:1px solid rgba(74,222,128,.4);
+  border-radius:12px;
   display:none;
-  animation:slideDown .3s cubic-bezier(.4,0,.2,1);
+  animation:verifyIn .45s cubic-bezier(.4,0,.2,1);
+  position:relative;overflow:hidden;
 }
-.wb-title{font-size:12px;font-weight:700;color:#4ADE80;margin-bottom:4px;display:flex;align-items:center;gap:6px}
-.wb-body{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6}
-.wb-body strong{color:rgba(255,255,255,.95)}
+.welcome-banner::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(74,222,128,.06),transparent);
+  animation:bannerShimmer 2.5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes bannerShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes verifyIn{
+  0%{opacity:0;transform:translateY(-10px) scale(.97)}
+  60%{transform:translateY(2px) scale(1.01)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+.wb-title{font-size:13px;font-weight:700;color:#4ADE80;margin-bottom:5px;display:flex;align-items:center;gap:7px}
+.wb-title-text{background:linear-gradient(90deg,#4ADE80,#86EFAC);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.wb-body{font-size:12px;color:rgba(255,255,255,.72);line-height:1.65}
+.wb-body strong{color:rgba(255,255,255,.96)}
+
+/* Particle canvas */
+#verify-particles{
+  position:fixed;inset:0;pointer-events:none;z-index:999;
+}
 
 /* ── TRUST BADGES ────────────────────────────────────────────── */
 .trust-row{
@@ -415,6 +437,171 @@ body{
   border-color:rgba(255,255,255,.2);
 }
 .cert-icon{font-size:11px}
+
+/* ── ALT AUTH DIVIDER ────────────────────────────────────────── */
+.alt-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:18px 0 16px;
+}
+.alt-div-line{flex:1;height:1px;background:rgba(255,255,255,.09)}
+.alt-div-text{font-size:11px;color:rgba(255,255,255,.28);white-space:nowrap;font-weight:500}
+
+/* ── METHOD TABS ─────────────────────────────────────────────── */
+.method-tabs{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px;margin-bottom:14px;
+}
+.method-tab{
+  padding:9px 12px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.45);
+  cursor:pointer;
+  font-family:"DM Sans",sans-serif;
+  transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.method-tab:hover{
+  border-color:rgba(96,165,250,.35);
+  color:rgba(255,255,255,.8);
+  background:rgba(255,255,255,.07);
+}
+.method-tab.active{
+  background:rgba(27,79,216,.18);
+  border-color:rgba(96,165,250,.5);
+  color:rgba(255,255,255,.95);
+  box-shadow:0 0 0 3px rgba(27,79,216,.12);
+}
+
+/* ── AUTH PANEL ──────────────────────────────────────────────── */
+.auth-panel{
+  display:none;
+  animation:slideDown .22s cubic-bezier(.4,0,.2,1);
+}
+.auth-panel.visible{display:block}
+
+/* Form inputs */
+.auth-field{margin-bottom:10px;position:relative}
+.auth-input{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  font-size:14px;font-family:"DM Sans",sans-serif;font-weight:500;
+  color:rgba(255,255,255,.92);
+  transition:all .2s;outline:none;
+}
+.auth-input::placeholder{color:rgba(255,255,255,.28);font-weight:400}
+.auth-input:focus{
+  border-color:rgba(96,165,250,.6);
+  background:rgba(27,79,216,.12);
+  box-shadow:0 0 0 3px rgba(27,79,216,.15);
+}
+.auth-input.error-field{border-color:rgba(220,38,38,.5);background:rgba(220,38,38,.06)}
+
+/* Password toggle */
+.pw-wrap{position:relative}
+.pw-toggle{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,255,255,.3);font-size:16px;
+  transition:color .2s;padding:4px;line-height:1;
+}
+.pw-toggle:hover{color:rgba(255,255,255,.7)}
+
+/* Phone row */
+.phone-row{display:flex;gap:8px}
+.country-select{
+  width:88px;flex-shrink:0;
+  padding:11px 10px;
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  font-size:13px;font-family:"DM Sans",sans-serif;font-weight:600;
+  color:rgba(255,255,255,.8);
+  outline:none;cursor:pointer;
+  transition:all .2s;
+  -webkit-appearance:none;
+}
+.country-select:focus{border-color:rgba(96,165,250,.6);background:rgba(27,79,216,.12)}
+
+/* Submit button */
+.auth-submit{
+  width:100%;padding:12px;
+  background:linear-gradient(135deg,#1B4FD8,#1239A6);
+  color:white;border:none;border-radius:10px;
+  font-size:14px;font-weight:700;
+  cursor:pointer;font-family:"DM Sans",sans-serif;
+  transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 16px rgba(27,79,216,.35);
+  margin-top:4px;
+}
+.auth-submit:hover{
+  background:linear-gradient(135deg,#2563EB,#1B4FD8);
+  transform:translateY(-1px);
+  box-shadow:0 8px 24px rgba(27,79,216,.45);
+}
+.auth-submit:active{transform:translateY(0)}
+.auth-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* Auth toggle link */
+.auth-toggle-row{
+  text-align:center;margin-top:12px;
+  font-size:12px;color:rgba(255,255,255,.35);
+}
+.auth-toggle-link{
+  color:rgba(96,165,250,.8);
+  cursor:pointer;font-weight:600;
+  border:none;background:none;
+  font-family:"DM Sans",sans-serif;
+  font-size:12px;text-decoration:underline;
+  transition:color .2s;
+}
+.auth-toggle-link:hover{color:#93C5FD}
+
+/* Register extra fields */
+.register-only{display:none}
+.register-only.show{display:block}
+
+/* ── OTP INPUTS ──────────────────────────────────────────────── */
+.otp-label{
+  font-size:12px;color:rgba(255,255,255,.5);
+  text-align:center;margin-bottom:12px;line-height:1.5;
+}
+.otp-grid{
+  display:flex;gap:8px;justify-content:center;margin-bottom:12px;
+}
+.otp-cell{
+  width:44px;height:52px;
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.15);
+  border-radius:10px;
+  font-size:22px;font-weight:700;
+  color:white;text-align:center;
+  font-family:"DM Mono",monospace;
+  transition:all .2s;outline:none;
+  caret-color:rgba(96,165,250,.8);
+}
+.otp-cell:focus{
+  border-color:rgba(96,165,250,.7);
+  background:rgba(27,79,216,.15);
+  box-shadow:0 0 0 3px rgba(27,79,216,.2);
+}
+.otp-cell.filled{border-color:rgba(74,222,128,.5);background:rgba(74,222,128,.06)}
+.resend-row{
+  text-align:center;font-size:12px;color:rgba(255,255,255,.35);margin-bottom:8px;
+}
+.resend-btn{
+  background:none;border:none;cursor:pointer;
+  color:rgba(96,165,250,.7);font-size:12px;font-weight:600;
+  font-family:"DM Sans",sans-serif;text-decoration:underline;
+  transition:color .2s;
+}
+.resend-btn:hover{color:#93C5FD}
+.resend-btn:disabled{color:rgba(255,255,255,.25);cursor:not-allowed;text-decoration:none}
 
 /* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media(max-width:480px){
@@ -535,7 +722,7 @@ body{
           <svg class="check-svg" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 13l5 5L20 7"/>
           </svg>
-          Identidad profesional verificada
+          <span class="wb-title-text">Identidad profesional verificada.</span>
         </div>
         <div class="wb-body" id="welcome-text"></div>
       </div>
@@ -705,6 +892,7 @@ async function verifyInvite() {
       `Clínica: <strong>${data.clinic_name}</strong> · Rol: ${roleLabel}<br>` +
       `<em style="opacity:.7;font-size:11px">Ahora inicia sesión con Google para acceder →</em>`;
     banner.style.display = 'block';
+    launchParticles();
 
     localStorage.setItem("dentalpro_invite", JSON.stringify(data));
   } catch (e) {
@@ -769,6 +957,69 @@ async function handleGoogleLogin(response) {
     showError(empathetic("sesión"));
     console.error(e);
   }
+}
+
+/* ── PARTICLE BURST ─────────────────────────────────────────── */
+function launchParticles() {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'verify-particles';
+  Object.assign(canvas.style, {
+    position:'fixed',inset:'0',width:'100%',height:'100%',
+    pointerEvents:'none',zIndex:'9999'
+  });
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  const COLORS = ['#4ADE80','#86EFAC','#60A5FA','#A78BFA','#FDE68A','#ffffff'];
+  const particles = Array.from({length:80}, () => {
+    const angle = (Math.random() * Math.PI * 2);
+    const speed = 3 + Math.random() * 6;
+    return {
+      x: canvas.width  / 2,
+      y: canvas.height / 2,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - (2 + Math.random() * 4),
+      r:  3 + Math.random() * 5,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      alpha: 1,
+      rot: Math.random() * Math.PI * 2,
+      rotV: (Math.random() - .5) * .3,
+      shape: Math.random() > .5 ? 'circle' : 'rect',
+    };
+  });
+
+  let frame;
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.vy += .18;   // gravity
+      p.alpha -= .018;
+      p.rot += p.rotV;
+      if (p.alpha <= 0) return;
+      alive = true;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      if (p.shape === 'circle') {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(-p.r, -p.r * .5, p.r * 2, p.r);
+      }
+      ctx.restore();
+    });
+    if (alive) { frame = requestAnimationFrame(tick); }
+    else { canvas.remove(); cancelAnimationFrame(frame); }
+  }
+  frame = requestAnimationFrame(tick);
 }
 
 /* ── INIT ───────────────────────────────────────────────────── */
